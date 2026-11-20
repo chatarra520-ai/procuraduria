@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quiz Procuraduría - Simulacro Interactivo</title>
+    <title>Simulacros - Índice</title>
     <style>
         :root {
             --bg-color: #f3f4f6;
@@ -14,8 +14,6 @@
             --text-main: #1f2937;
             --text-muted: #6b7280;
             --border-color: #e5e7eb;
-            --success-bg: #d1fae5;
-            --success-text: #065f46;
             --danger-bg: #fee2e2;
             --danger-text: #991b1b;
         }
@@ -37,79 +35,22 @@
             padding: 1rem;
         }
 
-        .quiz-card {
+        .index-card {
             width: 100%;
             max-width: 600px;
             background: var(--card-bg);
             border-radius: 16px;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
             padding: 1.5rem;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
         }
 
-        /* Top Bar */
-        .top-bar {
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
-            margin-bottom: 1.25rem;
+        .index-header {
             border-bottom: 1px solid var(--border-color);
             padding-bottom: 0.75rem;
+            margin-bottom: 1.25rem;
         }
 
-        .progress-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 0.9rem;
-            font-weight: 600;
-            color: var(--text-muted);
-        }
-
-        .stats-badges {
-            display: flex;
-            gap: 0.5rem;
-        }
-
-        .badge {
-            padding: 0.2rem 0.6rem;
-            border-radius: 9999px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 0.2rem;
-        }
-
-        .badge-err {
-            background-color: var(--danger-bg);
-            color: var(--danger-text);
-        }
-
-        .badge-ok {
-            background-color: var(--success-bg);
-            color: var(--success-text);
-        }
-
-        .progress-line {
-            width: 100%;
-            height: 6px;
-            background-color: var(--border-color);
-            border-radius: 3px;
-            overflow: hidden;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background-color: #4b5563;
-            width: 0%;
-            transition: width 0.3s ease;
-        }
-
-        /* Question Section */
-        .question-header {
+        .index-kicker {
             font-size: 0.85rem;
             font-weight: 700;
             color: var(--text-muted);
@@ -118,23 +59,20 @@
             margin-bottom: 0.5rem;
         }
 
-        .question-title {
+        .index-title {
             font-size: 1.15rem;
             font-weight: 600;
             line-height: 1.4;
             color: var(--text-main);
-            margin-bottom: 1.25rem;
         }
 
-        /* Options */
-        .options-group {
+        .menu-group {
             display: flex;
             flex-direction: column;
             gap: 0.75rem;
-            margin-bottom: 1rem;
         }
 
-        .option-item {
+        .menu-item {
             width: 100%;
             text-align: left;
             padding: 1rem;
@@ -148,585 +86,79 @@
             display: flex;
             align-items: flex-start;
             gap: 0.75rem;
+            text-decoration: none;
         }
 
-        .option-item:hover:not(:disabled) {
-            background-color: #f3f4f6;
-            border-color: #d1d5db;
-        }
-
-        .option-item.selected {
-            border-color: var(--primary);
+        .menu-item:hover {
             background-color: #eff6ff;
+            border-color: var(--primary);
         }
 
-        .option-item.correct {
-            border-color: #10b981;
-            background-color: var(--success-bg);
-            color: var(--success-text);
-        }
-
-        .option-item.incorrect {
-            border-color: var(--danger-text);
-            background-color: var(--danger-bg);
-            color: var(--danger-text);
-        }
-
-        .option-letter {
+        .menu-number {
             font-weight: 700;
             color: #4b5563;
             min-width: 20px;
         }
 
-        /* Hint Accordion */
-        .hint-section {
-            margin-bottom: 1rem;
-        }
-
-        .hint-btn {
-            background: none;
-            border: none;
-            color: var(--primary);
-            font-size: 0.9rem;
-            font-weight: 600;
-            cursor: pointer;
+        .menu-text {
             display: flex;
-            align-items: center;
-            gap: 0.3rem;
-            padding: 0.2rem 0;
+            flex-direction: column;
+            gap: 0.2rem;
         }
 
-        .hint-box {
+        .menu-name {
+            font-weight: 600;
+        }
+
+        .menu-desc {
             font-size: 0.85rem;
             color: var(--text-muted);
-            background-color: #f8fafc;
-            border-left: 3px solid var(--primary);
-            padding: 0.75rem;
-            margin-top: 0.5rem;
-            border-radius: 0 8px 8px 0;
-            display: none;
             line-height: 1.4;
         }
 
-        /* Feedback Box */
-        .feedback-container {
+        .notice {
+            display: none;
+            margin-top: 1rem;
             padding: 0.9rem;
             border-radius: 10px;
             font-size: 0.9rem;
-            margin-bottom: 1rem;
-            display: none;
             line-height: 1.4;
+            background-color: var(--danger-bg);
+            color: var(--danger-text);
         }
 
-        .feedback-container.show {
+        .notice.show {
             display: block;
-        }
-
-        /* Bottom Navigation Buttons matching image */
-        .bottom-nav {
-            display: flex;
-            gap: 1rem;
-            margin-top: 1rem;
-            padding-top: 1rem;
-            border-top: 1px solid var(--border-color);
-        }
-
-        .btn-nav {
-            flex: 1;
-            padding: 0.8rem 1.5rem;
-            border-radius: 9999px;
-            font-size: 0.95rem;
-            font-weight: 600;
-            cursor: pointer;
-            border: none;
-            transition: background 0.2s;
-            text-align: center;
-        }
-
-        .btn-back {
-            background-color: #e5e7eb;
-            color: #374151;
-        }
-
-        .btn-back:hover:not(:disabled) {
-            background-color: #d1d5db;
-        }
-
-        .btn-ready {
-            background-color: #93c5fd;
-            color: #1e3a8a;
-        }
-
-        .btn-ready:hover:not(:disabled) {
-            background-color: var(--primary);
-            color: white;
-        }
-
-        .btn-nav:disabled {
-            opacity: 0.4;
-            cursor: not-allowed;
-        }
-
-        /* Results View */
-        .results-view {
-            text-align: center;
-            padding: 2rem 1rem;
-            display: none;
-        }
-
-        .results-view h2 {
-            font-size: 1.5rem;
-            color: var(--text-main);
-            margin-bottom: 0.75rem;
-        }
-
-        .score-display {
-            font-size: 3rem;
-            font-weight: 800;
-            color: var(--primary);
-            margin-bottom: 1rem;
-        }
-
-        .results-desc {
-            font-size: 1rem;
-            color: var(--text-muted);
-            margin-bottom: 1.5rem;
-            line-height: 1.5;
         }
     </style>
 </head>
 
 <body>
 
-    <div class="quiz-card" id="main-card">
-        <div>
-            <!-- Top Bar -->
-            <div class="top-bar">
-                <div class="progress-row">
-                    <span id="progress-indicator">1 de 15</span>
-                    <div class="stats-badges">
-                        <div class="badge badge-err">× <span id="err-counter">0</span></div>
-                        <div class="badge badge-ok">✓ <span id="ok-counter">0</span></div>
-                    </div>
-                </div>
-                <div class="progress-line">
-                    <div class="progress-fill" id="progress-bar-fill"></div>
-                </div>
-            </div>
-
-            <!-- Quiz Content -->
-            <div id="active-quiz-content">
-                <div class="question-header" id="q-mod">Módulo</div>
-                <div class="question-title" id="q-title">Cargando...</div>
-
-                <!-- Hint -->
-                <div class="hint-section">
-                    <button class="hint-btn" onclick="toggleHint()">Pista <span id="hint-arrow">▼</span></button>
-                    <div class="hint-box" id="hint-box-content">Pista aquí</div>
-                </div>
-
-                <!-- Options -->
-                <div class="options-group" id="options-box"></div>
-
-                <!-- Feedback -->
-                <div class="feedback-container" id="feedback-box"></div>
-            </div>
-
-            <!-- Results Screen -->
-            <div class="results-view" id="results-view">
-                <h2>¡Simulacro Finalizado!</h2>
-                <div class="score-display" id="final-score">0/15</div>
-                <p class="results-desc" id="final-desc">Has completado el simulacro de preparación para la Procuraduría
-                    General de la Nación.</p>
-                <button class="btn-nav btn-ready" onclick="restartQuiz()"
-                    style="max-width: 250px; margin: 0 auto;">Reiniciar Simulacro</button>
-            </div>
+    <div class="index-card">
+        <div class="index-header">
+            <div class="index-kicker">Procuraduría General de la Nación</div>
+            <div class="index-title">Elige un simulacro</div>
         </div>
 
-        <!-- Bottom Navigation -->
-        <div class="bottom-nav" id="bottom-nav-container">
-            <button class="btn-nav btn-back" id="btn-back" onclick="handleBack()">Atrás</button>
-            <button class="btn-nav btn-ready" id="btn-action" onclick="handleAction()">Listo</button>
+        <div class="menu-group">
+            <a class="menu-item" href="conocimiento.html">
+                <span class="menu-number">1</span>
+                <span class="menu-text">
+                    <span class="menu-name">Quiz Procuraduría</span>
+                    <span class="menu-desc">Preguntas normativas y de juicio situacional.</span>
+                </span>
+            </a>
+
+            <a class="menu-item" href="comportamental.html">
+                <span class="menu-number">2</span>
+                <span class="menu-text">
+                    <span class="menu-name">Quiz Comportamental</span>
+                    <span class="menu-desc">50 preguntas de juicio situacional y comportamiento laboral.</span>
+                </span>
+            </a>
         </div>
     </div>
-
-    <script>
-        const questions = [
-            {
-                mod: "Juicio Situacional — Pregunta 2",
-                text: "Usted trabaja en una Procuraduría Provincial y es el mejor amigo de un candidato a la Alcaldía de un municipio bajo su jurisdicción. El candidato lo invita a una reunión privada en su casa para que le dé 'algunos consejos' sobre cómo organizar su futuro plan de desarrollo para que no tenga problemas disciplinarios más adelante. La reunión es estrictamente privada y sin prensa. Usted decide:",
-                options: [
-                    "A) Asistir, pues como experto en derecho disciplinario su consejo puede evitar que el futuro alcalde cometa errores, beneficiando el interés general.",
-                    "B) Declinar la invitación y explicarle a su amigo que, debido a su cargo de control y vigilancia sobre ese mismo municipio, cualquier asesoría o cercanía con su campaña compromete su imparcialidad y podría tipificar una prohibición legal.",
-                    "C) Ir a la reunión, pero pedirle a un colega que lo acompañe para que sirva de testigo de que solo se habló de temas académicos y preventivos."
-                ],
-                correct: 1,
-                hint: "Principios de imparcialidad, transparencia y prohibición de asesorías a sujetos vigilados.",
-                explanation: "Respuesta B (Correcta): El servidor de la PGN no solo debe ser imparcial, sino parecerlo. Las asesorías privadas a sujetos de vigilancia están estrictamente prohibidas por generar conflicto de intereses y comprometer la objetividad institucional."
-            },
-            {
-                mod: "Juicio Situacional — Pregunta 3",
-                text: "Un contratista que ha tenido varios procesos preventivos en su despacho le envía a su oficina una caja de café gourmet y una nota de agradecimiento 'por su rigor técnico y objetividad', aclarando que es un detalle institucional de fin de año que se envía a todas las entidades. Su reacción inmediata es:",
-                options: [
-                    "A) Aceptar el detalle, ya que no es dinero en efectivo y el café se puede compartir con todo el equipo de la oficina en el área de descanso.",
-                    "B) Devolver el detalle inmediatamente con una comunicación formal, explicando que los servidores de la PGN tienen prohibido recibir regalos o dádivas de personas naturales o jurídicas con quienes tengan relación funcional, sin importar el valor del objeto.",
-                    "C) Quedarse con el detalle para no ofender al contratista, pero registrarlo en un acta interna de la oficina para que sea transparente."
-                ],
-                correct: 1,
-                hint: "Prohibición absoluta de recibir dádivas o regalos de sujetos interesados en procesos.",
-                explanation: "Respuesta B (Correcta): El Código de Integridad y las normas disciplinarias prohíben recibir regalos de sujetos interesados en procesos de la entidad. La devolución debe ser formal para dejar constancia de la conducta ética."
-            },
-            {
-                mod: "Juicio Situacional — Pregunta 4",
-                text: "Usted nota que su jefe inmediato suele pedirle que le dé prioridad a las quejas ciudadanas que llegan a través de un periodista específico, dejando de lado expedientes que llevan meses en turno. El jefe argumenta que 'hay que cuidar la imagen de la Procuraduría'. Frente a esta instrucción, usted:",
-                options: [
-                    "A) Acata la orden, entendiendo que la gestión de la imagen institucional es una prioridad estratégica para mantener la confianza ciudadana.",
-                    "B) Realiza las tareas según el orden de llegada de los expedientes (derecho al turno), informando respetuosamente a su jefe que el criterio de selección debe ser la antigüedad y la gravedad del caso.",
-                    "C) Filtra a la prensa de manera anónima que se están priorizando casos por conveniencia mediática para forzar a su jefe a cambiar de actitud."
-                ],
-                correct: 1,
-                hint: "Principio de igualdad y respeto al orden riguroso de turno en los expedientes.",
-                explanation: "Respuesta B (Correcta): Justicia e Igualdad: El servidor público no puede discriminar entre ciudadanos basándose en la presión mediática. La lealtad es con el procedimiento legal y el derecho de turno."
-            },
-            {
-                mod: "Componente Básico — Prescripción",
-                text: "Un personero municipal remite por competencia una queja a la Procuraduría contra un concejal por presuntas irregularidades. Usted advierte que los hechos ocurrieron hace 4 años. ¿Cuál es la actuación procesal correcta respecto al término de prescripción?",
-                options: [
-                    "A) Archivar de inmediato porque la acción prescribe en 3 años según el régimen de servidores de elección popular.",
-                    "B) Continuar con el proceso, ya que la prescripción para servidores públicos es de 5 años y aún restan 12 meses.",
-                    "C) Remitir a la oficina de juzgamiento para que ellos declaren la interrupción de la prescripción de oficio."
-                ],
-                correct: 1,
-                hint: "Revise el artículo 30 de la Ley 1952 de 2019 (Código General Disciplinario).",
-                explanation: "Respuesta B (Correcta): Según el Art. 30 de la Ley 1952 de 2019, la acción disciplinaria prescribe en 5 años. Al haber transcurrido 4 años, el Estado aún conserva intacta su potestad sancionadora."
-            },
-            {
-                mod: "Constitución — Derecho de Petición y Tutela",
-                text: "Un ciudadano interpone un escrito ante la Alcaldía solicitando copia simple de las actas de contratación. Transcurridos 12 días hábiles sin respuesta, interpone tutela. De acuerdo con la Ley 1755 de 2015:",
-                options: [
-                    "A) La tutela es improcedente porque el plazo legal es de 30 días hábiles para cualquier escrito.",
-                    "B) La tutela es procedente, toda vez que vencido el término especial de 10 días hábiles para documentos e información, la omisión vulnera el derecho fundamental.",
-                    "C) El ciudadano debió tramitar obligatoriamente una queja disciplinaria previa."
-                ],
-                correct: 1,
-                hint: "Términos legales de respuesta para peticiones de documentos e información.",
-                explanation: "Respuesta B (Correcta): Las solicitudes de copias y documentos tienen un plazo de 10 días hábiles. Al pasar 12 días sin respuesta, se vulnera el derecho de petición, procediendo la tutela."
-            },
-            {
-                mod: "Estructura del Estado — CAR",
-                text: "Al interior de la estructura general del Estado colombiano, las Corporaciones Autónomas Regionales (CAR) se clasifican formalmente en la categoría de:",
-                options: [
-                    "A) Unidades pertenecientes a la Rama Ejecutiva del Sector Descentralizado Territorial.",
-                    "B) Órganos Autónomos e Independientes con régimen de creación legal y autonomía administrativa y patrimonial.",
-                    "C) Integrantes de la estructura de la Rama Judicial con funciones ambientales."
-                ],
-                correct: 1,
-                hint: "Revise el listado de órganos autónomos e independientes de la Constitución.",
-                explanation: "Respuesta B (Correcta): Las CAR forman parte de los Órganos Autónomos e Independientes dotados de personería jurídica, autonomía administrativa y patrimonio propio."
-            },
-            {
-                mod: "Organización Electoral — CNE",
-                text: "Respecto al Consejo Nacional Electoral (CNE), señale la afirmación jurídicamente CORRECTA sobre su integración y funciones:",
-                options: [
-                    "A) Sus 9 miembros son elegidos directamente por el Presidente de la República por 8 años.",
-                    "B) Sus 9 miembros son elegidos por el Congreso de la República en corporación conjunta y se encargan de la suprema inspección y vigilancia de la organización electoral.",
-                    "C) Es una dependencia adscrita administrativamente a la Registraduría Nacional del Estado Civil."
-                ],
-                correct: 1,
-                hint: "Consulte los artículos 120 y 263 de la Constitución Política.",
-                explanation: "Respuesta B (Correcta): El CNE se integra por 9 miembros elegidos por el Congreso en corporación conjunta para un período de 4 años, encargados de la suprema inspección y vigilancia electoral."
-            },
-            {
-                mod: "Procuraduría General — Elección",
-                text: "El Procurador General de la Nación es elegido conforme a las siguientes reglas del ordenamiento constitucional:",
-                options: [
-                    "A) Por voto directo de los ciudadanos en comicios presidenciales para período de 4 años.",
-                    "B) Por el Senado de la República para un período de 4 años, a partir de una terna integrada por el Presidente de la República, la Corte Suprema de Justicia y el Consejo de Estado.",
-                    "C) Por la Cámara de Representantes de terna del Defensor del Pueblo."
-                ],
-                correct: 1,
-                hint: "Revise el artículo 275 de la Constitución Política.",
-                explanation: "Respuesta B (Correcta): El Procurador es elegido por el Senado de la República para un período de 4 años de terna conformada por el Presidente, la Corte Suprema y el Consejo de Estado."
-            },
-            {
-                mod: "Función Administrativa — Desconcentración",
-                text: "En materia de administración de la función pública, la desconcentración administrativa consiste en:",
-                options: [
-                    "A) La creación de una nueva persona jurídica pública con autonomía propia.",
-                    "B) La radicación de competencias en dependencias jerárquicamente subordinadas del mismo organismo, sin personería jurídica propia.",
-                    "C) La transferencia temporal de competencias entre entidades de distinto orden gubernamental."
-                ],
-                correct: 1,
-                hint: "Diferencia clave con la descentralización: no crea personería jurídica.",
-                explanation: "Respuesta B (Correcta): Según la Ley 489 de 1998, la desconcentración traslada funciones dentro del mismo organismo público a dependencias o cargos subordinados sin crear una persona jurídica nueva."
-            },
-            {
-                mod: "Régimen de Inhabilidades — Nepotismo",
-                text: "El principio de prohibición del nepotismo (Art. 126 CP) impide a los servidores públicos con capacidad nominadora efectuar designaciones en personas con parentesco hasta:",
-                options: [
-                    "A) Segundo grado de consanguinidad y primer grado de afinidad únicamente.",
-                    "B) Cuarto grado de consanguinidad, segundo de afinidad, primero civil o cónyuge/compañero permanente.",
-                    "C) Solamente cónyuge o compañera en matrimonio católico."
-                ],
-                correct: 1,
-                hint: "Consulte el Acto Legislativo 02 de 2015.",
-                explanation: "Respuesta B (Correcta): El Art. 126 de la CP prohíbe el nombramiento o contratación de parientes dentro del cuarto grado de consanguinidad, segundo de afinidad, primero civil o cónyuge/compañero permanente."
-            },
-            {
-                mod: "Empleo Público — Posesión y Presupuesto",
-                text: "Un funcionario que pretende posesionarse en un cargo para el que concursó encuentra que el empleo existe en el manual, pero la entidad carece de apropiación presupuestal vigente. Jurídicamente:",
-                options: [
-                    "A) Debe posesionarse bajo promesa de adición presupuestal posterior.",
-                    "B) El servidor no puede tomar posesión válida del cargo (Art. 122 CP), por exigirse planta y apropiación presupuestal en firme.",
-                    "C) La posesión es válida si el Alcalde lo autoriza verbalmente."
-                ],
-                correct: 1,
-                hint: "Revise el artículo 122 de la Constitución Política.",
-                explanation: "Respuesta B (Correcta): El Art. 122 de la CP dictamina que para proveer empleos remunerados es requisito constitucional indispensable que estén previstos en la planta de personal y cuenten con apropiación en el presupuesto vigente."
-            },
-            {
-                mod: "Responsabilidad de Servidores",
-                text: "Un servidor público destruye culposamente un equipo del inventario fiscal y falsifica un acta formal de baja. Esta conducta unificada desencadena concurrentemente:",
-                options: [
-                    "A) Únicamente responsabilidad penal.",
-                    "B) Responsabilidad disciplinaria, penal y fiscal, por ser autónomas e independientes entre sí.",
-                    "C) Solamente responsabilidad política ante el Concejo."
-                ],
-                correct: 1,
-                hint: "Revise el artículo 6 de la CP sobre autonomía de los regímenes de responsabilidad.",
-                explanation: "Respuesta B (Correcta): En virtud del Art. 6 de la CP, un mismo hecho genera responsabilidades autónomas e independientes en las ramas penal, disciplinaria y fiscal."
-            },
-            {
-                mod: "Proceso Disciplinario — Pliego de Cargos",
-                text: "Dentro de las reglas probatorias y procesales del Código General Disciplinario, ¿cuál actuación procede contra el Auto de Formulación del Pliego de Cargos?",
-                options: [
-                    "A) Recurso de apelación inmediato en efecto suspensivo.",
-                    "B) No procede ningún recurso de ley.",
-                    "C) Recurso de reposición y en subsidio apelación."
-                ],
-                correct: 1,
-                hint: "Consulte el trámite procesal de la Ley 1952 de 2019 frente al auto de cargos.",
-                explanation: "Respuesta B (Correcta): En consonancia con el Código General Disciplinario (Ley 1952 de 2019), contra el auto de formulación de pliego de cargos no procede ningún recurso."
-            },
-            {
-                mod: "Contratación Estatal — Garantías y Anticipos",
-                text: "En la contratación estatutaria colombiana, señale la aseveración CORRECTA en materia de garantías y pagos:",
-                options: [
-                    "A) Anticipo y pago anticipado son idénticos y transfieren el dinero a la propiedad del contratista de forma inmediata.",
-                    "B) Ni el anticipo ni el pago anticipado podrán exceder del 50% del valor total del contrato celebrado.",
-                    "C) Las garantías son obligatorias sin excepción en contratos de mínima cuantía."
-                ],
-                correct: 1,
-                hint: "Revise los límites legales del anticipo y pago anticipado en contratos estatales.",
-                explanation: "Respuesta B (Correcta): Ni el anticipo ni el pago anticipado pueden superar el tope del 50% del monto total del contrato."
-            },
-            {
-                mod: "Contratación Estatal — Interventoría",
-                text: "Al comparar legalmente la Supervisión y la Interventoría en contratos estatales, resulta de obligatorio cumplimiento la siguiente regla:",
-                options: [
-                    "A) El interventor debe ser por ley un funcionario de planta de la entidad.",
-                    "B) Si el contrato principal es prorrogado en su plazo de ejecución, el contrato de interventoría correspondiente debe ser prorrogado obligatoriamente.",
-                    "C) La interventoría tiene límite de adición en valor de hasta el 10% sin excepciones."
-                ],
-                correct: 1,
-                hint: "Consulte el Estatuto Anticorrupción (Ley 1474 de 2011, Art. 83).",
-                explanation: "Respuesta B (Correcta): Según la Ley 1474 de 2011, la interventoría sigue la suerte del contrato principal; si este se prorroga, la interventoría debe prorrogarse obligatoriamente."
-            }
-        ];
-
-        let currentIndex = 0;
-        let userSelections = new Array(questions.length).fill(null);
-        let lockedStates = new Array(questions.length).fill(false);
-        let successCount = 0;
-        let errorCount = 0;
-
-        const progressIndicator = document.getElementById('progress-indicator');
-        const okCounter = document.getElementById('ok-counter');
-        const errCounter = document.getElementById('err-counter');
-        const progressBarFill = document.getElementById('progress-bar-fill');
-
-        const qMod = document.getElementById('q-mod');
-        const qTitle = document.getElementById('q-title');
-        const hintBoxContent = document.getElementById('hint-box-content');
-        const hintArrow = document.getElementById('hint-arrow');
-        const optionsBox = document.getElementById('options-box');
-        const feedbackBox = document.getElementById('feedback-box');
-
-        const btnBack = document.getElementById('btn-back');
-        const btnAction = document.getElementById('btn-action');
-
-        const activeQuizContent = document.getElementById('active-quiz-content');
-        const resultsView = document.getElementById('results-view');
-        const bottomNavContainer = document.getElementById('bottom-nav-container');
-
-        function renderQuestion() {
-            const q = questions[currentIndex];
-            qMod.textContent = q.mod;
-            qTitle.textContent = q.text;
-            hintBoxContent.textContent = q.hint;
-            hintBoxContent.style.display = 'none';
-            hintArrow.textContent = '▼';
-
-            // Progress
-            progressIndicator.textContent = `${currentIndex + 1} de ${questions.length}`;
-            const pct = Math.round(((currentIndex + 1) / questions.length) * 100);
-            progressBarFill.style.width = pct + '%';
-
-            // Options
-            optionsBox.innerHTML = '';
-            q.options.forEach((optText, idx) => {
-                const btn = document.createElement('button');
-                btn.className = 'option-item';
-
-                const letterSpan = document.createElement('span');
-                letterSpan.className = 'option-letter';
-                letterSpan.textContent = optText.charAt(0);
-
-                const textSpan = document.createElement('span');
-                textSpan.textContent = optText.slice(3);
-
-                btn.appendChild(letterSpan);
-                btn.appendChild(textSpan);
-
-                const isLocked = lockedStates[currentIndex];
-                const selectedIdx = userSelections[currentIndex];
-
-                if (isLocked) {
-                    btn.disabled = true;
-                    if (idx === q.correct) {
-                        btn.classList.add('correct');
-                    } else if (idx === selectedIdx) {
-                        btn.classList.add('incorrect');
-                    }
-                } else {
-                    if (selectedIdx === idx) {
-                        btn.classList.add('selected');
-                    }
-                    btn.onclick = () => selectOption(idx);
-                }
-
-                optionsBox.appendChild(btn);
-            });
-
-            // Feedback
-            if (lockedStates[currentIndex]) {
-                showFeedbackUI(userSelections[currentIndex] === q.correct, q.explanation);
-                btnAction.textContent = currentIndex === questions.length - 1 ? 'Resultados' : 'Siguiente';
-                btnAction.disabled = false;
-            } else {
-                feedbackBox.classList.remove('show');
-                btnAction.textContent = 'Listo';
-                btnAction.disabled = userSelections[currentIndex] === null;
-            }
-
-            btnBack.disabled = currentIndex === 0;
-        }
-
-        function selectOption(idx) {
-            if (lockedStates[currentIndex]) return;
-            userSelections[currentIndex] = idx;
-
-            const buttons = optionsBox.getElementsByClassName('option-item');
-            for (let i = 0; i < buttons.length; i++) {
-                if (i === idx) {
-                    buttons[i].classList.add('selected');
-                } else {
-                    buttons[i].classList.remove('selected');
-                }
-            }
-            btnAction.disabled = false;
-        }
-
-        function handleAction() {
-            const isLocked = lockedStates[currentIndex];
-
-            if (!isLocked) {
-                // Lock and evaluate
-                if (userSelections[currentIndex] === null) return;
-                lockedStates[currentIndex] = true;
-
-                const q = questions[currentIndex];
-                const isCorrect = userSelections[currentIndex] === q.correct;
-
-                if (isCorrect) {
-                    successCount++;
-                    okCounter.textContent = successCount;
-                } else {
-                    errorCount++;
-                    errCounter.textContent = errorCount;
-                }
-
-                renderQuestion();
-            } else {
-                // Next question or results
-                if (currentIndex < questions.length - 1) {
-                    currentIndex++;
-                    renderQuestion();
-                } else {
-                    showResultsScreen();
-                }
-            }
-        }
-
-        function handleBack() {
-            if (currentIndex > 0) {
-                currentIndex--;
-                renderQuestion();
-            }
-        }
-
-        function showFeedbackUI(isCorrect, explanation) {
-            feedbackBox.classList.add('show');
-            if (isCorrect) {
-                feedbackBox.style.backgroundColor = '#d1fae5';
-                feedbackBox.style.color = '#065f46';
-                feedbackBox.innerHTML = `<strong>✓ Respuesta correcta</strong><br>${explanation}`;
-            } else {
-                feedbackBox.style.backgroundColor = '#fee2e2';
-                feedbackBox.style.color = '#991b1b';
-                feedbackBox.innerHTML = `<strong>× Incorrectas (Tu respuesta)</strong><br>${explanation}`;
-            }
-        }
-
-        function toggleHint() {
-            if (hintBoxContent.style.display === 'block') {
-                hintBoxContent.style.display = 'none';
-                hintArrow.textContent = '▼';
-            } else {
-                hintBoxContent.style.display = 'block';
-                hintArrow.textContent = '▲';
-            }
-        }
-
-        function showResultsScreen() {
-            activeQuizContent.style.display = 'none';
-            bottomNavContainer.style.display = 'none';
-            document.querySelector('.top-bar').style.display = 'none';
-
-            document.getElementById('final-score').textContent = `${successCount} / ${questions.length}`;
-            resultsView.style.display = 'block';
-        }
-
-        function restartQuiz() {
-            currentIndex = 0;
-            successCount = 0;
-            errorCount = 0;
-            userSelections = new Array(questions.length).fill(null);
-            lockedStates = new Array(questions.length).fill(false);
-            okCounter.textContent = '0';
-            errCounter.textContent = '0';
-
-            resultsView.style.display = 'none';
-            activeQuizContent.style.display = 'block';
-            bottomNavContainer.style.display = 'flex';
-            document.querySelector('.top-bar').style.display = 'flex';
-
-            renderQuestion();
-        }
-
-        // Inicializar
-        renderQuestion();
-    </script>
 
 </body>
 

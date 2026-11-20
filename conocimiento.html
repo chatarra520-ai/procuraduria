@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Comportamental - Simulacro de Juicio Situacional</title>
+    <style>
+        :root {
+            --bg-color: #f3f4f6;
+            --card-bg: #ffffff;
+            --primary: #3b82f6;
+            --primary-hover: #2563eb;
+            --text-main: #1f2937;
+            --text-muted: #6b7280;
+            --border-color: #e5e7eb;
+            --success-bg: #d1fae5;
+            --success-text: #065f46;
+            --danger-bg: #fee2e2;
+            --danger-text: #991b1b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 1rem;
+        }
+
+        .quiz-card {
+            width: 100%;
+            max-width: 600px;
+            background: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .top-bar {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin-bottom: 1.25rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.75rem;
+        }
+
+        .progress-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        .stats-badges {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .badge {
+            padding: 0.2rem 0.6rem;
+            border-radius: 9999px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.2rem;
+        }
+
+        .badge-err {
+            background-color: var(--danger-bg);
+            color: var(--danger-text);
+        }
+
+        .badge-ok {
+            background-color: var(--success-bg);
+            color: var(--success-text);
+        }
+
+        .progress-line {
+            width: 100%;
+            height: 6px;
+            background-color: var(--border-color);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: #4b5563;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .question-header {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+        }
+
+        .question-title {
+            font-size: 1.15rem;
+            font-weight: 600;
+            line-height: 1.4;
+            color: var(--text-main);
+            margin-bottom: 1.25rem;
+        }
+
+        .options-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .option-item {
+            width: 100%;
+            text-align: left;
+            padding: 1rem;
+            background-color: #f9fafb;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            font-size: 0.95rem;
+            color: var(--text-main);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+
+        .option-item:hover:not(:disabled) {
+            background-color: #f3f4f6;
+            border-color: #d1d5db;
+        }
+
+        .option-item.selected {
+            border-color: var(--primary);
+            background-color: #eff6ff;
+        }
+
+        .option-item.correct {
+            border-color: #10b981;
+            background-color: var(--success-bg);
+            color: var(--success-text);
+        }
+
+        .option-item.incorrect {
+            border-color: var(--danger-text);
+            background-color: var(--danger-bg);
+            color: var(--danger-text);
+        }
+
+        .option-letter {
+            font-weight: 700;
+            color: #4b5563;
+            min-width: 20px;
+        }
+
+        .hint-section {
+            margin-bottom: 1rem;
+        }
+
+        .hint-btn {
+            background: none;
+            border: none;
+            color: var(--primary);
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            padding: 0.2rem 0;
+        }
+
+        .hint-box {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            background-color: #f8fafc;
+            border-left: 3px solid var(--primary);
+            padding: 0.75rem;
+            margin-top: 0.5rem;
+            border-radius: 0 8px 8px 0;
+            display: none;
+            line-height: 1.4;
+        }
+
+        .feedback-container {
+            padding: 0.9rem;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            display: none;
+            line-height: 1.4;
+        }
+
+        .feedback-container.show {
+            display: block;
+        }
+
+        .bottom-nav {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .btn-nav {
+            flex: 1;
+            padding: 0.8rem 1.5rem;
+            border-radius: 9999px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: background 0.2s;
+            text-align: center;
+        }
+
+        .btn-back {
+            background-color: #e5e7eb;
+            color: #374151;
+        }
+
+        .btn-back:hover:not(:disabled) {
+            background-color: #d1d5db;
+        }
+
+        .btn-ready {
+            background-color: #93c5fd;
+            color: #1e3a8a;
+        }
+
+        .btn-ready:hover:not(:disabled) {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-nav:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .results-view {
+            text-align: center;
+            padding: 2rem 1rem;
+            display: none;
+        }
+
+        .results-view h2 {
+            font-size: 1.5rem;
+            color: var(--text-main);
+            margin-bottom: 0.75rem;
+        }
+
+        .score-display {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .results-desc {
+            font-size: 1rem;
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="quiz-card" id="main-card">
+        <div>
+            <div class="top-bar">
+                <div class="progress-row">
+                    <span id="progress-indicator">1 de 50</span>
+                    <div class="stats-badges">
+                        <div class="badge badge-err">× <span id="err-counter">0</span></div>
+                        <div class="badge badge-ok">✓ <span id="ok-counter">0</span></div>
+                    </div>
+                </div>
+                <div class="progress-line">
+                    <div class="progress-fill" id="progress-bar-fill"></div>
+                </div>
+            </div>
+
+            <div id="active-quiz-content">
+                <div class="question-header" id="q-mod">Módulo</div>
+                <div class="question-title" id="q-title">Cargando...</div>
+
+                <div class="hint-section">
+                    <button class="hint-btn" onclick="toggleHint()">Pista <span id="hint-arrow">▼</span></button>
+                    <div class="hint-box" id="hint-box-content">Pista aquí</div>
+                </div>
+
+                <div class="options-group" id="options-box"></div>
+
+                <div class="feedback-container" id="feedback-box"></div>
+            </div>
+
+            <div class="results-view" id="results-view">
+                <h2>¡Simulacro Finalizado!</h2>
+                <div class="score-display" id="final-score">0/50</div>
+                <p class="results-desc" id="final-desc">Has completado el simulacro de juicio situacional y
+                    comportamiento laboral.</p>
+                <button class="btn-nav btn-ready" onclick="restartQuiz()"
+                    style="max-width: 250px; margin: 0 auto;">Reiniciar Simulacro</button>
+            </div>
+        </div>
+
+        <div class="bottom-nav" id="bottom-nav-container">
+            <button class="btn-nav btn-back" id="btn-back" onclick="handleBack()">Atrás</button>
+            <button class="btn-nav btn-ready" id="btn-action" onclick="handleAction()">Listo</button>
+        </div>
+    </div>
+
+    <script>
+        // Formato: [enunciado, [opciones], índice de la correcta (0=A, 1=B, 2=C, 3=D), competencias que evalúa]
+        const RAW = [
+            ["Tu jefe te pide un informe urgente, pero tienes dos tareas críticas en curso. ¿Qué haces?", ["Ignoras las tareas previas y entregas el informe tarde.", "Priorizas según impacto y fecha límite, confirmas expectativas con tu jefe y comunicas un plan realista.", "Haces las tres tareas a la vez sin avisar a nadie.", "Dices que no puedes hacerlo y delegas todo sin seguimiento."], 1, "priorización, comunicación proactiva y gestión realista de compromisos"],
+            ["Un compañero repite errores que afectan al equipo. ¿Qué haces primero?", ["Lo reportas inmediatamente a Recursos Humanos.", "Hablas con él en privado, de forma concreta y respetuosa, ofreciendo ayuda para mejorar.", "Criticas sus errores frente al resto del equipo.", "Haces su trabajo sin decirle nada."], 1, "retroalimentación directa, respetuosa y orientada a la mejora"],
+            ["Recibes una crítica fuerte de tu supervisor sobre un proyecto. ¿Cuál es la mejor reacción?", ["Te defiendes y explicas que la culpa fue de otro.", "Escuchas sin interrumpir, pides ejemplos específicos y propones acciones de mejora.", "Te molestas y evitas hablar del tema.", "Aceptas todo, aunque no entiendes qué debes corregir."], 1, "receptividad, aprendizaje y acción concreta ante la retroalimentación"],
+            ["Detectas un error en un informe que ya fue enviado a un cliente. ¿Qué haces?", ["Esperas a ver si el cliente lo nota.", "Informas de inmediato a tu responsable, propones una corrección y comunicas el ajuste al cliente con transparencia.", "Corriges el archivo sin avisar a nadie.", "Culpas al compañero que preparó los datos."], 1, "responsabilidad, transparencia y resolución rápida de problemas"],
+            ["Un cliente está molesto por un retraso que no causaste. ¿Qué haces?", ["Le explicas que no es tu responsabilidad.", "Escuchas su inconformidad, te disculpas por el impacto, explicas el plan de solución y das un seguimiento claro.", "Le dices que se comunique con otra área.", "Prometes una solución sin conocer los hechos."], 1, "empatía, ownership y una solución concreta"],
+            ["Debes entregar un proyecto, pero descubres que no tendrás todos los datos a tiempo. ¿Qué haces?", ["Entregas el trabajo incompleto sin advertirlo.", "Informas temprano, identificas qué información puedes obtener, propones alternativas y ajustas el plan con las partes involucradas.", "Inventas datos para completar el informe.", "Dejas de trabajar hasta que llegue toda la información."], 1, "anticipación, integridad y gestión proactiva de riesgos"],
+            ["Dos compañeros tienen una discusión que afecta el ambiente del equipo. ¿Qué haces?", ["Tomas partido por quien te cae mejor.", "Escuchas a ambos por separado, buscas hechos objetivos y facilitas una conversación centrada en soluciones.", "Evitas involucrarte aunque el trabajo se esté afectando.", "Comentas el conflicto con otros compañeros."], 1, "mediación constructiva, imparcialidad y foco en el objetivo común"],
+            ["Te asignan una tarea que no sabes cómo realizar. ¿Cuál es la mejor respuesta?", ["Dices que sí y luego improvisas sin apoyo.", "Aceptas el reto, identificas lo que necesitas aprender, pides orientación y estableces un plan con fechas.", "Rechazas la tarea porque no tienes experiencia.", "Esperas a que otro la haga por ti."], 1, "iniciativa, aprendizaje continuo y solicitud oportuna de apoyo"],
+            ["Un compañero toma crédito por una idea que aportaste. ¿Qué haces?", ["Discutes con él frente al equipo.", "Conversas en privado, explicas los hechos con calma y, si es necesario, aclaras tu contribución con evidencia ante el responsable.", "No haces nada para evitar problemas.", "Dejas de colaborar con esa persona."], 1, "asertividad profesional y resolución basada en hechos"],
+            ["Tu equipo debe cumplir una meta difícil en poco tiempo. ¿Qué haces?", ["Trabajas solo y no informas el avance.", "Divides el trabajo según fortalezas, acuerdas responsabilidades, haces seguimiento y comunicas obstáculos a tiempo.", "Culpas a otros si no se alcanza la meta.", "Reduces la calidad para terminar rápido sin avisar."], 1, "organización, colaboración y seguimiento orientado a resultados"],
+            ["Recibes una instrucción que consideras incorrecta. ¿Qué haces?", ["La ejecutas sin cuestionarla, aunque pueda causar un error grave.", "Verificas la información, explicas tu preocupación con datos y propones una alternativa antes de decidir.", "Desobedeces la instrucción sin consultar.", "Criticas la decisión detrás de la espalda del jefe."], 1, "pensamiento crítico, respeto por la autoridad y comunicación constructiva"],
+            ["Un compañero te pide información confidencial de la empresa. ¿Qué haces?", ["Se la compartes porque confías en él.", "Explicas que no puedes compartir información restringida y lo orientas hacia el proceso o autorización correcta.", "Le envías solo una parte para no incumplir del todo.", "Le dices que la busque en internet."], 1, "cumplimiento de políticas, discreción y manejo responsable de la información"],
+            ["Cometiste un error que afectó a un compañero. ¿Qué haces?", ["Ocultas el error esperando que no tenga consecuencias.", "Reconoces el error, te disculpas, corriges el impacto y explicas cómo evitarás que se repita.", "Culpas a una falla del sistema sin revisar tu parte.", "Esperas a que el compañero lo descubra."], 1, "accountability, humildad y mejora continua"],
+            ["Debes elegir entre dos soluciones: una rápida pero riesgosa y otra más lenta pero segura. ¿Qué haces?", ["Siempre eliges la opción rápida para quedar bien.", "Evalúas riesgos, impacto, recursos y plazos; consultas a los interesados cuando sea necesario y eliges la alternativa más equilibrada.", "Delegas la decisión sin analizar.", "Eliges la opción más popular sin evaluar consecuencias."], 1, "análisis, gestión de riesgos y decisiones informadas"],
+            ["Un cliente solicita algo que va contra la política de la empresa. ¿Qué haces?", ["Accedes para evitar perder al cliente.", "Explicas el límite con respeto, buscas una alternativa permitida y escalas el caso si corresponde.", "Le dices que la política es un problema de la empresa.", "Ignoras la solicitud sin responder."], 1, "integridad, orientación al cliente y manejo adecuado de excepciones"],
+            ["Tu desempeño ha bajado por motivos personales. ¿Qué haces?", ["Ocultas la situación hasta que afecte seriamente tu trabajo.", "Comunicas lo necesario a tu jefe, propones un plan para cumplir responsabilidades y solicitas apoyo razonable.", "Dejas de asistir sin avisar.", "Culpas a la empresa por tu situación personal."], 1, "comunicación responsable, profesionalismo y búsqueda de soluciones"],
+            ["Un compañero hace comentarios ofensivos en una reunión. ¿Qué haces?", ["Te ríes para no crear conflicto.", "Intervienes con respeto, estableces un límite claro y, si continúa o es grave, lo reportas por los canales adecuados.", "Lo confrontas con insultos.", "Esperas a que otra persona reaccione."], 1, "respeto, coraje civil y uso de los canales formales cuando corresponde"],
+            ["Te asignan una tarea fuera de tu horario habitual. ¿Cuál es la mejor respuesta?", ["Te niegas sin explicar ningún motivo.", "Evalúas la urgencia, comunicas tu disponibilidad y acuerdas una solución viable con tu responsable.", "Aceptas siempre, aunque descuides tus obligaciones principales.", "Delegas la tarea sin autorización."], 1, "flexibilidad con límites profesionales y comunicación clara"],
+            ["Un proyecto se retrasa por una decisión que tomaste. ¿Qué haces?", ["Culpas a factores externos y evitas hablar del tema.", "Informas de inmediato, asumes tu responsabilidad, presentas un plan de recuperación y aprendes de la causa.", "Esperas a que alguien más lo detecte.", "Cambias el alcance del proyecto sin consultar."], 1, "transparencia, responsabilidad y capacidad de corrección"],
+            ["Debes comunicar una mala noticia a un cliente. ¿Qué haces?", ["Evitas contactarlo hasta que él pregunte.", "Comunicas el hecho con claridad, empatía y oportunidad; explicas el impacto, las acciones correctivas y el siguiente paso.", "Le envías un mensaje ambiguo para no preocuparlo.", "Culpas a otra área frente al cliente."], 1, "comunicación honesta, empatía y manejo profesional de situaciones difíciles"],
+            ["Un compañero necesita ayuda, pero tú tienes una fecha límite propia. ¿Qué haces?", ["Lo ignoras completamente.", "Evalúas la urgencia, ofreces ayuda dentro de tus posibilidades y coordinas apoyo adicional si es necesario.", "Abandonas tu tarea para ayudarle sin avisar.", "Le dices que resuelva solo porque no es tu problema."], 1, "colaboración equilibrada y gestión de prioridades"],
+            ["Recibes información contradictoria de dos áreas sobre un mismo tema. ¿Qué haces?", ["Eliges la versión de la persona con mayor jerarquía sin verificar.", "Reúnes evidencia, consultas a las fuentes, aclaras las diferencias y documentas la decisión final.", "Eliges la información que más te conviene.", "Esperas a que otros resuelvan la discrepancia."], 1, "análisis objetivo, verificación y documentación"],
+            ["Un compañero propone una idea mejor que la tuya. ¿Qué haces?", ["La rechazas para defender tu propuesta.", "Reconoces el aporte, analizas cómo integrarla y apoyas la mejor solución para el objetivo.", "Criticas la idea sin fundamentos.", "Presentas la idea como tuya."], 1, "apertura, colaboración y orientación al resultado antes que al ego"],
+            ["Tu jefe te pide que hagas algo que consideras poco ético. ¿Qué haces?", ["Lo haces porque es tu jefe.", "Explicas tu preocupación, solicitas claridad sobre la instrucción y escalas el asunto por los canales éticos si persiste el riesgo.", "Lo haces en secreto.", "Renuncias sin intentar aclarar la situación."], 1, "integridad, consulta y uso de los mecanismos formales de reporte"],
+            ["Te encomiendan liderar un equipo por primera vez. ¿Qué haces?", ["Impones tus decisiones sin escuchar.", "Estableces objetivos, escuchas al equipo, asignas responsabilidades según fortalezas y haces seguimiento con retroalimentación.", "Delegas todo y no participas.", "Haces todo tú mismo para evitar errores."], 1, "liderazgo participativo, claridad y desarrollo del equipo"],
+            ["Un compañero constantemente interrumpe tu trabajo con solicitudes. ¿Qué haces?", ["Le respondes con molestia.", "Acuerdas horarios o canales para atender solicitudes, priorizas según urgencia y explicas tu disponibilidad con respeto.", "Dejas de responderle.", "Haces todas sus solicitudes aunque descuides tus responsabilidades."], 1, "límites profesionales, organización y comunicación asertiva"],
+            ["Debes presentar un resultado negativo a la dirección. ¿Qué haces?", ["Ocultas los datos negativos.", "Presentas los hechos con datos, explicas causas, propones alternativas y defines un plan de acción.", "Culpas al equipo antes de analizar.", "Presentas solo información positiva para evitar preguntas."], 1, "transparencia, análisis y orientación a soluciones"],
+            ["Un compañero comete un error que podría afectar la seguridad o integridad de un proceso. ¿Qué haces?", ["Lo corriges en silencio y no informas.", "Detienes o alertas el riesgo según su gravedad, informas al responsable y apoyas la corrección documentada.", "Esperas a ver si ocurre una consecuencia.", "Comentas el error en redes sociales internas."], 1, "prioridad por la seguridad, cumplimiento y reporte oportuno"],
+            ["Te piden trabajar con alguien con quien has tenido diferencias. ¿Qué haces?", ["Evitas comunicarte con esa persona.", "Dejas atrás el conflicto personal, estableces acuerdos de trabajo claros y te enfocas en los objetivos compartidos.", "Solicitas cambiar de equipo sin explicar el motivo.", "Hablas mal de esa persona con otros compañeros."], 1, "profesionalismo, colaboración y separación entre lo personal y lo laboral"],
+            ["Recibes una tarea urgente mientras estás en una reunión importante. ¿Qué haces?", ["Abandonas la reunión sin avisar.", "Evalúas la urgencia, informas a las personas involucradas y organizas una respuesta o delegación adecuada.", "Ignoras la solicitud hasta el día siguiente.", "Interrumpes la reunión repetidamente para atender mensajes."], 1, "priorización, comunicación y manejo equilibrado de compromisos"],
+            ["Un compañero está teniendo un bajo desempeño y parece desmotivado. ¿Qué haces?", ["Lo reportas de inmediato sin conversar con él.", "Ofreces apoyo, escuchas su situación, identificas obstáculos y, si es necesario, involucras al responsable con respeto.", "Criticas su desempeño frente al equipo.", "Haces su trabajo de forma permanente."], 1, "empatía, apoyo y escalado responsable"],
+            ["Te ofrecen un atajo para cumplir una meta que podría comprometer la calidad. ¿Qué haces?", ["Lo aceptas porque el resultado es lo único importante.", "Explicas el riesgo, propones una alternativa que preserve calidad y escalas la decisión si es necesario.", "Ocultas el impacto del atajo.", "Culminas el trabajo sin control de calidad."], 1, "calidad, ética y gestión de riesgos"],
+            ["Un cliente cambia los requisitos cuando el proyecto ya está avanzado. ¿Qué haces?", ["Te molestas y te niegas a hacer cambios.", "Documentas el cambio, evalúas impacto en tiempo, costo y alcance, y acuerdas las prioridades con las partes involucradas.", "Aceptas todo sin evaluar consecuencias.", "Continúas con el plan anterior sin informar."], 1, "gestión del cambio, comunicación y control de alcance"],
+            ["Un compañero te pide que cubras una falta de ética suya. ¿Qué haces?", ["Lo cubres por lealtad al equipo.", "Te niegas respetuosamente, le explicas por qué y reportas el asunto por el canal adecuado si hay riesgo.", "Amenazas con revelarlo públicamente.", "Ignoras la situación aunque sea grave."], 1, "integridad y cumplimiento de los procedimientos de reporte"],
+            ["Tu equipo logra un resultado importante. ¿Qué haces?", ["Te atribuyes el logro principal.", "Reconoces las contribuciones específicas de cada persona y compartes el resultado con transparencia.", "No mencionas el logro para evitar celos.", "Atribuyes todo al jefe."], 1, "reconocimiento, colaboración y liderazgo generoso"],
+            ["Debes tomar una decisión sin tener toda la información. ¿Qué haces?", ["Decides al azar para no retrasar el trabajo.", "Identificas lo esencial, consultas fuentes confiables, defines supuestos, estableces un plazo y comunicas los riesgos.", "No decides hasta tener el 100% de la información, aunque haya urgencia.", "Delegas la decisión sin contexto."], 1, "juicio bajo incertidumbre y comunicación de supuestos"],
+            ["Un compañero hace bromas repetidas que te incomodan. ¿Qué haces?", ["Aguantas en silencio para evitar problemas.", "Le comunicas claramente que el comportamiento te afecta y, si continúa, acudes a los canales formales.", "Respondes con bromas ofensivas.", "Comentas el caso con todo el equipo."], 1, "respeto, comunicación asertiva y uso de canales de denuncia"],
+            ["Recibes una retroalimentación negativa que consideras injusta. ¿Qué haces?", ["Discutes con enojo en el momento.", "Escuchas, pides ejemplos y contexto, presentas información adicional con calma y acuerdas acciones de mejora.", "Ignoras la retroalimentación.", "Hablas mal del evaluador con otros compañeros."], 1, "madurez emocional, escucha y diálogo profesional"],
+            ["Debes entregar un trabajo de alta calidad, pero el tiempo es insuficiente. ¿Qué haces?", ["Entregas algo incompleto sin avisar.", "Priorizas los entregables críticos, comunicas el alcance posible, solicitas apoyo si aplica y documentas lo pendiente.", "Trabajas sin descanso y ocultas los riesgos.", "Reduces la calidad sin informar a nadie."], 1, "planificación, transparencia y gestión de expectativas"],
+            ["Un compañero propone una solución que podría beneficiar a un proveedor cercano a él. ¿Qué haces?", ["La apruebas sin revisar para no generar conflicto.", "Señalas el posible conflicto de interés, solicitas transparencia y propones una evaluación objetiva del proveedor.", "Acusas al compañero sin evidencia.", "Ignoras el posible conflicto."], 1, "ética, objetividad y prevención de conflictos de interés"],
+            ["Te asignan una meta ambiciosa que parece difícil. ¿Qué haces?", ["Dices que es imposible y no intentas.", "La divides en hitos, identificas recursos, buscas apoyo, mides avances y ajustas el plan cuando sea necesario.", "Aceptas la meta sin planificar.", "Esperas a que la meta cambie."], 1, "orientación a resultados, planificación y resiliencia"],
+            ["Un compañero comete un error menor, pero tú puedes corregirlo rápidamente. ¿Qué haces?", ["Lo corriges sin humillarlo y luego le das retroalimentación constructiva si corresponde.", "Lo señalas frente a todos para que aprenda.", "Lo ignoras y dejas que afecte el trabajo.", "Reportas el error como si fuera grave sin evaluar."], 0, "apoyo práctico, respeto y retroalimentación proporcionada al impacto"],
+            ["Te piden trabajar en un proyecto que no entiendes completamente. ¿Qué haces?", ["Comienzas sin hacer preguntas.", "Pides claridad sobre objetivo, alcance, prioridades y criterios de éxito antes de avanzar.", "Rechazas el proyecto por falta de información.", "Copias el trabajo de otro proyecto sin adaptarlo."], 1, "claridad, proactividad y prevención de retrabajos"],
+            ["Un compañero te pide un favor que va contra las normas. ¿Qué haces?", ["Lo haces para mantener una buena relación.", "Te niegas con respeto, explicas la norma y ofreces una alternativa permitida.", "Lo haces, pero le pides que no lo mencione.", "Lo reportas sin explicarle nada."], 1, "integridad, respeto y cumplimiento normativo"],
+            ["Tu equipo enfrenta una crisis inesperada. ¿Qué haces?", ["Entras en pánico y esperas instrucciones.", "Mantienes la calma, identificas el impacto, comunicas información verificada, asignas acciones y haces seguimiento.", "Ocultas el problema hasta que se agrave.", "Culpas a otros por la crisis."], 1, "liderazgo bajo presión, comunicación y gestión de crisis"],
+            ["Un compañero propone una idea que ya fue descartada antes. ¿Qué haces?", ["Le dices que la idea ya falló y no merece atención.", "Explicas el contexto previo con respeto y analizas si las condiciones actuales permiten una nueva oportunidad.", "Te burlas de la propuesta.", "Ignoras la idea sin responder."], 1, "respeto, contexto y pensamiento abierto"],
+            ["Debes dar retroalimentación a alguien con quien no tienes buena relación. ¿Qué haces?", ["Evitas la conversación.", "Preparas ejemplos concretos, te enfocas en conductas y resultados, y mantienes un tono respetuoso y orientado a la mejora.", "Hablas de la persona con otros compañeros.", "Envías un mensaje duro sin contexto."], 1, "retroalimentación objetiva, respetuosa y útil"],
+            ["Detectas una mejora que beneficia a toda la empresa, pero no es tu responsabilidad directa. ¿Qué haces?", ["No haces nada porque no te corresponde.", "Documentas la propuesta, identificas el beneficio y la presentas al responsable correspondiente con una recomendación clara.", "Implementas el cambio sin autorización.", "Comentas la idea informalmente sin seguimiento."], 1, "iniciativa, pensamiento estratégico y respeto por los procesos"],
+            ["Un compañero te pide ayuda repetidamente sin intentar resolver por sí mismo. ¿Qué haces?", ["Le haces todo el trabajo para evitar conflicto.", "Estableces límites, le enseñas cómo abordar el problema y le propones recursos o un plan de aprendizaje.", "Le dices que no vuelva a preguntarte.", "Reportas su comportamiento sin conversar con él."], 1, "desarrollo de otros, límites sanos y autonomía responsable"],
+            ["Al finalizar un proyecto con resultados mixtos, ¿qué haces?", ["Solo destacas lo positivo y evitas analizar errores.", "Reconoces logros, analizas causas de las desviaciones, documentas aprendizajes y propones mejoras para el próximo proyecto.", "Culpas a un compañero por los resultados negativos.", "No realizas ninguna evaluación."], 1, "aprendizaje organizacional, análisis objetivo y mejora continua"]
+        ];
+
+        const questions = RAW.map((r, i) => ({
+            mod: "Juicio Situacional — Pregunta " + (i + 1),
+            text: r[0],
+            options: r[1].map((t, j) => String.fromCharCode(65 + j) + ") " + t),
+            correct: r[2],
+            hint: "Competencia en juego: " + r[3].split(/, | y /)[0] + ".",
+            explanation: "La conducta más efectiva demuestra " + r[3] + "."
+        }));
+
+        // ===== Barajar opciones y reetiquetar letras =====
+        // Así la respuesta correcta no queda siempre en la misma posición.
+        function stripLetter(s) { return s.replace(/^[A-D]\)\s*/, ''); }
+
+        function shuffleArray(arr) {
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        function prepareQuestions() {
+            questions.forEach(q => {
+                const items = q.options.map((t, i) => ({ t: stripLetter(t), c: i === q.correct }));
+                shuffleArray(items);
+                q.options = items.map((o, i) => String.fromCharCode(65 + i) + ') ' + o.t);
+                q.correct = items.findIndex(o => o.c);
+                q.explanation = q.explanation.replace(/^Respuesta [A-D] \(Correcta\):\s*/, '');
+            });
+        }
+        prepareQuestions();
+
+        let currentIndex = 0;
+        let userSelections = new Array(questions.length).fill(null);
+        let lockedStates = new Array(questions.length).fill(false);
+        let successCount = 0;
+        let errorCount = 0;
+
+        const progressIndicator = document.getElementById('progress-indicator');
+        const okCounter = document.getElementById('ok-counter');
+        const errCounter = document.getElementById('err-counter');
+        const progressBarFill = document.getElementById('progress-bar-fill');
+
+        const qMod = document.getElementById('q-mod');
+        const qTitle = document.getElementById('q-title');
+        const hintBoxContent = document.getElementById('hint-box-content');
+        const hintArrow = document.getElementById('hint-arrow');
+        const optionsBox = document.getElementById('options-box');
+        const feedbackBox = document.getElementById('feedback-box');
+
+        const btnBack = document.getElementById('btn-back');
+        const btnAction = document.getElementById('btn-action');
+
+        const activeQuizContent = document.getElementById('active-quiz-content');
+        const resultsView = document.getElementById('results-view');
+        const bottomNavContainer = document.getElementById('bottom-nav-container');
+
+        function renderQuestion() {
+            const q = questions[currentIndex];
+            qMod.textContent = q.mod;
+            qTitle.textContent = q.text;
+            hintBoxContent.textContent = q.hint;
+            hintBoxContent.style.display = 'none';
+            hintArrow.textContent = '▼';
+
+            progressIndicator.textContent = `${currentIndex + 1} de ${questions.length}`;
+            const pct = Math.round(((currentIndex + 1) / questions.length) * 100);
+            progressBarFill.style.width = pct + '%';
+
+            optionsBox.innerHTML = '';
+            q.options.forEach((optText, idx) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-item';
+
+                const letterSpan = document.createElement('span');
+                letterSpan.className = 'option-letter';
+                letterSpan.textContent = optText.charAt(0);
+
+                const textSpan = document.createElement('span');
+                textSpan.textContent = optText.slice(3);
+
+                btn.appendChild(letterSpan);
+                btn.appendChild(textSpan);
+
+                const isLocked = lockedStates[currentIndex];
+                const selectedIdx = userSelections[currentIndex];
+
+                if (isLocked) {
+                    btn.disabled = true;
+                    if (idx === q.correct) {
+                        btn.classList.add('correct');
+                    } else if (idx === selectedIdx) {
+                        btn.classList.add('incorrect');
+                    }
+                } else {
+                    if (selectedIdx === idx) {
+                        btn.classList.add('selected');
+                    }
+                    btn.onclick = () => selectOption(idx);
+                }
+
+                optionsBox.appendChild(btn);
+            });
+
+            if (lockedStates[currentIndex]) {
+                showFeedbackUI(userSelections[currentIndex] === q.correct, q);
+                btnAction.textContent = currentIndex === questions.length - 1 ? 'Resultados' : 'Siguiente';
+                btnAction.disabled = false;
+            } else {
+                feedbackBox.classList.remove('show');
+                btnAction.textContent = 'Listo';
+                btnAction.disabled = userSelections[currentIndex] === null;
+            }
+
+            btnBack.disabled = currentIndex === 0;
+        }
+
+        function selectOption(idx) {
+            if (lockedStates[currentIndex]) return;
+            userSelections[currentIndex] = idx;
+
+            const buttons = optionsBox.getElementsByClassName('option-item');
+            for (let i = 0; i < buttons.length; i++) {
+                if (i === idx) {
+                    buttons[i].classList.add('selected');
+                } else {
+                    buttons[i].classList.remove('selected');
+                }
+            }
+            btnAction.disabled = false;
+        }
+
+        function handleAction() {
+            const isLocked = lockedStates[currentIndex];
+
+            if (!isLocked) {
+                if (userSelections[currentIndex] === null) return;
+                lockedStates[currentIndex] = true;
+
+                const q = questions[currentIndex];
+                const isCorrect = userSelections[currentIndex] === q.correct;
+
+                if (isCorrect) {
+                    successCount++;
+                    okCounter.textContent = successCount;
+                } else {
+                    errorCount++;
+                    errCounter.textContent = errorCount;
+                }
+
+                renderQuestion();
+            } else {
+                if (currentIndex < questions.length - 1) {
+                    currentIndex++;
+                    renderQuestion();
+                } else {
+                    showResultsScreen();
+                }
+            }
+        }
+
+        function handleBack() {
+            if (currentIndex > 0) {
+                currentIndex--;
+                renderQuestion();
+            }
+        }
+
+        function showFeedbackUI(isCorrect, q) {
+            const letter = String.fromCharCode(65 + q.correct);
+            feedbackBox.classList.add('show');
+            if (isCorrect) {
+                feedbackBox.style.backgroundColor = '#d1fae5';
+                feedbackBox.style.color = '#065f46';
+                feedbackBox.innerHTML = `<strong>✓ Respuesta correcta (${letter})</strong><br>${q.explanation}`;
+            } else {
+                feedbackBox.style.backgroundColor = '#fee2e2';
+                feedbackBox.style.color = '#991b1b';
+                feedbackBox.innerHTML = `<strong>× Respuesta incorrecta. La correcta es la ${letter}</strong><br>${q.explanation}`;
+            }
+        }
+
+        function toggleHint() {
+            if (hintBoxContent.style.display === 'block') {
+                hintBoxContent.style.display = 'none';
+                hintArrow.textContent = '▼';
+            } else {
+                hintBoxContent.style.display = 'block';
+                hintArrow.textContent = '▲';
+            }
+        }
+
+        function showResultsScreen() {
+            activeQuizContent.style.display = 'none';
+            bottomNavContainer.style.display = 'none';
+            document.querySelector('.top-bar').style.display = 'none';
+
+            document.getElementById('final-score').textContent = `${successCount} / ${questions.length}`;
+            resultsView.style.display = 'block';
+        }
+
+        function restartQuiz() {
+            currentIndex = 0;
+            successCount = 0;
+            errorCount = 0;
+            userSelections = new Array(questions.length).fill(null);
+            lockedStates = new Array(questions.length).fill(false);
+            okCounter.textContent = '0';
+            errCounter.textContent = '0';
+
+            // Rebarajar opciones en cada reinicio
+            prepareQuestions();
+
+            resultsView.style.display = 'none';
+            activeQuizContent.style.display = 'block';
+            bottomNavContainer.style.display = 'flex';
+            document.querySelector('.top-bar').style.display = 'flex';
+
+            renderQuestion();
+        }
+
+        renderQuestion();
+    </script>
+
+</body>
+
+</html>

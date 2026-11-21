@@ -14,8 +14,6 @@
             --text-main: #1f2937;
             --text-muted: #6b7280;
             --border-color: #e5e7eb;
-            --danger-bg: #fee2e2;
-            --danger-text: #991b1b;
         }
 
         * {
@@ -64,6 +62,19 @@
             font-weight: 600;
             line-height: 1.4;
             color: var(--text-main);
+        }
+
+        .section-label {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin: 1.25rem 0 0.75rem;
+        }
+
+        .section-label:first-of-type {
+            margin-top: 0;
         }
 
         .menu-group {
@@ -115,21 +126,6 @@
             color: var(--text-muted);
             line-height: 1.4;
         }
-
-        .notice {
-            display: none;
-            margin-top: 1rem;
-            padding: 0.9rem;
-            border-radius: 10px;
-            font-size: 0.9rem;
-            line-height: 1.4;
-            background-color: var(--danger-bg);
-            color: var(--danger-text);
-        }
-
-        .notice.show {
-            display: block;
-        }
     </style>
 </head>
 
@@ -141,17 +137,63 @@
             <div class="index-title">Elige un simulacro</div>
         </div>
 
+        <div class="section-label">Conocimiento por temas</div>
         <div class="menu-group">
-            <a class="menu-item" href="conocimiento.html">
+            <a class="menu-item" href="conocimiento.html#constitucion">
                 <span class="menu-number">1</span>
                 <span class="menu-text">
-                    <span class="menu-name">Quiz Procuraduría</span>
-                    <span class="menu-desc">Preguntas normativas y de juicio situacional.</span>
+                    <span class="menu-name">Constitución y estructura del Estado</span>
+                    <span class="menu-desc">30 preguntas · Constitución, ramas del poder, organización electoral y entidades del Estado.</span>
                 </span>
             </a>
-
-            <a class="menu-item" href="comportamental.html">
+            <a class="menu-item" href="conocimiento.html#procuraduria">
                 <span class="menu-number">2</span>
+                <span class="menu-text">
+                    <span class="menu-name">Procuraduría General de la Nación</span>
+                    <span class="menu-desc">23 preguntas · Funciones, elección, intervención y atención al público.</span>
+                </span>
+            </a>
+            <a class="menu-item" href="conocimiento.html#disciplinario">
+                <span class="menu-number">3</span>
+                <span class="menu-text">
+                    <span class="menu-name">Régimen y proceso disciplinario</span>
+                    <span class="menu-desc">20 preguntas · Órganos competentes, etapas, sanciones, alcaldes y gobernadores.</span>
+                </span>
+            </a>
+            <a class="menu-item" href="conocimiento.html#empleo">
+                <span class="menu-number">4</span>
+                <span class="menu-text">
+                    <span class="menu-name">Empleo público, contratación y control</span>
+                    <span class="menu-desc">13 preguntas · Empleo público, nepotismo, contratación estatal, control fiscal y anticorrupción.</span>
+                </span>
+            </a>
+            <a class="menu-item" href="conocimiento.html#administrativo">
+                <span class="menu-number">5</span>
+                <span class="menu-text">
+                    <span class="menu-name">Derecho administrativo y procedimiento</span>
+                    <span class="menu-desc">10 preguntas · Acto administrativo, recursos, contencioso administrativo y delegación.</span>
+                </span>
+            </a>
+            <a class="menu-item" href="conocimiento.html#juicio">
+                <span class="menu-number">6</span>
+                <span class="menu-text">
+                    <span class="menu-name">Juicio situacional y ética</span>
+                    <span class="menu-desc">2 preguntas · Casos de conducta dentro de conocimiento.</span>
+                </span>
+            </a>
+            <a class="menu-item" href="conocimiento.html#todos">
+                <span class="menu-number">7</span>
+                <span class="menu-text">
+                    <span class="menu-name">Todos los temas mezclados</span>
+                    <span class="menu-desc">98 preguntas · Simulacro integral de conocimiento.</span>
+                </span>
+            </a>
+        </div>
+
+        <div class="section-label">Comportamiento</div>
+        <div class="menu-group">
+            <a class="menu-item" href="comportamental.html">
+                <span class="menu-number">8</span>
                 <span class="menu-text">
                     <span class="menu-name">Quiz Comportamental</span>
                     <span class="menu-desc">50 preguntas de juicio situacional y comportamiento laboral.</span>

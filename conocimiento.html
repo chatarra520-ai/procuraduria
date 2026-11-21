@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quiz Comportamental - Simulacro de Juicio Situacional</title>
+    <title>Quiz Procuraduría - Simulacro Interactivo</title>
     <style>
         :root {
             --bg-color: #f3f4f6;
@@ -295,7 +295,7 @@
         <div>
             <div class="top-bar">
                 <div class="progress-row">
-                    <span id="progress-indicator">1 de 50</span>
+                    <span id="progress-indicator">1 de 98</span>
                     <div class="stats-badges">
                         <div class="badge badge-err">× <span id="err-counter">0</span></div>
                         <div class="badge badge-ok">✓ <span id="ok-counter">0</span></div>
@@ -322,9 +322,9 @@
 
             <div class="results-view" id="results-view">
                 <h2>¡Simulacro Finalizado!</h2>
-                <div class="score-display" id="final-score">0/50</div>
-                <p class="results-desc" id="final-desc">Has completado el simulacro de juicio situacional y
-                    comportamiento laboral.</p>
+                <div class="score-display" id="final-score">0/98</div>
+                <p class="results-desc" id="final-desc">Has completado el simulacro de preparación para la Procuraduría
+                    General de la Nación.</p>
                 <button class="btn-nav btn-ready" onclick="restartQuiz()"
                     style="max-width: 250px; margin: 0 auto;">Reiniciar Simulacro</button>
             </div>
@@ -337,68 +337,697 @@
     </div>
 
     <script>
-        // Formato: [enunciado, [opciones], índice de la correcta (0=A, 1=B, 2=C, 3=D), competencias que evalúa]
-        const RAW = [
-            ["Tu jefe te pide un informe urgente, pero tienes dos tareas críticas en curso. ¿Qué haces?", ["Ignoras las tareas previas y entregas el informe tarde.", "Priorizas según impacto y fecha límite, confirmas expectativas con tu jefe y comunicas un plan realista.", "Haces las tres tareas a la vez sin avisar a nadie.", "Dices que no puedes hacerlo y delegas todo sin seguimiento."], 1, "priorización, comunicación proactiva y gestión realista de compromisos"],
-            ["Un compañero repite errores que afectan al equipo. ¿Qué haces primero?", ["Lo reportas inmediatamente a Recursos Humanos.", "Hablas con él en privado, de forma concreta y respetuosa, ofreciendo ayuda para mejorar.", "Criticas sus errores frente al resto del equipo.", "Haces su trabajo sin decirle nada."], 1, "retroalimentación directa, respetuosa y orientada a la mejora"],
-            ["Recibes una crítica fuerte de tu supervisor sobre un proyecto. ¿Cuál es la mejor reacción?", ["Te defiendes y explicas que la culpa fue de otro.", "Escuchas sin interrumpir, pides ejemplos específicos y propones acciones de mejora.", "Te molestas y evitas hablar del tema.", "Aceptas todo, aunque no entiendes qué debes corregir."], 1, "receptividad, aprendizaje y acción concreta ante la retroalimentación"],
-            ["Detectas un error en un informe que ya fue enviado a un cliente. ¿Qué haces?", ["Esperas a ver si el cliente lo nota.", "Informas de inmediato a tu responsable, propones una corrección y comunicas el ajuste al cliente con transparencia.", "Corriges el archivo sin avisar a nadie.", "Culpas al compañero que preparó los datos."], 1, "responsabilidad, transparencia y resolución rápida de problemas"],
-            ["Un cliente está molesto por un retraso que no causaste. ¿Qué haces?", ["Le explicas que no es tu responsabilidad.", "Escuchas su inconformidad, te disculpas por el impacto, explicas el plan de solución y das un seguimiento claro.", "Le dices que se comunique con otra área.", "Prometes una solución sin conocer los hechos."], 1, "empatía, ownership y una solución concreta"],
-            ["Debes entregar un proyecto, pero descubres que no tendrás todos los datos a tiempo. ¿Qué haces?", ["Entregas el trabajo incompleto sin advertirlo.", "Informas temprano, identificas qué información puedes obtener, propones alternativas y ajustas el plan con las partes involucradas.", "Inventas datos para completar el informe.", "Dejas de trabajar hasta que llegue toda la información."], 1, "anticipación, integridad y gestión proactiva de riesgos"],
-            ["Dos compañeros tienen una discusión que afecta el ambiente del equipo. ¿Qué haces?", ["Tomas partido por quien te cae mejor.", "Escuchas a ambos por separado, buscas hechos objetivos y facilitas una conversación centrada en soluciones.", "Evitas involucrarte aunque el trabajo se esté afectando.", "Comentas el conflicto con otros compañeros."], 1, "mediación constructiva, imparcialidad y foco en el objetivo común"],
-            ["Te asignan una tarea que no sabes cómo realizar. ¿Cuál es la mejor respuesta?", ["Dices que sí y luego improvisas sin apoyo.", "Aceptas el reto, identificas lo que necesitas aprender, pides orientación y estableces un plan con fechas.", "Rechazas la tarea porque no tienes experiencia.", "Esperas a que otro la haga por ti."], 1, "iniciativa, aprendizaje continuo y solicitud oportuna de apoyo"],
-            ["Un compañero toma crédito por una idea que aportaste. ¿Qué haces?", ["Discutes con él frente al equipo.", "Conversas en privado, explicas los hechos con calma y, si es necesario, aclaras tu contribución con evidencia ante el responsable.", "No haces nada para evitar problemas.", "Dejas de colaborar con esa persona."], 1, "asertividad profesional y resolución basada en hechos"],
-            ["Tu equipo debe cumplir una meta difícil en poco tiempo. ¿Qué haces?", ["Trabajas solo y no informas el avance.", "Divides el trabajo según fortalezas, acuerdas responsabilidades, haces seguimiento y comunicas obstáculos a tiempo.", "Culpas a otros si no se alcanza la meta.", "Reduces la calidad para terminar rápido sin avisar."], 1, "organización, colaboración y seguimiento orientado a resultados"],
-            ["Recibes una instrucción que consideras incorrecta. ¿Qué haces?", ["La ejecutas sin cuestionarla, aunque pueda causar un error grave.", "Verificas la información, explicas tu preocupación con datos y propones una alternativa antes de decidir.", "Desobedeces la instrucción sin consultar.", "Criticas la decisión detrás de la espalda del jefe."], 1, "pensamiento crítico, respeto por la autoridad y comunicación constructiva"],
-            ["Un compañero te pide información confidencial de la empresa. ¿Qué haces?", ["Se la compartes porque confías en él.", "Explicas que no puedes compartir información restringida y lo orientas hacia el proceso o autorización correcta.", "Le envías solo una parte para no incumplir del todo.", "Le dices que la busque en internet."], 1, "cumplimiento de políticas, discreción y manejo responsable de la información"],
-            ["Cometiste un error que afectó a un compañero. ¿Qué haces?", ["Ocultas el error esperando que no tenga consecuencias.", "Reconoces el error, te disculpas, corriges el impacto y explicas cómo evitarás que se repita.", "Culpas a una falla del sistema sin revisar tu parte.", "Esperas a que el compañero lo descubra."], 1, "accountability, humildad y mejora continua"],
-            ["Debes elegir entre dos soluciones: una rápida pero riesgosa y otra más lenta pero segura. ¿Qué haces?", ["Siempre eliges la opción rápida para quedar bien.", "Evalúas riesgos, impacto, recursos y plazos; consultas a los interesados cuando sea necesario y eliges la alternativa más equilibrada.", "Delegas la decisión sin analizar.", "Eliges la opción más popular sin evaluar consecuencias."], 1, "análisis, gestión de riesgos y decisiones informadas"],
-            ["Un cliente solicita algo que va contra la política de la empresa. ¿Qué haces?", ["Accedes para evitar perder al cliente.", "Explicas el límite con respeto, buscas una alternativa permitida y escalas el caso si corresponde.", "Le dices que la política es un problema de la empresa.", "Ignoras la solicitud sin responder."], 1, "integridad, orientación al cliente y manejo adecuado de excepciones"],
-            ["Tu desempeño ha bajado por motivos personales. ¿Qué haces?", ["Ocultas la situación hasta que afecte seriamente tu trabajo.", "Comunicas lo necesario a tu jefe, propones un plan para cumplir responsabilidades y solicitas apoyo razonable.", "Dejas de asistir sin avisar.", "Culpas a la empresa por tu situación personal."], 1, "comunicación responsable, profesionalismo y búsqueda de soluciones"],
-            ["Un compañero hace comentarios ofensivos en una reunión. ¿Qué haces?", ["Te ríes para no crear conflicto.", "Intervienes con respeto, estableces un límite claro y, si continúa o es grave, lo reportas por los canales adecuados.", "Lo confrontas con insultos.", "Esperas a que otra persona reaccione."], 1, "respeto, coraje civil y uso de los canales formales cuando corresponde"],
-            ["Te asignan una tarea fuera de tu horario habitual. ¿Cuál es la mejor respuesta?", ["Te niegas sin explicar ningún motivo.", "Evalúas la urgencia, comunicas tu disponibilidad y acuerdas una solución viable con tu responsable.", "Aceptas siempre, aunque descuides tus obligaciones principales.", "Delegas la tarea sin autorización."], 1, "flexibilidad con límites profesionales y comunicación clara"],
-            ["Un proyecto se retrasa por una decisión que tomaste. ¿Qué haces?", ["Culpas a factores externos y evitas hablar del tema.", "Informas de inmediato, asumes tu responsabilidad, presentas un plan de recuperación y aprendes de la causa.", "Esperas a que alguien más lo detecte.", "Cambias el alcance del proyecto sin consultar."], 1, "transparencia, responsabilidad y capacidad de corrección"],
-            ["Debes comunicar una mala noticia a un cliente. ¿Qué haces?", ["Evitas contactarlo hasta que él pregunte.", "Comunicas el hecho con claridad, empatía y oportunidad; explicas el impacto, las acciones correctivas y el siguiente paso.", "Le envías un mensaje ambiguo para no preocuparlo.", "Culpas a otra área frente al cliente."], 1, "comunicación honesta, empatía y manejo profesional de situaciones difíciles"],
-            ["Un compañero necesita ayuda, pero tú tienes una fecha límite propia. ¿Qué haces?", ["Lo ignoras completamente.", "Evalúas la urgencia, ofreces ayuda dentro de tus posibilidades y coordinas apoyo adicional si es necesario.", "Abandonas tu tarea para ayudarle sin avisar.", "Le dices que resuelva solo porque no es tu problema."], 1, "colaboración equilibrada y gestión de prioridades"],
-            ["Recibes información contradictoria de dos áreas sobre un mismo tema. ¿Qué haces?", ["Eliges la versión de la persona con mayor jerarquía sin verificar.", "Reúnes evidencia, consultas a las fuentes, aclaras las diferencias y documentas la decisión final.", "Eliges la información que más te conviene.", "Esperas a que otros resuelvan la discrepancia."], 1, "análisis objetivo, verificación y documentación"],
-            ["Un compañero propone una idea mejor que la tuya. ¿Qué haces?", ["La rechazas para defender tu propuesta.", "Reconoces el aporte, analizas cómo integrarla y apoyas la mejor solución para el objetivo.", "Criticas la idea sin fundamentos.", "Presentas la idea como tuya."], 1, "apertura, colaboración y orientación al resultado antes que al ego"],
-            ["Tu jefe te pide que hagas algo que consideras poco ético. ¿Qué haces?", ["Lo haces porque es tu jefe.", "Explicas tu preocupación, solicitas claridad sobre la instrucción y escalas el asunto por los canales éticos si persiste el riesgo.", "Lo haces en secreto.", "Renuncias sin intentar aclarar la situación."], 1, "integridad, consulta y uso de los mecanismos formales de reporte"],
-            ["Te encomiendan liderar un equipo por primera vez. ¿Qué haces?", ["Impones tus decisiones sin escuchar.", "Estableces objetivos, escuchas al equipo, asignas responsabilidades según fortalezas y haces seguimiento con retroalimentación.", "Delegas todo y no participas.", "Haces todo tú mismo para evitar errores."], 1, "liderazgo participativo, claridad y desarrollo del equipo"],
-            ["Un compañero constantemente interrumpe tu trabajo con solicitudes. ¿Qué haces?", ["Le respondes con molestia.", "Acuerdas horarios o canales para atender solicitudes, priorizas según urgencia y explicas tu disponibilidad con respeto.", "Dejas de responderle.", "Haces todas sus solicitudes aunque descuides tus responsabilidades."], 1, "límites profesionales, organización y comunicación asertiva"],
-            ["Debes presentar un resultado negativo a la dirección. ¿Qué haces?", ["Ocultas los datos negativos.", "Presentas los hechos con datos, explicas causas, propones alternativas y defines un plan de acción.", "Culpas al equipo antes de analizar.", "Presentas solo información positiva para evitar preguntas."], 1, "transparencia, análisis y orientación a soluciones"],
-            ["Un compañero comete un error que podría afectar la seguridad o integridad de un proceso. ¿Qué haces?", ["Lo corriges en silencio y no informas.", "Detienes o alertas el riesgo según su gravedad, informas al responsable y apoyas la corrección documentada.", "Esperas a ver si ocurre una consecuencia.", "Comentas el error en redes sociales internas."], 1, "prioridad por la seguridad, cumplimiento y reporte oportuno"],
-            ["Te piden trabajar con alguien con quien has tenido diferencias. ¿Qué haces?", ["Evitas comunicarte con esa persona.", "Dejas atrás el conflicto personal, estableces acuerdos de trabajo claros y te enfocas en los objetivos compartidos.", "Solicitas cambiar de equipo sin explicar el motivo.", "Hablas mal de esa persona con otros compañeros."], 1, "profesionalismo, colaboración y separación entre lo personal y lo laboral"],
-            ["Recibes una tarea urgente mientras estás en una reunión importante. ¿Qué haces?", ["Abandonas la reunión sin avisar.", "Evalúas la urgencia, informas a las personas involucradas y organizas una respuesta o delegación adecuada.", "Ignoras la solicitud hasta el día siguiente.", "Interrumpes la reunión repetidamente para atender mensajes."], 1, "priorización, comunicación y manejo equilibrado de compromisos"],
-            ["Un compañero está teniendo un bajo desempeño y parece desmotivado. ¿Qué haces?", ["Lo reportas de inmediato sin conversar con él.", "Ofreces apoyo, escuchas su situación, identificas obstáculos y, si es necesario, involucras al responsable con respeto.", "Criticas su desempeño frente al equipo.", "Haces su trabajo de forma permanente."], 1, "empatía, apoyo y escalado responsable"],
-            ["Te ofrecen un atajo para cumplir una meta que podría comprometer la calidad. ¿Qué haces?", ["Lo aceptas porque el resultado es lo único importante.", "Explicas el riesgo, propones una alternativa que preserve calidad y escalas la decisión si es necesario.", "Ocultas el impacto del atajo.", "Culminas el trabajo sin control de calidad."], 1, "calidad, ética y gestión de riesgos"],
-            ["Un cliente cambia los requisitos cuando el proyecto ya está avanzado. ¿Qué haces?", ["Te molestas y te niegas a hacer cambios.", "Documentas el cambio, evalúas impacto en tiempo, costo y alcance, y acuerdas las prioridades con las partes involucradas.", "Aceptas todo sin evaluar consecuencias.", "Continúas con el plan anterior sin informar."], 1, "gestión del cambio, comunicación y control de alcance"],
-            ["Un compañero te pide que cubras una falta de ética suya. ¿Qué haces?", ["Lo cubres por lealtad al equipo.", "Te niegas respetuosamente, le explicas por qué y reportas el asunto por el canal adecuado si hay riesgo.", "Amenazas con revelarlo públicamente.", "Ignoras la situación aunque sea grave."], 1, "integridad y cumplimiento de los procedimientos de reporte"],
-            ["Tu equipo logra un resultado importante. ¿Qué haces?", ["Te atribuyes el logro principal.", "Reconoces las contribuciones específicas de cada persona y compartes el resultado con transparencia.", "No mencionas el logro para evitar celos.", "Atribuyes todo al jefe."], 1, "reconocimiento, colaboración y liderazgo generoso"],
-            ["Debes tomar una decisión sin tener toda la información. ¿Qué haces?", ["Decides al azar para no retrasar el trabajo.", "Identificas lo esencial, consultas fuentes confiables, defines supuestos, estableces un plazo y comunicas los riesgos.", "No decides hasta tener el 100% de la información, aunque haya urgencia.", "Delegas la decisión sin contexto."], 1, "juicio bajo incertidumbre y comunicación de supuestos"],
-            ["Un compañero hace bromas repetidas que te incomodan. ¿Qué haces?", ["Aguantas en silencio para evitar problemas.", "Le comunicas claramente que el comportamiento te afecta y, si continúa, acudes a los canales formales.", "Respondes con bromas ofensivas.", "Comentas el caso con todo el equipo."], 1, "respeto, comunicación asertiva y uso de canales de denuncia"],
-            ["Recibes una retroalimentación negativa que consideras injusta. ¿Qué haces?", ["Discutes con enojo en el momento.", "Escuchas, pides ejemplos y contexto, presentas información adicional con calma y acuerdas acciones de mejora.", "Ignoras la retroalimentación.", "Hablas mal del evaluador con otros compañeros."], 1, "madurez emocional, escucha y diálogo profesional"],
-            ["Debes entregar un trabajo de alta calidad, pero el tiempo es insuficiente. ¿Qué haces?", ["Entregas algo incompleto sin avisar.", "Priorizas los entregables críticos, comunicas el alcance posible, solicitas apoyo si aplica y documentas lo pendiente.", "Trabajas sin descanso y ocultas los riesgos.", "Reduces la calidad sin informar a nadie."], 1, "planificación, transparencia y gestión de expectativas"],
-            ["Un compañero propone una solución que podría beneficiar a un proveedor cercano a él. ¿Qué haces?", ["La apruebas sin revisar para no generar conflicto.", "Señalas el posible conflicto de interés, solicitas transparencia y propones una evaluación objetiva del proveedor.", "Acusas al compañero sin evidencia.", "Ignoras el posible conflicto."], 1, "ética, objetividad y prevención de conflictos de interés"],
-            ["Te asignan una meta ambiciosa que parece difícil. ¿Qué haces?", ["Dices que es imposible y no intentas.", "La divides en hitos, identificas recursos, buscas apoyo, mides avances y ajustas el plan cuando sea necesario.", "Aceptas la meta sin planificar.", "Esperas a que la meta cambie."], 1, "orientación a resultados, planificación y resiliencia"],
-            ["Un compañero comete un error menor, pero tú puedes corregirlo rápidamente. ¿Qué haces?", ["Lo corriges sin humillarlo y luego le das retroalimentación constructiva si corresponde.", "Lo señalas frente a todos para que aprenda.", "Lo ignoras y dejas que afecte el trabajo.", "Reportas el error como si fuera grave sin evaluar."], 0, "apoyo práctico, respeto y retroalimentación proporcionada al impacto"],
-            ["Te piden trabajar en un proyecto que no entiendes completamente. ¿Qué haces?", ["Comienzas sin hacer preguntas.", "Pides claridad sobre objetivo, alcance, prioridades y criterios de éxito antes de avanzar.", "Rechazas el proyecto por falta de información.", "Copias el trabajo de otro proyecto sin adaptarlo."], 1, "claridad, proactividad y prevención de retrabajos"],
-            ["Un compañero te pide un favor que va contra las normas. ¿Qué haces?", ["Lo haces para mantener una buena relación.", "Te niegas con respeto, explicas la norma y ofreces una alternativa permitida.", "Lo haces, pero le pides que no lo mencione.", "Lo reportas sin explicarle nada."], 1, "integridad, respeto y cumplimiento normativo"],
-            ["Tu equipo enfrenta una crisis inesperada. ¿Qué haces?", ["Entras en pánico y esperas instrucciones.", "Mantienes la calma, identificas el impacto, comunicas información verificada, asignas acciones y haces seguimiento.", "Ocultas el problema hasta que se agrave.", "Culpas a otros por la crisis."], 1, "liderazgo bajo presión, comunicación y gestión de crisis"],
-            ["Un compañero propone una idea que ya fue descartada antes. ¿Qué haces?", ["Le dices que la idea ya falló y no merece atención.", "Explicas el contexto previo con respeto y analizas si las condiciones actuales permiten una nueva oportunidad.", "Te burlas de la propuesta.", "Ignoras la idea sin responder."], 1, "respeto, contexto y pensamiento abierto"],
-            ["Debes dar retroalimentación a alguien con quien no tienes buena relación. ¿Qué haces?", ["Evitas la conversación.", "Preparas ejemplos concretos, te enfocas en conductas y resultados, y mantienes un tono respetuoso y orientado a la mejora.", "Hablas de la persona con otros compañeros.", "Envías un mensaje duro sin contexto."], 1, "retroalimentación objetiva, respetuosa y útil"],
-            ["Detectas una mejora que beneficia a toda la empresa, pero no es tu responsabilidad directa. ¿Qué haces?", ["No haces nada porque no te corresponde.", "Documentas la propuesta, identificas el beneficio y la presentas al responsable correspondiente con una recomendación clara.", "Implementas el cambio sin autorización.", "Comentas la idea informalmente sin seguimiento."], 1, "iniciativa, pensamiento estratégico y respeto por los procesos"],
-            ["Un compañero te pide ayuda repetidamente sin intentar resolver por sí mismo. ¿Qué haces?", ["Le haces todo el trabajo para evitar conflicto.", "Estableces límites, le enseñas cómo abordar el problema y le propones recursos o un plan de aprendizaje.", "Le dices que no vuelva a preguntarte.", "Reportas su comportamiento sin conversar con él."], 1, "desarrollo de otros, límites sanos y autonomía responsable"],
-            ["Al finalizar un proyecto con resultados mixtos, ¿qué haces?", ["Solo destacas lo positivo y evitas analizar errores.", "Reconoces logros, analizas causas de las desviaciones, documentas aprendizajes y propones mejoras para el próximo proyecto.", "Culpas a un compañero por los resultados negativos.", "No realizas ninguna evaluación."], 1, "aprendizaje organizacional, análisis objetivo y mejora continua"]
+        const questions = [
+            {
+                mod: "Juicio Situacional — Pregunta 2",
+                text: "Usted trabaja en una Procuraduría Provincial y es el mejor amigo de un candidato a la Alcaldía de un municipio bajo su jurisdicción. El candidato lo invita a una reunión privada en su casa para que le dé 'algunos consejos' sobre cómo organizar su futuro plan de desarrollo para que no tenga problemas disciplinarios más adelante. La reunión es estrictamente privada y sin prensa. Usted decide:",
+                options: [
+                    "A) Asistir, pues como experto en derecho disciplinario su consejo puede evitar que el futuro alcalde cometa errores, beneficiando el interés general.",
+                    "B) Ir a la reunión, pero pedirle a un colega que lo acompañe para que sirva de testigo de que solo se habló de temas académicos y preventivos.",
+                    "C) Declinar la invitación y explicarle a su amigo que, debido a su cargo de control y vigilancia sobre ese mismo municipio, cualquier asesoría o cercanía con su campaña compromete su imparcialidad y podría tipificar una prohibición legal."
+                ],
+                correct: 2,
+                hint: "Principios de imparcialidad, transparencia y prohibición de asesorías a sujetos vigilados.",
+                explanation: "El servidor de la PGN no solo debe ser imparcial, sino parecerlo. Las asesorías privadas a sujetos de vigilancia están estrictamente prohibidas por generar conflicto de intereses y comprometer la objetividad institucional."
+            },
+            {
+                mod: "Constitución — Derecho de Petición y Tutela",
+                text: "Un ciudadano interpone un escrito ante la Alcaldía solicitando copia simple de las actas de contratación. Transcurridos 12 días hábiles sin respuesta, interpone tutela. De acuerdo con la Ley 1755 de 2015:",
+                options: [
+                    "A) La tutela es improcedente porque el plazo legal es de 30 días hábiles para cualquier escrito.",
+                    "B) La tutela es procedente, toda vez que vencido el término especial de 10 días hábiles para documentos e información, la omisión vulnera el derecho fundamental.",
+                    "C) El ciudadano debió tramitar obligatoriamente una queja disciplinaria previa."
+                ],
+                correct: 1,
+                hint: "Términos legales de respuesta para peticiones de documentos e información.",
+                explanation: "Las solicitudes de copias y documentos tienen un plazo de 10 días hábiles. Al pasar 12 días sin respuesta, se vulnera el derecho de petición, procediendo la tutela."
+            },
+            {
+                mod: "Estructura del Estado — CAR",
+                text: "Al interior de la estructura general del Estado colombiano, las Corporaciones Autónomas Regionales (CAR) se clasifican formalmente en la categoría de:",
+                options: [
+                    "A) Órganos Autónomos e Independientes con régimen de creación legal y autonomía administrativa y patrimonial.",
+                    "B) Unidades pertenecientes a la Rama Ejecutiva del Sector Descentralizado Territorial.",
+                    "C) Integrantes de la estructura de la Rama Judicial con funciones ambientales."
+                ],
+                correct: 0,
+                hint: "Revise el listado de órganos autónomos e independientes de la Constitución.",
+                explanation: "Las CAR forman parte de los Órganos Autónomos e Independientes dotados de personería jurídica, autonomía administrativa y patrimonio propio."
+            },
+            {
+                mod: "Organización Electoral — CNE",
+                text: "Respecto al Consejo Nacional Electoral (CNE), señale la afirmación jurídicamente CORRECTA sobre su integración y funciones:",
+                options: [
+                    "A) Sus 9 miembros son elegidos directamente por el Presidente de la República por 8 años.",
+                    "B) Es una dependencia adscrita administrativamente a la Registraduría Nacional del Estado Civil.",
+                    "C) Sus 9 miembros son elegidos por el Congreso de la República en corporación conjunta y se encargan de la suprema inspección y vigilancia de la organización electoral."
+                ],
+                correct: 2,
+                hint: "Consulte los artículos 120 y 263 de la Constitución Política.",
+                explanation: "El CNE se integra por 9 miembros elegidos por el Congreso en corporación conjunta para un período de 4 años, encargados de la suprema inspección y vigilancia electoral."
+            },
+            {
+                mod: "Procuraduría General — Elección",
+                text: "El Procurador General de la Nación es elegido conforme a las siguientes reglas del ordenamiento constitucional:",
+                options: [
+                    "A) Por el Senado de la República para un período de 4 años, a partir de una terna integrada por el Presidente de la República, la Corte Suprema de Justicia y el Consejo de Estado.",
+                    "B) Por voto directo de los ciudadanos en comicios presidenciales para período de 4 años.",
+                    "C) Por la Cámara de Representantes de terna del Defensor del Pueblo."
+                ],
+                correct: 0,
+                hint: "Revise el artículo 275 de la Constitución Política.",
+                explanation: "El Procurador es elegido por el Senado de la República para un período de 4 años de terna conformada por el Presidente, la Corte Suprema y el Consejo de Estado."
+            },
+            {
+                mod: "Función Administrativa — Desconcentración",
+                text: "En materia de administración de la función pública, la desconcentración administrativa consiste en:",
+                options: [
+                    "A) La creación de una nueva persona jurídica pública con autonomía propia.",
+                    "B) La radicación de competencias en dependencias jerárquicamente subordinadas del mismo organismo, sin personería jurídica propia.",
+                    "C) La transferencia temporal de competencias entre entidades de distinto orden gubernamental."
+                ],
+                correct: 1,
+                hint: "Diferencia clave con la descentralización: no crea personería jurídica.",
+                explanation: "Según la Ley 489 de 1998, la desconcentración traslada funciones dentro del mismo organismo público a dependencias o cargos subordinados sin crear una persona jurídica nueva."
+            },
+            {
+                mod: "Régimen de Inhabilidades — Nepotismo",
+                text: "El principio de prohibición del nepotismo (Art. 126 CP) impide a los servidores públicos con capacidad nominadora efectuar designaciones en personas con parentesco hasta:",
+                options: [
+                    "A) Segundo grado de consanguinidad y primer grado de afinidad únicamente.",
+                    "B) Solamente cónyuge o compañera en matrimonio católico.",
+                    "C) Cuarto grado de consanguinidad, segundo de afinidad, primero civil o cónyuge/compañero permanente."
+                ],
+                correct: 2,
+                hint: "Consulte el Acto Legislativo 02 de 2015.",
+                explanation: "El Art. 126 de la CP prohíbe el nombramiento o contratación de parientes dentro del cuarto grado de consanguinidad, segundo de afinidad, primero civil o cónyuge/compañero permanente."
+            },
+            {
+                mod: "Empleo Público — Posesión y Presupuesto",
+                text: "Un funcionario que pretende posesionarse en un cargo para el que concursó encuentra que el empleo existe en el manual, pero la entidad carece de apropiación presupuestal vigente. Jurídicamente:",
+                options: [
+                    "A) Debe posesionarse bajo promesa de adición presupuestal posterior.",
+                    "B) El servidor no puede tomar posesión válida del cargo (Art. 122 CP), por exigirse planta y apropiación presupuestal en firme.",
+                    "C) La posesión es válida si el Alcalde lo autoriza verbalmente."
+                ],
+                correct: 1,
+                hint: "Revise el artículo 122 de la Constitución Política.",
+                explanation: "El Art. 122 de la CP dictamina que para proveer empleos remunerados es requisito constitucional indispensable que estén previstos en la planta de personal y cuenten con apropiación en el presupuesto vigente."
+            },
+            {
+                mod: "Responsabilidad de Servidores",
+                text: "Un servidor público destruye culposamente un equipo del inventario fiscal y falsifica un acta formal de baja. Esta conducta unificada desencadena concurrentemente:",
+                options: [
+                    "A) Únicamente responsabilidad penal.",
+                    "B) Solamente responsabilidad política ante el Concejo.",
+                    "C) Responsabilidad disciplinaria, penal y fiscal, por ser autónomas e independientes entre sí."
+                ],
+                correct: 2,
+                hint: "Revise el artículo 6 de la CP sobre autonomía de los regímenes de responsabilidad.",
+                explanation: "En virtud del Art. 6 de la CP, un mismo hecho genera responsabilidades autónomas e independientes en las ramas penal, disciplinaria y fiscal."
+            },
+            {
+                mod: "Proceso Disciplinario — Pliego de Cargos",
+                text: "Dentro de las reglas probatorias y procesales del Código General Disciplinario, ¿cuál actuación procede contra el Auto de Formulación del Pliego de Cargos?",
+                options: [
+                    "A) No procede ningún recurso de ley.",
+                    "B) Recurso de apelación inmediato en efecto suspensivo.",
+                    "C) Recurso de reposición y en subsidio apelación."
+                ],
+                correct: 0,
+                hint: "Consulte el trámite procesal de la Ley 1952 de 2019 frente al auto de cargos.",
+                explanation: "En consonancia con el Código General Disciplinario (Ley 1952 de 2019), contra el auto de formulación de pliego de cargos no procede ningún recurso."
+            },
+            {
+                mod: "Contratación Estatal — Garantías y Anticipos",
+                text: "En la contratación estatutaria colombiana, señale la aseveración CORRECTA en materia de garantías y pagos:",
+                options: [
+                    "A) Anticipo y pago anticipado son idénticos y transfieren el dinero a la propiedad del contratista de forma inmediata.",
+                    "B) Ni el anticipo ni el pago anticipado podrán exceder del 50% del valor total del contrato celebrado.",
+                    "C) Las garantías son obligatorias sin excepción en contratos de mínima cuantía."
+                ],
+                correct: 1,
+                hint: "Revise los límites legales del anticipo y pago anticipado en contratos estatales.",
+                explanation: "Ni el anticipo ni el pago anticipado pueden superar el tope del 50% del monto total del contrato."
+            },
+            {
+                mod: "Contratación Estatal — Interventoría",
+                text: "Al comparar legalmente la Supervisión y la Interventoría en contratos estatales, resulta de obligatorio cumplimiento la siguiente regla:",
+                options: [
+                    "A) El interventor debe ser por ley un funcionario de planta de la entidad.",
+                    "B) La interventoría tiene límite de adición en valor de hasta el 10% sin excepciones.",
+                    "C) Si el contrato principal es prorrogado en su plazo de ejecución, el contrato de interventoría correspondiente debe ser prorrogado obligatoriamente."
+                ],
+                correct: 2,
+                hint: "Consulte el Estatuto Anticorrupción (Ley 1474 de 2011, Art. 83).",
+                explanation: "Según la Ley 1474 de 2011, la interventoría sigue la suerte del contrato principal; si este se prorroga, la interventoría debe prorrogarse obligatoriamente."
+            },
+            {
+                mod: "Banco PGN P1 — Tutela e Indígenas",
+                text: "Un personero observa que una comunidad indígena fue desalojada sin trámite previo, vulnerando su debido proceso y territorio. La comunidad carece de recursos. El mecanismo idóneo y sumario es:",
+                options: [
+                    "A) Acción Constitucional de Tutela.",
+                    "B) Acción de Cumplimiento.",
+                    "C) Acción Popular.",
+                    "D) Recurso de Reposición."
+                ],
+                correct: 0,
+                hint: "Art. 86 CP: mecanismo sumario e inmediato ante la vulneración de derechos fundamentales.",
+                explanation: "El Art. 86 CP establece la Acción de Tutela como el mecanismo sumario e inmediato ante la vulneración de derechos fundamentales."
+            },
+            {
+                mod: "Banco PGN P2 — Participación Ciudadana",
+                text: "Ciudadanos organizan una asamblea pública formal con las autoridades distritales y concejales para discutir directamente asuntos de interés local sin votación en urnas. Corresponde a:",
+                options: [
+                    "A) Plebiscito.",
+                    "B) Cabildo Abierto.",
+                    "C) Consulta Popular.",
+                    "D) Referendo."
+                ],
+                correct: 1,
+                hint: "Art. 103 CP y Ley 1757 de 2015: mecanismo de participación sin votación en urnas.",
+                explanation: "El Cabildo Abierto (Art. 103 CP y Ley 1757/15) es la reunión pública de concejos o JAL para discutir asuntos comunitarios."
+            },
+            {
+                mod: "Banco PGN P3 — Estructura del Estado",
+                text: "La Comisión Nacional del Servicio Civil (CNSC) se clasifica dentro de la estructura estatal como:",
+                options: [
+                    "A) Establecimiento Público adscrito a MinTrabajo.",
+                    "B) Unidad Administrativa Especial.",
+                    "C) Organismo de Control.",
+                    "D) Órgano Autónomo e Independiente de creación constitucional."
+                ],
+                correct: 3,
+                hint: "Art. 130 CP: administración de la carrera administrativa.",
+                explanation: "El Art. 130 CP define a la CNSC como un órgano autónomo e independiente de rango constitucional que administra la carrera."
+            },
+            {
+                mod: "Banco PGN P4 — SIVJRNR",
+                text: "En el marco del Sistema de Verdad, Justicia y Reparación, la entidad encargada de administrar la justicia transicional es:",
+                options: [
+                    "A) Comisión de la Verdad.",
+                    "B) Jurisdicción Especial para la Paz (JEP).",
+                    "C) UBPD.",
+                    "D) Corte Suprema."
+                ],
+                correct: 1,
+                hint: "Acto Legislativo 01 de 2017: componente judicial del sistema transicional.",
+                explanation: "El Acto Legislativo 01 de 2017 creó la JEP como el componente judicial autónomo del sistema transicional."
+            },
+            {
+                mod: "Banco PGN P5 — Rama Ejecutiva",
+                text: "Un organismo con personería jurídica, autonomía administrativa y patrimonio propio destinado a prestar servicios técnicos pertenece a:",
+                options: [
+                    "A) Departamento Administrativo.",
+                    "B) Unidad Administrativa sin personería.",
+                    "C) Establecimiento Público.",
+                    "D) Consejo Superior."
+                ],
+                correct: 2,
+                hint: "Ley 489 de 1998, Art. 70: entidades descentralizadas por servicios.",
+                explanation: "Según la Ley 489 de 1998 (Art. 70), los Establecimientos Públicos son descentralizados por servicios con personería y patrimonio."
+            },
+            {
+                mod: "Banco PGN P6 — Rama Judicial",
+                text: "Supremo tribunal de la Jurisdicción de lo Contencioso Administrativo que conoce de nulidad y restablecimiento del derecho contra actos nacionales:",
+                options: [
+                    "A) Corte Suprema de Justicia.",
+                    "B) Consejo de Estado.",
+                    "C) Corte Constitucional.",
+                    "D) Comisión Disciplinaria."
+                ],
+                correct: 1,
+                hint: "Art. 237 CP.",
+                explanation: "El Art. 237 CP señala al Consejo de Estado como el tribunal supremo de lo contencioso administrativo."
+            },
+            {
+                mod: "Banco PGN P7 — Órganos de Control PGN",
+                text: "Sustento constitucional que faculta preferentemente a la Procuraduría para investigar a un Gobernador:",
+                options: [
+                    "A) Potestad delegada del Consejo de Estado.",
+                    "B) Cláusula general de competencia disciplinaria sobre la conducta oficial (Arts. 118 y 277 CP).",
+                    "C) Control fiscal concomitante.",
+                    "D) Delegación de Fiscalía."
+                ],
+                correct: 1,
+                hint: "Revise los Arts. 118 y 277 de la Constitución Política.",
+                explanation: "Según el PDF, los Arts. 118 y 277 de la Carta Política otorgan a la PGN la vigilancia de la conducta oficial y el control disciplinario."
+            },
+            {
+                mod: "Banco PGN P8 — Control Fiscal",
+                text: "Facultad expedita de la Contraloría para intervenir mientras un proyecto vial con sobrecostos está en ejecución sin coadministrar:",
+                options: [
+                    "A) Control Posterior y Selectivo.",
+                    "B) Acción de Repetición.",
+                    "C) Juicio de Cuentas.",
+                    "D) Control Preventivo y Concomitante."
+                ],
+                correct: 3,
+                hint: "Acto Legislativo 04 de 2019: control fiscal en tiempo real.",
+                explanation: "El Acto Legislativo 04 de 2019 introdujo el control fiscal preventivo y concomitante en tiempo real."
+            },
+            {
+                mod: "Banco PGN P9 — Organización Electoral",
+                text: "Impugnación para revocar la inscripción de candidato a Gobernador por inhabilidad sobreviniente. Compete a:",
+                options: [
+                    "A) Registraduría Nacional.",
+                    "B) Tribunal Administrativo.",
+                    "C) Consejo de Estado.",
+                    "D) Consejo Nacional Electoral (CNE)."
+                ],
+                correct: 3,
+                hint: "Art. 265 (num. 7) CP.",
+                explanation: "El Art. 265 (num. 7) CP confiere al CNE la función de revocar inscripciones de candidatos inhabilitados."
+            },
+            {
+                mod: "Banco PGN P10 — Principios Administrativos",
+                text: "Un Alcalde transfiere la facultad contractual a un Secretario y meses después decide reasumirla. Corresponde a:",
+                options: [
+                    "A) Delegación y reasunción (revocabilidad de la delegación).",
+                    "B) Desconcentración e irrevocabilidad.",
+                    "C) Descentralización.",
+                    "D) Avocación."
+                ],
+                correct: 0,
+                hint: "Ley 489 de 1998: la delegación es esencialmente revocable.",
+                explanation: "La Ley 489 de 1998 establece que la delegación es esencialmente revocable y reasumible en cualquier momento."
+            },
+            {
+                mod: "Banco PGN P11 — Empleo Público",
+                text: "Regla general constitucional para proveer vacante definitiva de carrera administrativa:",
+                options: [
+                    "A) Concurso público de méritos administrado o vigilado por la CNSC.",
+                    "B) Vinculación provisional discrecional.",
+                    "C) Libre nombramiento.",
+                    "D) Contrato de servicios."
+                ],
+                correct: 0,
+                hint: "Art. 125 CP.",
+                explanation: "El Art. 125 CP exige el concurso público de méritos como regla general de ingreso y ascenso a la carrera."
+            },
+            {
+                mod: "Banco PGN P12 — Servidores Públicos",
+                text: "Profesional en sistemas contratado por honorarios mediante Contrato de Prestación de Servicios (Ley 80/93):",
+                options: [
+                    "A) Empleado Público.",
+                    "B) Trabajador Oficial.",
+                    "C) NO es servidor público; es un particular contratista de apoyo a la gestión.",
+                    "D) Empleado provisional."
+                ],
+                correct: 2,
+                hint: "Ley 80 de 1993: los contratistas no hacen parte de la planta de personal.",
+                explanation: "Los contratistas de prestación de servicios se rigen por la Ley 80/93 y no forman parte de la planta de personal estatal."
+            },
+            {
+                mod: "Banco PGN P13 — Inhabilidades / Nepotismo",
+                text: "Director pretende nombrar a su hermana gemela en un cargo profesional de su entidad:",
+                options: [
+                    "A) Es procedente por perfil.",
+                    "B) Requiere permiso del Concejo.",
+                    "C) Permitido si es otra dependencia.",
+                    "D) Está prohibido por la causal constitucional de nepotismo (Art. 126 CP)."
+                ],
+                correct: 3,
+                hint: "Art. 126 CP: parentesco con quien tiene capacidad nominadora.",
+                explanation: "El Art. 126 CP prohíbe el nombramiento de parientes hasta cuarto grado de consanguinidad (hermanos)."
+            },
+            {
+                mod: "Banco PGN P14 — Responsabilidad Disciplinaria",
+                text: "Inspector omite tramitar querellas reiteradamente (falta grave por omisión). Sanción aplicable:",
+                options: [
+                    "A) Multa convertible.",
+                    "B) Suspensión en el ejercicio del cargo e inhabilidad especial.",
+                    "C) Destitución por 20 años.",
+                    "D) Amonestación escrita."
+                ],
+                correct: 1,
+                hint: "Código General Disciplinario: sanciones según la clasificación de la falta.",
+                explanation: "El Código General Disciplinario asigna la suspensión e inhabilidad especial a las faltas graves."
+            },
+            {
+                mod: "Banco PGN P15 — Responsabilidad Patrimonial",
+                text: "Estado es condenado por accidente causado por conductor oficial ebrio. Obligación de la entidad:",
+                options: [
+                    "A) Nulidad y Restablecimiento.",
+                    "B) Acción Popular.",
+                    "C) Acción de Repetición (Art. 90 CP y Ley 678/01).",
+                    "D) Acción de Cumplimiento."
+                ],
+                correct: 2,
+                hint: "Art. 90 CP y Ley 678 de 2001: condena por dolo o culpa grave del funcionario.",
+                explanation: "El Art. 90 CP obliga al Estado a repetir contra el funcionario que causó la condena con dolo o culpa grave."
+            },
+            {
+                mod: "Banco PGN P17 — Pruebas Disciplinarias",
+                text: "Investigador niega prueba impertinente solicitada por el implicado mediante:",
+                options: [
+                    "A) Comunicación informal.",
+                    "B) Auto motivado, contra el cual procede recurso de apelación.",
+                    "C) Auto de simple trámite."
+                ],
+                correct: 1,
+                hint: "El rechazo de pruebas afecta el derecho de defensa.",
+                explanation: "Según el PDF, el rechazo de pruebas afecta la defensa y se decide mediante auto interlocutorio apelable (Art. 134 CGD)."
+            },
+            {
+                mod: "Banco PGN P18 — Causales de Exclusión",
+                text: "Servidor comete falta gravísima bajo insuperable coacción de grupo armado. Consecuencia:",
+                options: [
+                    "A) Reducción de sanción a la mitad.",
+                    "B) Sanción obligatoria.",
+                    "C) Declaratoria de inexistencia de responsabilidad por causal de exclusión."
+                ],
+                correct: 2,
+                hint: "Causales que excluyen la responsabilidad disciplinaria (Art. 31 CGD según el PDF).",
+                explanation: "Según el PDF, el Art. 31 CGD contempla la insuperable coacción ajena como causal que excluye la responsabilidad."
+            },
+            {
+                mod: "Banco PGN P19 — Notificación del Pliego de Cargos",
+                text: "Domicilio de exservidor desconocido tras agotarse búsqueda:",
+                options: [
+                    "A) Notificación por aviso enviada a última dirección y fijada en sede pública.",
+                    "B) Notificación por estado en web por 5 días.",
+                    "C) Notificación por edicto en diario."
+                ],
+                correct: 0,
+                hint: "Aplica cuando es imposible la notificación personal (CPACA y CGD).",
+                explanation: "Ante la imposibilidad de notificación personal, aplica notificación por aviso conforme a CPACA y CGD."
+            },
+            {
+                mod: "Banco PGN P20 — Ley 2094 de 2021",
+                text: "Gran diferencia estructural del nuevo sistema disciplinario:",
+                options: [
+                    "A) Separación entre el funcionario que instruye (cargos) y el funcionario que juzga.",
+                    "B) Mismo funcionario investiga y falla.",
+                    "C) Conciliación obligatoria."
+                ],
+                correct: 0,
+                hint: "Ley 2094 de 2021: garantía de imparcialidad.",
+                explanation: "La Ley 2094 de 2021 instituyó la separación de instrucción y juzgamiento para garantizar imparcialidad."
+            },
+            {
+                mod: "Banco PGN P21 — Derecho Administrativo",
+                text: "¿Qué estudia el Derecho Administrativo?",
+                options: [
+                    "A) Las relaciones entre particulares en contratos civiles.",
+                    "B) La organización y actividad de la Administración pública.",
+                    "C) Únicamente los delitos penales.",
+                    "D) La sucesión de bienes."
+                ],
+                correct: 1,
+                hint: "Estructura, actos y procedimientos de la administración estatal.",
+                explanation: "El Derecho Administrativo regula la estructura, actos y procedimientos de la administración estatal."
+            },
+            {
+                mod: "Banco PGN P22 — Acto Administrativo",
+                text: "¿Qué es un acto administrativo?",
+                options: [
+                    "A) Un contrato entre dos particulares.",
+                    "B) Una sentencia penal.",
+                    "C) Una decisión formal de una entidad pública que produce efectos jurídicos.",
+                    "D) Un documento interno sin efectos."
+                ],
+                correct: 2,
+                hint: "Manifestación unilateral de la administración.",
+                explanation: "El acto administrativo es la manifestación unilateral de la administración que crea, modifica o extingue situaciones jurídicas."
+            },
+            {
+                mod: "Banco PGN P23 — Debido Proceso Administrativo",
+                text: "Principio que garantiza la defensa y contradicción en procedimientos administrativos:",
+                options: [
+                    "A) Celeridad.",
+                    "B) Economía.",
+                    "C) Publicidad.",
+                    "D) Debido proceso."
+                ],
+                correct: 3,
+                hint: "Art. 29 CP y Art. 3 CPACA.",
+                explanation: "El debido proceso (Art. 29 CP y Art. 3 CPACA) impone el respeto a la contradicción y legítima defensa."
+            },
+            {
+                mod: "Banco PGN P24 — Procedimiento Sancionatorio",
+                text: "Objeto del procedimiento administrativo sancionatorio:",
+                options: [
+                    "A) Imponer una pena de prisión.",
+                    "B) Resolver un divorcio.",
+                    "C) Investigar una conducta e imponer una sanción administrativa (multa, suspensión, etc.).",
+                    "D) Otorgar licencias."
+                ],
+                correct: 2,
+                hint: "Ley 1437 de 2011 (CPACA): faltas administrativas no disciplinarias.",
+                explanation: "Regulado por la Ley 1437 de 2011 para investigar y sancionar faltas administrativas no disciplinarias."
+            },
+            {
+                mod: "Banco PGN P25 — Recursos Administrativos",
+                text: "Recurso que se presenta ante la misma autoridad que tomó la decisión:",
+                options: [
+                    "A) Recurso de casación.",
+                    "B) Recurso de reposición.",
+                    "C) Recurso de revisión.",
+                    "D) Recurso de queja."
+                ],
+                correct: 1,
+                hint: "Se interpone ante el mismo funcionario que expidió el acto.",
+                explanation: "El recurso de reposición procede ante el mismo funcionario para que aclare, modifique o revoque el acto."
+            },
+            {
+                mod: "Banco PGN P26 — Contencioso Administrativo",
+                text: "¿Qué busca el proceso contencioso administrativo?",
+                options: [
+                    "A) Controlar judicialmente la legalidad de los actos y omisiones de la Administración.",
+                    "B) Sancionar disciplinariamente.",
+                    "C) Resolver litigios comerciales.",
+                    "D) Imponer penas de cárcel."
+                ],
+                correct: 0,
+                hint: "Jurisdicción especializada en decisiones estatales.",
+                explanation: "Es la jurisdicción especializada para juzgar la legalidad de las decisiones estatales."
+            },
+            {
+                mod: "Banco PGN P27 — Estatuto Anticorrupción",
+                text: "Ley principal anticorrupción vigente en Colombia:",
+                options: [
+                    "A) Ley 100 de 1993.",
+                    "B) Ley 2195 de 2022.",
+                    "C) Ley 30 de 1992.",
+                    "D) Ley 115 de 1994."
+                ],
+                correct: 1,
+                hint: "Ley que complementa la Ley 1474 de 2011.",
+                explanation: "Según el PDF, la Ley 2195 de 2022 es el Estatuto Anticorrupción actual que complementa la Ley 1474 de 2011."
+            },
+            {
+                mod: "Banco PGN P28 — Observatorio Anticorrupción",
+                text: "Entidad que administra el Observatorio Anticorrupción:",
+                options: [
+                    "A) Contraloría General.",
+                    "B) Fiscalía General.",
+                    "C) Secretaría de Transparencia de la Presidencia.",
+                    "D) Banco de la República."
+                ],
+                correct: 2,
+                hint: "Ley 2195: entidad adscrita a la Presidencia de la República.",
+                explanation: "Según el PDF, la Ley 2195 adscribe la administración del Observatorio a la Secretaría de Transparencia."
+            },
+            {
+                mod: "Banco PGN P29 — Control Fiscal",
+                text: "Máximo órgano de control fiscal del Estado colombiano:",
+                options: [
+                    "A) Procuraduría General.",
+                    "B) Fiscalía General.",
+                    "C) Contraloría General de la República.",
+                    "D) Congreso."
+                ],
+                correct: 2,
+                hint: "Art. 267 CP.",
+                explanation: "El Art. 267 CP establece a la CGR como el máximo órgano de control fiscal sobre los recursos públicos."
+            },
+            {
+                mod: "Banco PGN P30 — Peculado",
+                text: "Definición legal de Peculado por Apropiación:",
+                options: [
+                    "A) Uso indebido o apropiación de recursos públicos en beneficio propio o de terceros.",
+                    "B) Presentación de queja disciplinaria.",
+                    "C) Solicitud de licencias.",
+                    "D) Ejercicio de veedurías."
+                ],
+                correct: 0,
+                hint: "Delito contra la administración pública.",
+                explanation: "Delito contra la administración pública tipificado en el Código Penal y falta disciplinaria gravísima."
+            },
+            {
+                mod: "Banco PGN P31 — Personas Jurídicas",
+                text: "Sanción máxima a personas jurídicas por actos de corrupción bajo la Ley 2195 de 2022:",
+                options: [
+                    "A) Disolución obligatoria inmediata.",
+                    "B) Cierre temporal por 3 días.",
+                    "C) Exención de responsabilidad.",
+                    "D) Multas de hasta 200.000 SMMLV e inhabilidad para recibir incentivos por 10 años."
+                ],
+                correct: 3,
+                hint: "Ley 2195 de 2022: sanciones administrativas a empresas involucradas en corrupción.",
+                explanation: "Según el PDF, la Ley 2195 sanciona administrativamente a las empresas involucradas en corrupción. (Las cifras exactas conviene verificarlas contra el texto de la ley.)"
+            },
+            {
+                mod: "Banco PGN P32 — Caso Delegación DIAN",
+                text: "En una Dirección Seccional de la DIAN se preparan dos delegaciones: (1) El Director Seccional delegaría en el Jefe de Recaudo la firma de facilidades de pago; (2) La firma de requerimientos ordinarios se delegaría de la Jefa de Fiscalización en un Gestor II. ¿Qué exige cada una?",
+                options: [
+                    "A) La 1ª la hace el director seccional sin autorización; la 2ª la hace la jefa de división.",
+                    "B) La 1ª necesita autorización del Director General; la 2ª requiere visto bueno.",
+                    "C) Ninguna se puede hacer.",
+                    "D) La 1ª necesita autorización previa del Director General; la 2ª se hace mediante resolución del director seccional."
+                ],
+                correct: 3,
+                hint: "Manual de delegación tributaria: la delegación de facilidades de pago requiere autorización formal.",
+                explanation: "Según el PDF, conforme al manual de delegación tributaria, la delegación de funciones de facilidades de pago requiere autorización formal previa del Director General."
+            },
+            {
+                mod: "Banco PGN P33 — Caso Reserva Tributaria DIAN",
+                text: "Un hermano de una servidora de la DIAN le solicita verbalmente confirmar 'si coinciden' las cifras de patrimonio e ingresos de una sociedad que planea comprar. La servidora tiene acceso al sistema. ¿Qué conducta corresponde?",
+                options: [
+                    "A) Decirle solo si las cifras coinciden sin dar valores numéricos.",
+                    "B) Pedirle que radique un derecho de petición para entregarle copias.",
+                    "C) No darle ningún dato e indicarle que solo puede revisar la declaración si el representante legal autoriza formalmente por escrito."
+                ],
+                correct: 2,
+                hint: "La reserva tributaria es absoluta, incluso frente a confirmaciones verbales.",
+                explanation: "La reserva tributaria es absoluta. Entregar datos o confirmaciones verbales viola la reserva legal y constituye falta disciplinaria gravísima."
+            }
         ];
 
-        const questions = RAW.map((r, i) => ({
-            mod: "Juicio Situacional — Pregunta " + (i + 1),
-            text: r[0],
-            options: r[1].map((t, j) => String.fromCharCode(65 + j) + ") " + t),
-            correct: r[2],
-            hint: "Competencia en juego: " + r[3].split(/, | y /)[0] + ".",
-            explanation: "La conducta más efectiva demuestra " + r[3] + "."
-        }));
+        // Formato: [módulo, enunciado, [opciones], índice de la correcta (0=A,1=B,2=C,3=D), pista, explicación]
+        const NEW = [
+            // ===== Constitución — Módulo 1 (20) =====
+            ["Constitución — Módulo 1 · P1", "¿Qué tipo de Estado establece el artículo 1 de la Constitución Política de Colombia?", ["Estado autoritario centralizado.", "Estado social de derecho.", "Estado federal.", "Estado teocrático."], 1, "Artículo 1 de la Constitución Política.", "El artículo 1 define a Colombia como un Estado social de derecho, organizado en forma de República unitaria, descentralizada, con autonomía de sus entidades territoriales, democrática, participativa y pluralista."],
+            ["Constitución — Módulo 1 · P2", "¿Cuál es la finalidad principal de los principios constitucionales?", ["Limitar exclusivamente la actuación de los jueces.", "Sustituir las leyes en todos los casos.", "Orientar y condicionar la actuación del Estado y de las personas conforme a valores y normas de rango constitucional.", "Regular únicamente los asuntos económicos del país."], 2, "Piensa en el valor normativo de los principios dentro de la Constitución.", "Los principios constitucionales son normas generales con fuerza normativa que orientan la interpretación y aplicación del ordenamiento jurídico; forman parte de la Constitución y no admiten razonamientos en contra."],
+            ["Constitución — Módulo 1 · P3", "¿Cuál de los siguientes es un ejemplo de principio constitucional mencionado en el módulo?", ["Principio de proporcionalidad.", "Principio de jerarquía militar.", "Principio de libre empresa obligatoria.", "Principio de exclusión social."], 0, "Principios constitucionales implícitos o internos.", "El módulo identifica expresamente la proporcionalidad, el respeto por el acto propio y la participación como ejemplos de principios constitucionales implícitos o internos."],
+            ["Constitución — Módulo 1 · P4", "Según el artículo 2 de la Constitución, ¿cuál es uno de los fines esenciales del Estado colombiano?", ["Servir a la comunidad y promover la prosperidad general.", "Concentrar todo el poder en el Presidente de la República.", "Eliminar la participación ciudadana en las decisiones públicas.", "Sustituir la Constitución por decretos presidenciales."], 0, "Artículo 2 de la Constitución: fines esenciales del Estado.", "El artículo 2 establece que el Estado debe servir a la comunidad, promover la prosperidad general, garantizar los principios, derechos y deberes constitucionales, facilitar la participación ciudadana y asegurar la convivencia pacífica y un orden justo."],
+            ["Constitución — Módulo 1 · P5", "¿Dónde reside exclusivamente la soberanía en Colombia?", ["En el Presidente de la República.", "En el Congreso de la República.", "En el pueblo.", "En las Fuerzas Militares."], 2, "Artículo 3 de la Constitución.", "El artículo 3 dispone que la soberanía reside exclusivamente en el pueblo, del cual emana el poder público; este puede ejercerse directamente o mediante representantes."],
+            ["Constitución — Módulo 1 · P6", "¿Qué significa que la Constitución sea “norma de normas”?", ["Que cualquier ley puede modificar la Constitución libremente.", "Que la Constitución prevalece sobre las leyes y demás normas jurídicas cuando exista incompatibilidad.", "Que los decretos tienen mayor valor que la Constitución.", "Que los tratados internacionales siempre prevalecen sobre la Constitución."], 1, "Artículo 4: relación entre la Constitución y las demás normas.", "El artículo 4 establece la supremacía constitucional: ante una incompatibilidad entre la Constitución y una ley u otra norma, deben aplicarse las disposiciones constitucionales."],
+            ["Constitución — Módulo 1 · P7", "¿Qué obligación tiene el Estado frente a la diversidad étnica y cultural de la Nación?", ["Eliminarla para uniformar la cultura nacional.", "Reconocerla y protegerla.", "Prohibir las lenguas de los grupos étnicos.", "Limitarla únicamente a las zonas rurales."], 1, "Artículo 7 de la Constitución.", "El artículo 7 reconoce y protege la diversidad étnica y cultural de la Nación; además, el artículo 10 reconoce como oficiales las lenguas y dialectos de los grupos étnicos en sus territorios."],
+            ["Constitución — Módulo 1 · P8", "¿Cuál es el idioma oficial de Colombia?", ["El inglés.", "El castellano.", "Todas las lenguas indígenas sin distinción territorial.", "El portugués."], 1, "Artículo 10 de la Constitución.", "El artículo 10 establece que el castellano es el idioma oficial de Colombia; no obstante, las lenguas y dialectos de los grupos étnicos también son oficiales en sus territorios."],
+            ["Constitución — Módulo 1 · P9", "¿En cuántas ramas o poderes se encuentra estructurado el Estado colombiano para ejercer el poder público?", ["Dos.", "Tres.", "Cuatro.", "Cinco."], 1, "Cuenta las ramas del poder público.", "El Estado colombiano se estructura en las ramas Ejecutiva, Legislativa y Judicial. Son independientes, pero colaboran entre sí para cumplir los fines del Estado."],
+            ["Constitución — Módulo 1 · P10", "¿Qué rama del poder está representada por el Gobierno Nacional?", ["Rama Legislativa.", "Rama Judicial.", "Rama Ejecutiva.", "Rama Electoral."], 2, "Piensa en quiénes integran el Gobierno Nacional.", "La rama Ejecutiva está representada por el Gobierno Nacional, integrado por el Presidente de la República, los ministros y los directores de departamentos administrativos."],
+            ["Constitución — Módulo 1 · P11", "¿Cuál es la función principal de la rama Legislativa?", ["Administrar justicia.", "Formular leyes, ejercer control político sobre el Gobierno y reformar la Constitución.", "Dirigir la política exterior del país.", "Vigilar el cumplimiento de la ley mediante superintendencias."], 1, "Piensa en el Congreso de la República.", "El Congreso de la República, integrado por el Senado y la Cámara de Representantes, tiene como misión formular leyes, mantener el control político sobre el Gobierno y reformar la Constitución."],
+            ["Constitución — Módulo 1 · P12", "¿Quiénes integran el Congreso de la República?", ["El Presidente y la Vicepresidencia.", "El Senado y la Cámara de Representantes.", "Las Cortes y los tribunales.", "Los ministerios y departamentos administrativos."], 1, "Composición del Congreso de la República.", "La rama Legislativa está representada por el Congreso de la República, compuesto por el Senado y la Cámara de Representantes."],
+            ["Constitución — Módulo 1 · P13", "¿Cuál es la función esencial de la rama Judicial?", ["Crear leyes.", "Ejecutar políticas públicas.", "Solucionar los conflictos entre el Estado y los ciudadanos, o entre estos últimos.", "Controlar políticamente al Gobierno."], 2, "Piensa en quién administra justicia.", "La rama Judicial está integrada por las Cortes y los tribunales, y su función es administrar justicia, resolviendo los conflictos que surjan entre el Estado y los ciudadanos o entre los propios ciudadanos."],
+            ["Constitución — Módulo 1 · P14", "¿Qué característica define a Colombia como Estado descentralizado?", ["Todas las decisiones se toman únicamente en la capital del país.", "La función administrativa puede desconcentrarse, transfiriendo competencias, funciones y recursos a otras dependencias o niveles territoriales.", "Los entes territoriales carecen de autonomía.", "El Presidente administra directamente todos los servicios públicos."], 1, "Descentralización territorial y por servicios.", "El módulo explica que Colombia es un Estado descentralizado territorialmente y por servicios, pues la función administrativa puede desconcentrarse al transferir poder de decisión, competencias, funciones y recursos a otras dependencias."],
+            ["Constitución — Módulo 1 · P15", "¿Qué son los establecimientos públicos?", ["Organismos que atienden funciones administrativas y prestan servicios públicos, con personería jurídica, administración y presupuesto propios.", "Empresas exclusivamente privadas sin relación con el Estado.", "Corporaciones que solo emiten conceptos jurídicos.", "Entidades que formulan leyes en el Congreso."], 0, "Piensa en entidades descentralizadas por servicios.", "Según el módulo, los establecimientos públicos cumplen funciones administrativas y prestan servicios públicos; cuentan con personería jurídica, administración y presupuesto propios."],
+            ["Constitución — Módulo 1 · P16", "¿Qué son las sociedades de economía mixta?", ["Entidades constituidas únicamente con capital privado.", "Entidades autorizadas por la ley, conformadas por capital estatal y privado.", "Organismos judiciales especializados.", "Dependencias internas de un ministerio sin personería jurídica."], 1, "Fíjate en el origen del capital y en el régimen según la proporción estatal.", "Son entidades autorizadas por la ley que combinan capital estatal y privado. Su régimen depende de la proporción del capital estatal: si supera el 90%, se rigen como Empresas Industriales y Comerciales del Estado; en otro caso, por reglas de derecho privado."],
+            ["Constitución — Módulo 1 · P17", "¿Qué función cumplen las superintendencias dentro de la rama Ejecutiva?", ["Formular leyes.", "Administrar justicia en conflictos entre particulares.", "Inspeccionar y vigilar el cumplimiento de la ley, mediante delegación del Presidente.", "Reformar la Constitución."], 2, "Rama Ejecutiva: delegación del Presidente de la República.", "El módulo indica que las superintendencias cumplen labores de inspección y vigilancia del cumplimiento de la ley mediante la delegación que realiza el Presidente de la República."],
+            ["Constitución — Módulo 1 · P18", "¿Cuál es una finalidad del Acuerdo de Paz mencionada en el módulo?", ["Eliminar la participación política de la ciudadanía.", "Contribuir a una cultura política basada en la democracia, el libre juego de ideas y el debate civilizado.", "Sustituir la Constitución por normas militares.", "Restringir la reparación integral a las víctimas."], 1, "Acuerdo de Paz: nueva cultura política.", "El Acuerdo de Paz plantea contribuir a una nueva cultura que proscriba el uso de las armas en la política y promueva la democracia, el libre juego de ideas y el debate civilizado."],
+            ["Constitución — Módulo 1 · P19", "¿Qué objetivo tiene el Estado frente a las víctimas del conflicto armado, según el módulo?", ["Ignorar sus derechos para priorizar la inversión privada.", "Atenderlas y repararlas integralmente, contribuyendo a la inclusión social y a la paz.", "Trasladar toda la responsabilidad de reparación a las víctimas.", "Limitar la atención exclusivamente a la reparación económica."], 1, "Atención y reparación a las víctimas del conflicto armado.", "El módulo señala que el Estado y la sociedad deben liderar acciones para atender y reparar integralmente a las víctimas, contribuyendo a la inclusión social y a la paz."],
+            ["Constitución — Módulo 1 · P20", "¿Qué temas integran el Módulo 1 del curso de Gerentes Públicos?", ["Contratación pública, selección de personal y evaluación del desempeño.", "Principios constitucionales, estructura del Estado, descentralización, organización territorial e institucionalidad para el posconflicto.", "Presupuesto público, contratación estatal y gestión del talento humano.", "Gestión del riesgo, contabilidad pública y auditoría interna."], 1, "Piensa en la organización y funcionamiento del Estado colombiano.", "El Módulo 1 se ocupa de la organización y funcionamiento del Estado colombiano a partir de los principios constitucionales, la estructura del Estado, la descentralización y organización territorial, y la institucionalidad para el posconflicto."],
+
+            // ===== Procuraduría — Funciones y atención (20) =====
+            ["Procuraduría — Funciones y atención · P1", "¿Qué entidad representa a los ciudadanos ante el Estado en Colombia?", ["La Fiscalía General de la Nación", "La Procuraduría General de la Nación", "La Contraloría General de la República", "El Consejo Superior de la Judicatura"], 1, "Piensa en el Ministerio Público.", "La Procuraduría es la entidad que representa a los ciudadanos ante el Estado y es el máximo organismo del Ministerio Público."],
+            ["Procuraduría — Funciones y atención · P2", "¿De qué organismos está conformado el Ministerio Público, además de la Procuraduría General de la Nación?", ["Fiscalía y Contraloría", "Defensoría del Pueblo y personerías", "Corte Constitucional y Consejo de Estado", "Policía Nacional y Ejército"], 1, "El Ministerio Público tiene tres organismos.", "El Ministerio Público está conformado por la Procuraduría, la Defensoría del Pueblo y las personerías."],
+            ["Procuraduría — Funciones y atención · P3", "¿Cuál es la principal responsabilidad de la Procuraduría según la función preventiva?", ["Sancionar antes de investigar", "Prevenir antes que sancionar", "Administrar directamente las entidades estatales", "Representar al Estado ante los ciudadanos"], 1, "Función preventiva de la Procuraduría.", "La función preventiva busca vigilar el actuar de los servidores públicos y advertir posibles violaciones antes de que ocurran."],
+            ["Procuraduría — Funciones y atención · P4", "¿Qué busca la función preventiva de la Procuraduría?", ["Vigilar el actuar de los servidores públicos y advertir posibles violaciones de normas", "Reemplazar a las autoridades administrativas en sus decisiones", "Ejercer coadministración sobre las entidades estatales", "Crear nuevas leyes para el país"], 0, "Función preventiva: vigilar sin intervenir en la gestión.", "La Procuraduría previene sin intervenir directamente en la gestión de las entidades estatales."],
+            ["Procuraduría — Funciones y atención · P5", "¿Qué tipo de autonomía tiene la Procuraduría General de la Nación?", ["Solo autonomía administrativa", "Autonomía administrativa, financiera y presupuestal", "Autonomía política y militar", "No tiene autonomía"], 1, "Estatuto Orgánico del Presupuesto Nacional.", "La Procuraduría cuenta con autonomía administrativa, financiera y presupuestal, conforme al Estatuto Orgánico del Presupuesto Nacional."],
+            ["Procuraduría — Funciones y atención · P6", "¿Cuál es una de las funciones de intervención de la Procuraduría?", ["Intervenir ante jurisdicciones como la Contencioso Administrativa, Constitucional, penal, civil, laboral y de familia", "Dictar sentencias definitivas en todos los procesos judiciales", "Administrar las cárceles del país", "Nombrar a todos los jueces de la República"], 0, "Función de intervención de la Procuraduría.", "La Procuraduría actúa como sujeto procesal ante varias jurisdicciones y autoridades."],
+            ["Procuraduría — Funciones y atención · P7", "¿Qué función cumple la Procuraduría en materia disciplinaria?", ["Iniciar, adelantar y fallar investigaciones por faltas disciplinarias", "Solo recibir quejas sin investigarlas", "Sancionar penalmente a los delincuentes", "Representar exclusivamente a los servidores públicos"], 0, "Función disciplinaria de la Procuraduría.", "La Procuraduría investiga y sanciona faltas disciplinarias de servidores públicos y de particulares con funciones públicas."],
+            ["Procuraduría — Funciones y atención · P8", "¿A quiénes puede investigar disciplinariamente la Procuraduría, además de los servidores públicos?", ["A cualquier ciudadano particular sin funciones públicas", "A particulares que ejercen funciones públicas o manejan dineros del Estado", "Solo a miembros de la Fuerza Pública", "A empresas privadas sin relación con el Estado"], 1, "Sujetos de la función disciplinaria.", "La función disciplinaria también aplica a particulares que cumplen funciones públicas o administran recursos estatales."],
+            ["Procuraduría — Funciones y atención · P9", "¿Bajo qué normas se desarrolla la función disciplinaria de la Procuraduría?", ["Código General Disciplinario, Ley 1952 de 2019 y Ley 2094 de 2021", "Código Penal Único", "Constitución Política de 1991 solamente", "Ley 1437 de 2011"], 0, "Normas que regulan la función disciplinaria.", "Estas normas regulan el ejercicio de la función disciplinaria de la Procuraduría."],
+            ["Procuraduría — Funciones y atención · P10", "¿Cómo se describe la facultad de intervención de la Procuraduría?", ["Es facultativa y opcional", "Es imperativa y se desarrolla de forma selectiva cuando el Procurador General lo considere necesario", "Solo aplica en procesos penales", "No tiene relación con derechos fundamentales"], 1, "Facultad de intervención: obligatoria o facultativa, general o selectiva.", "La intervención es obligatoria pero selectiva, y se enfoca en la defensa de derechos y garantías fundamentales."],
+            ["Procuraduría — Funciones y atención · P11", "¿Cuál es la dirección de la sede principal de la Procuraduría General de la Nación?", ["Carrera 7 # 15-80, Bogotá", "Carrera 5 # 15-80, Bogotá D.C.", "Calle 100 # 15-80, Bogotá", "Avenida El Dorado # 15-80, Bogotá"], 1, "Sede principal en Bogotá D.C.", "Esta es la dirección oficial de la sede principal de la Procuraduría."],
+            ["Procuraduría — Funciones y atención · P12", "¿Cuál es el horario de atención de la sede principal de la Procuraduría?", ["Lunes a viernes, 8 a.m. a 5 p.m., jornada continua", "Lunes a viernes, 9 a.m. a 4 p.m.", "Lunes a sábado, 8 a.m. a 12 m.", "24 horas todos los días"], 0, "Horario oficial de la sede principal.", "Este es el horario oficial de atención de la sede principal."],
+            ["Procuraduría — Funciones y atención · P13", "¿Cuál es el número de la línea gratuita y anticorrupción de la Procuraduría?", ["01 8000 940 808", "01 8000 123 456", "601 587 8750", "01 8000 111 222"], 0, "Línea gratuita y línea anticorrupción.", "Este número sirve tanto como línea gratuita como línea anticorrupción."],
+            ["Procuraduría — Funciones y atención · P14", "¿Qué tipo de trámites se pueden realizar a través de la Sede Electrónica de la Procuraduría?", ["Radicar PQRSDF, solicitudes de conciliación y consultas de estado de radicaciones", "Solo pagar multas de tránsito", "Solicitar pasaportes", "Realizar declaraciones de renta"], 0, "Sede Electrónica de la Procuraduría.", "La Sede Electrónica permite realizar estos y otros trámites en línea."],
+            ["Procuraduría — Funciones y atención · P15", "¿Para quién es exclusivo el buzón de notificaciones judiciales de la Procuraduría?", ["Para cualquier ciudadano", "Para juzgados, tribunales y altas cortes", "Para empresas privadas", "Para estudiantes universitarios"], 1, "Buzón de notificaciones judiciales.", "El buzón judicial es exclusivo para que los despachos judiciales realicen notificaciones a la Procuraduría."],
+            ["Procuraduría — Funciones y atención · P16", "¿Qué artículo de la Ley 1437 de 2011 regula el buzón de notificaciones judiciales?", ["Artículo 100", "Artículo 197", "Artículo 250", "Artículo 300"], 1, "Ley 1437 de 2011 (CPACA).", "Este artículo establece la obligación de tener un buzón electrónico para notificaciones judiciales."],
+            ["Procuraduría — Funciones y atención · P17", "¿Cuál es el correo electrónico del buzón de notificaciones judiciales de la Procuraduría?", ["procesosjudiciales@procuraduria.gov.co", "notificaciones@procuraduria.gov.co", "judiciales@procuraduria.gov.co", "contacto@procuraduria.gov.co"], 0, "Correo exclusivo para notificaciones judiciales.", "Este es el correo oficial y exclusivo para notificaciones judiciales."],
+            ["Procuraduría — Funciones y atención · P18", "¿Qué tipo de usuario puede radicar PQRSDF de forma anónima en la Sede Electrónica?", ["Usuario registrado", "Usuario sin registro", "Usuario anónimo", "Usuario administrador"], 2, "Tipos de usuario de la Sede Electrónica.", "El usuario anónimo puede generar radicaciones de PQRSDF y realizar consultas sin dejar registro de su dirección IP."],
+            ["Procuraduría — Funciones y atención · P19", "¿Qué debe hacer un usuario para acceder a formularios de envío de sanciones SIRI en la Sede Electrónica?", ["No requiere registro", "Debe registrarse como usuario registrado", "Solo necesita llamar por teléfono", "Debe enviar una carta física"], 1, "Sistema de Registro de Sanciones (SIRI).", "Los formularios SIRI están disponibles solo para usuarios registrados."],
+            ["Procuraduría — Funciones y atención · P20", "¿Cuál es el teléfono conmutador de la sede principal de la Procuraduría?", ["+57 601 587 8750", "+57 601 123 4567", "+57 601 987 6543", "+57 601 555 1234"], 0, "Teléfono de la sede principal.", "Este es el número oficial del conmutador de la sede principal."],
+
+            // ===== Procuraduría — Ubicación en el Estado (1) =====
+            ["Procuraduría — Ubicación en el Estado", "Respecto a la Procuraduría General de la Nación, ¿cuál afirmación es correcta?", ["Es un organismo de la rama ejecutiva, adscrito a la Presidencia de la República.", "Es un organismo autónomo de control del Estado, separado de las ramas ejecutiva, legislativa y judicial, que encabeza el Ministerio Público.", "Hace parte de la rama judicial y su nombre correcto es Procuraduría Nacional de la Nación.", "Es una dependencia del Congreso encargada de expedir las leyes disciplinarias."], 1, "Fíjate en el nombre oficial y en el lugar que ocupa frente a las tres ramas.", "La entidad se llama Procuraduría General de la Nación (no “nacional”). Es un organismo autónomo de control del Estado colombiano, separado de las ramas ejecutiva, legislativa y judicial, y encabeza el Ministerio Público."],
+
+            // ===== Proceso disciplinario (3) =====
+            ["Disciplinario — Órganos competentes", "¿Qué significa que la Procuraduría General de la Nación tenga poder disciplinario preferente?", ["Que solo puede investigar a los servidores de la Rama Judicial.", "Que puede iniciar, proseguir o asumir (avocar) investigaciones que adelanten otras autoridades o dependencias internas.", "Que únicamente actúa como segunda instancia de las Oficinas de Control Disciplinario Interno.", "Que las Personerías deben entregarle todos sus expedientes y dejar de investigar."], 1, "La PGN es el máximo órgano del Ministerio Público.", "La PGN posee el poder disciplinario preferente, que le permite iniciar, proseguir o asumir (avocar) investigaciones que estén adelantando otras autoridades o dependencias internas."],
+            ["Disciplinario — Etapas del proceso", "¿Cuándo procede la indagación previa en el proceso disciplinario?", ["Siempre, como primera etapa obligatoria de todo proceso.", "Cuando existe duda sobre la identificación o individualización del presunto autor de la falta.", "Cuando ya se notificó el pliego de cargos al investigado.", "Únicamente cuando el fallo sancionatorio ya fue apelado."], 1, "Es una etapa opcional y eventual.", "La indagación previa es opcional y eventual: procede cuando hay duda sobre la identificación del presunto autor. Busca individualizar al responsable y recaudar información inicial; tiene un término general de 6 meses y concluye con archivo definitivo o auto de apertura de investigación."],
+            ["Disciplinario — Reglas y garantías", "Una falta disciplinaria leve cometida con culpa se sanciona con:", ["Multa.", "Amonestación escrita.", "Suspensión en el ejercicio del cargo.", "Destitución e inhabilidad general."], 1, "Graduación de sanciones según la clase de falta.", "Las faltas leves se sancionan con multa si son dolosas y con amonestación escrita si son culposas."],
+
+            // ===== Proceso disciplinario — video (3) =====
+            ["Disciplinario — Órganos competentes (2)", "En materia disciplinaria, ¿cuál afirmación sobre el poder preferente a nivel municipal es correcta?", ["Solo la Procuraduría puede ejercerlo; las personerías únicamente reciben quejas.", "La Procuraduría y las personerías pueden asumir investigaciones de otras autoridades; las personerías lo aplican sobre la administración municipal.", "Las oficinas de control interno pueden asumir las investigaciones que adelanta la Procuraduría.", "Las personerías lo ejercen sobre las entidades del orden nacional."], 1, "Piensa en qué autoridades pueden asumir investigaciones de otras y en el nivel donde actúan las personerías.", "Las personerías, la Procuraduría y las oficinas de control interno de las entidades públicas investigan y sancionan disciplinariamente. La Procuraduría y las personerías tienen poder disciplinario preferente, es decir, pueden asumir investigaciones de otras autoridades; en el caso de las personerías, lo aplican sobre la administración municipal."],
+            ["Disciplinario — Etapas del proceso (2)", "Al concluir la investigación disciplinaria, ¿qué puede ocurrir y qué recurso procede contra el pliego de cargos?", ["Siempre concluye en pliego de cargos, que puede apelarse.", "Solo puede concluir en archivo, porque el pliego de cargos lo formula la segunda instancia.", "Puede concluir en archivo o en pliego de cargos; contra el pliego de cargos no procede ningún recurso.", "Concluye en fallo sancionatorio directo, sin pliego de cargos."], 2, "Si hay mérito, la investigación puede terminar de dos maneras distintas.", "La investigación se inicia si hay mérito y puede concluir en un archivo o en un pliego de cargos. Contra el pliego de cargos no procede ningún recurso."],
+            ["Disciplinario — Recursos y decisiones", "Contra un fallo sancionatorio procede apelación. Si el investigado es el apelante único, ¿qué ocurre con la decisión de la segunda instancia?", ["Resolver la apelación sin poder empeorar su situación.", "Puede aumentar la sanción si lo considera necesario.", "Debe devolver el proceso a la indagación previa.", "Debe declarar que contra el fallo no procede ningún recurso."], 0, "Piensa en la garantía de quien apela solo.", "Frente a un fallo sancionatorio cabe apelación, pero si el investigado es apelante único, la segunda instancia no podrá empeorar su situación."],
+
+            // ===== Alcaldes y gobernadores — video (3) =====
+            ["Disciplinario — Alcaldes y gobernadores (competencia)", "¿Qué autoridad es competente para iniciar investigaciones disciplinarias contra alcaldes y gobernadores?", ["La Procuraduría.", "Las personerías.", "Las oficinas de control interno disciplinario de la alcaldía o gobernación.", "La Contraloría General de la República."], 0, "Piensa en qué autoridades NO tienen competencia sobre servidores elegidos por voto popular.", "La Procuraduría es la competente para iniciar investigaciones disciplinarias a alcaldes y gobernadores. Por eso, las personerías y las oficinas de control interno disciplinario de alcaldías y gobernaciones no tienen competencia para ello."],
+            ["Disciplinario — Alcaldes y gobernadores (destitución)", "Si la Procuraduría dicta un fallo de destitución contra un alcalde o gobernador, ¿qué ocurre con ese fallo?", ["Se ejecuta de inmediato, porque la Procuraduría es la autoridad disciplinaria.", "No se ejecuta de inmediato: pasa de manera automática al Consejo de Estado para su revisión, aunque el alcalde o gobernador no la pida.", "Solo se revisa si el alcalde o gobernador interpone un recurso.", "Lo ejecuta directamente el Concejo o la Asamblea sin más trámite."], 1, "Piensa en quién puede remover a una autoridad elegida por voto popular.", "El fallo de destitución no se ejecuta de manera inmediata: pasa de forma automática al Consejo de Estado para su revisión, incluso si el alcalde o gobernador no lo piden. Esto se debe a que en Colombia solamente una autoridad judicial puede remover a una autoridad elegida por voto popular."],
+            ["Disciplinario — Alcaldes y gobernadores (suspensión provisional)", "¿Qué requisitos deben darse para que la Procuraduría suspenda provisionalmente a un alcalde o gobernador mientras sigue la investigación?", ["Que la falta sea leve y que el investigado lo solicite.", "Que el Consejo de Estado ya haya revisado el fallo de destitución.", "Que la falta sea grave o gravísima y existan elementos que indiquen que, desde su cargo, podría interferir en la investigación o continuar con la conducta.", "Que el Concejo o la Asamblea autorice la suspensión."], 2, "La suspensión provisional exige dos condiciones: la clase de falta y un riesgo durante la investigación.", "Lo que sí puede hacer la Procuraduría es apartarlo del cargo mientras sigue la investigación mediante una suspensión provisional. Para que opere, la falta debe ser grave o gravísima y debe haber elementos que indiquen que el alcalde o gobernador, desde su cargo, puede interferir en la investigación o continuar con la comisión de la conducta."],
+
+            // ===== Destitución y suspensión disciplinaria (4) =====
+            ["Disciplinario — Sanciones según la falta (graves)", "¿Con qué sanción se castigan las faltas disciplinarias graves?", ["Multa o amonestación escrita.", "Suspensión en el ejercicio del cargo e inhabilidad especial.", "Destitución e inhabilidad general de 10 a 20 años.", "Un llamado de atención verbal."], 1, "Graduación de sanciones según la clase de falta.", "Según la graduación de sanciones, las faltas graves se sancionan con suspensión en el ejercicio del cargo e inhabilidad especial. Las leves se sancionan con multa (si son dolosas) o amonestación escrita (si son culposas), y las gravísimas con dolo con destitución e inhabilidad general."],
+            ["Disciplinario — Sanciones según la falta (gravísimas)", "Una falta disciplinaria gravísima cometida con dolo conlleva:", ["Multa.", "Suspensión en el ejercicio del cargo e inhabilidad especial.", "Destitución e inhabilidad general de 10 a 20 años.", "Amonestación escrita."], 2, "Graduación de sanciones: la clase de falta más severa y el elemento subjetivo (dolo).", "Las faltas gravísimas cometidas con dolo conllevan destitución e inhabilidad general de 10 a 20 años."],
+            ["Disciplinario — Suspensión provisional vs. suspensión como sanción", "¿Cuál es la diferencia entre la suspensión provisional y la suspensión como sanción disciplinaria?", ["La provisional se impone en el fallo y la sanción se aplica durante la investigación.", "La provisional es una medida para apartar al investigado del cargo mientras sigue la investigación; la suspensión en el ejercicio del cargo es una sanción propia de las faltas graves.", "Ambas son sanciones definitivas que se imponen en el fallo.", "La provisional solo procede por faltas leves y la sanción solo por faltas gravísimas."], 1, "Una ocurre mientras sigue la investigación; la otra, al final, con el fallo.", "La suspensión provisional aparta al investigado del cargo mientras sigue la investigación y requiere falta grave o gravísima y riesgo de interferir en la investigación o de continuar la conducta. La suspensión en el ejercicio del cargo, en cambio, es la sanción que corresponde a las faltas graves."],
+            ["Destitución y Suspensión Disciplinaria — Cuestionario compartido", "Un alcalde elegido por voto popular lleva suspendido provisionalmente por riesgo de interferir en la investigación. La Procuraduría dicta en segunda instancia fallo de destitución y el alcalde manifiesta por escrito que no solicitará revisión. ¿Qué procede respecto a la destitución?", ["Esperar la revisión automática del Consejo de Estado y ejecutar la destitución solo si este la confirma.", "Ejecutar el fallo de inmediato porque el alcalde renunció a pedir la revisión.", "Dar por ejecutada la destitución porque la suspensión provisional ya equivale al retiro definitivo.", "Archivar el fallo disciplinario hasta que el alcalde presente una demanda ordinaria de nulidad."], 0, "Piensa qué ocurre en Colombia cuando una autoridad administrativa dicta destitución contra un mandatario elegido por voto popular, aun sin petición del investigado.", "El fallo de destitución contra un alcalde o gobernador no se ejecuta de inmediato: pasa de forma automática al Consejo de Estado para su revisión, incluso si el alcalde no la pide, porque solo una autoridad judicial puede remover a una autoridad elegida por voto popular. La suspensión provisional es solo una medida para apartarlo del cargo mientras sigue la investigación; no equivale al retiro definitivo."]
+        ];
+
+        questions.push(...NEW.map(r => ({
+            mod: r[0],
+            text: r[1],
+            options: r[2].map((t, j) => String.fromCharCode(65 + j) + ") " + t),
+            correct: r[3],
+            hint: r[4],
+            explanation: r[5]
+        })));
+
+        // ===== Temas =====
+        // Cada pregunta pertenece a un tema. El tema se elige desde el index con un enlace
+        // como conocimiento.html#constitucion. Sin tema (o con #todos) se cargan todas mezcladas.
+        const TEMAS = {
+            constitucion: "Constitución y estructura del Estado",
+            procuraduria: "Procuraduría General de la Nación",
+            disciplinario: "Régimen y proceso disciplinario",
+            empleo: "Empleo público, contratación y control",
+            administrativo: "Derecho administrativo y procedimiento",
+            juicio: "Juicio situacional y ética"
+        };
+        const TEMA_ANTIGUAS = {
+            "Juicio Situacional — Pregunta 2": "juicio",
+            "Constitución — Derecho de Petición y Tutela": "constitucion",
+            "Estructura del Estado — CAR": "constitucion",
+            "Organización Electoral — CNE": "constitucion",
+            "Procuraduría General — Elección": "procuraduria",
+            "Función Administrativa — Desconcentración": "administrativo",
+            "Régimen de Inhabilidades — Nepotismo": "empleo",
+            "Empleo Público — Posesión y Presupuesto": "empleo",
+            "Responsabilidad de Servidores": "disciplinario",
+            "Proceso Disciplinario — Pliego de Cargos": "disciplinario",
+            "Contratación Estatal — Garantías y Anticipos": "empleo",
+            "Contratación Estatal — Interventoría": "empleo"
+        };
+        const TEMA_BANCO = {
+            1: "constitucion", 2: "constitucion", 3: "constitucion", 4: "constitucion", 5: "constitucion", 6: "constitucion",
+            7: "procuraduria", 8: "empleo", 9: "constitucion", 10: "administrativo", 11: "empleo", 12: "empleo", 13: "empleo",
+            14: "disciplinario", 15: "administrativo", 17: "disciplinario", 18: "disciplinario", 19: "disciplinario", 20: "disciplinario",
+            21: "administrativo", 22: "administrativo", 23: "administrativo", 24: "administrativo", 25: "administrativo", 26: "administrativo",
+            27: "empleo", 28: "empleo", 29: "empleo", 30: "empleo", 31: "empleo", 32: "administrativo", 33: "juicio"
+        };
+        function temaDe(q) {
+            if (TEMA_ANTIGUAS[q.mod]) return TEMA_ANTIGUAS[q.mod];
+            const b = q.mod.match(/^Banco PGN P(\d+)/);
+            if (b) return TEMA_BANCO[Number(b[1])];
+            if (q.mod.startsWith("Constitución — Módulo 1")) return "constitucion";
+            if (q.mod.startsWith("Procuraduría —")) return "procuraduria";
+            if (q.mod.startsWith("Disciplinario —") || q.mod.startsWith("Destitución y")) return "disciplinario";
+            return undefined;
+        }
+        questions.forEach(q => { q.tema = temaDe(q); });
+
+        (function aplicarTema() {
+            const h = decodeURIComponent(location.hash.replace('#', ''));
+            if (TEMAS[h]) {
+                const filtradas = questions.filter(q => q.tema === h);
+                questions.length = 0;
+                questions.push(...filtradas);
+                document.title = "Quiz — " + TEMAS[h];
+            }
+        })();
+        window.addEventListener('hashchange', () => location.reload());
 
         // ===== Barajar opciones y reetiquetar letras =====
         // Así la respuesta correcta no queda siempre en la misma posición.

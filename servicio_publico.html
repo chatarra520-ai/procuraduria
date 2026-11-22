@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Servicio Público - Práctica</title>
+    <style>
+        :root {
+            --bg-color: #f3f4f6;
+            --card-bg: #ffffff;
+            --primary: #3b82f6;
+            --primary-hover: #2563eb;
+            --text-main: #1f2937;
+            --text-muted: #6b7280;
+            --border-color: #e5e7eb;
+            --success-bg: #d1fae5;
+            --success-text: #065f46;
+            --danger-bg: #fee2e2;
+            --danger-text: #991b1b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 1rem;
+        }
+
+        .quiz-card {
+            width: 100%;
+            max-width: 600px;
+            background: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .top-bar {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin-bottom: 1.25rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.75rem;
+        }
+
+        .progress-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        .stats-badges {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .badge {
+            padding: 0.2rem 0.6rem;
+            border-radius: 9999px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.2rem;
+        }
+
+        .badge-err {
+            background-color: var(--danger-bg);
+            color: var(--danger-text);
+        }
+
+        .badge-ok {
+            background-color: var(--success-bg);
+            color: var(--success-text);
+        }
+
+        .progress-line {
+            width: 100%;
+            height: 6px;
+            background-color: var(--border-color);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: #4b5563;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .question-header {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+        }
+
+        .question-title {
+            font-size: 1.15rem;
+            font-weight: 600;
+            line-height: 1.4;
+            color: var(--text-main);
+            margin-bottom: 1.25rem;
+        }
+
+        .options-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .option-item {
+            width: 100%;
+            text-align: left;
+            padding: 1rem;
+            background-color: #f9fafb;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            font-size: 0.95rem;
+            color: var(--text-main);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+
+        .option-item:hover:not(:disabled) {
+            background-color: #f3f4f6;
+            border-color: #d1d5db;
+        }
+
+        .option-item.selected {
+            border-color: var(--primary);
+            background-color: #eff6ff;
+        }
+
+        .option-item.correct {
+            border-color: #10b981;
+            background-color: var(--success-bg);
+            color: var(--success-text);
+        }
+
+        .option-item.incorrect {
+            border-color: var(--danger-text);
+            background-color: var(--danger-bg);
+            color: var(--danger-text);
+        }
+
+        .option-letter {
+            font-weight: 700;
+            color: #4b5563;
+            min-width: 20px;
+        }
+
+        .hint-section {
+            margin-bottom: 1rem;
+        }
+
+        .hint-btn {
+            background: none;
+            border: none;
+            color: var(--primary);
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            padding: 0.2rem 0;
+        }
+
+        .hint-box {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            background-color: #f8fafc;
+            border-left: 3px solid var(--primary);
+            padding: 0.75rem;
+            margin-top: 0.5rem;
+            border-radius: 0 8px 8px 0;
+            display: none;
+            line-height: 1.4;
+        }
+
+        .feedback-container {
+            padding: 0.9rem;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            display: none;
+            line-height: 1.4;
+        }
+
+        .feedback-container.show {
+            display: block;
+        }
+
+        .bottom-nav {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .btn-nav {
+            flex: 1;
+            padding: 0.8rem 1.5rem;
+            border-radius: 9999px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: background 0.2s;
+            text-align: center;
+        }
+
+        .btn-back {
+            background-color: #e5e7eb;
+            color: #374151;
+        }
+
+        .btn-back:hover:not(:disabled) {
+            background-color: #d1d5db;
+        }
+
+        .btn-ready {
+            background-color: #93c5fd;
+            color: #1e3a8a;
+        }
+
+        .btn-ready:hover:not(:disabled) {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-nav:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .results-view {
+            text-align: center;
+            padding: 2rem 1rem;
+            display: none;
+        }
+
+        .results-view h2 {
+            font-size: 1.5rem;
+            color: var(--text-main);
+            margin-bottom: 0.75rem;
+        }
+
+        .score-display {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .results-desc {
+            font-size: 1rem;
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="quiz-card" id="main-card">
+        <div>
+            <div class="top-bar">
+                <div class="progress-row">
+                    <span id="progress-indicator">1 de 12</span>
+                    <div class="stats-badges">
+                        <div class="badge badge-err">× <span id="err-counter">0</span></div>
+                        <div class="badge badge-ok">✓ <span id="ok-counter">0</span></div>
+                    </div>
+                </div>
+                <div class="progress-line">
+                    <div class="progress-fill" id="progress-bar-fill"></div>
+                </div>
+            </div>
+
+            <div id="active-quiz-content">
+                <div class="question-header" id="q-mod">Módulo</div>
+                <div class="question-title" id="q-title">Cargando...</div>
+
+                <div class="hint-section">
+                    <button class="hint-btn" onclick="toggleHint()">Pista <span id="hint-arrow">▼</span></button>
+                    <div class="hint-box" id="hint-box-content">Pista aquí</div>
+                </div>
+
+                <div class="options-group" id="options-box"></div>
+
+                <div class="feedback-container" id="feedback-box"></div>
+            </div>
+
+            <div class="results-view" id="results-view">
+                <h2>¡Simulacro Finalizado!</h2>
+                <div class="score-display" id="final-score">0/12</div>
+                <p class="results-desc" id="final-desc">Has completado la práctica de situaciones del servicio público.</p>
+                <button class="btn-nav btn-ready" onclick="restartQuiz()"
+                    style="max-width: 250px; margin: 0 auto;">Reiniciar Simulacro</button>
+            </div>
+        </div>
+
+        <div class="bottom-nav" id="bottom-nav-container">
+            <button class="btn-nav btn-back" id="btn-back" onclick="handleBack()">Atrás</button>
+            <button class="btn-nav btn-ready" id="btn-action" onclick="handleAction()">Listo</button>
+        </div>
+    </div>
+
+    <script>
+        const RAW = [
+            [
+                "Certificación de cumplimiento. Eres supervisor de un contrato. El contratista solicita que certifiques la entrega completa, aunque falta un producto. Tu jefe te dice que firmes porque “lo entregarán mañana”.",
+                [
+                    "Firmar la certificación de entrega completa y dejar una nota personal sobre el producto que aún está pendiente.",
+                    "Firmar si el contratista promete por correo electrónico entregar mañana el producto que falta, conservando el mensaje.",
+                    "Certificar únicamente lo verificado, documentar el pendiente y comunicarlo por el procedimiento correspondiente."
+                ],
+                2,
+                "Piensa en qué puedes certificar con evidencia y no con promesas.",
+                "Criterio: Certificar hechos comprobados, no promesas de cumplimiento."
+            ],
+            [
+                "Regalo de un proveedor. Un proveedor que participa en un proceso de selección te envía una invitación con todos los gastos pagos a un evento recreativo.",
+                [
+                    "Aceptarla si todavía no has intervenido en la evaluación de las propuestas del proceso de selección.",
+                    "Aceptarla y comprometerte por escrito a mantener la imparcialidad durante todo el proceso de selección.",
+                    "Rechazarla e informar el ofrecimiento por el canal institucional correspondiente."
+                ],
+                2,
+                "Piensa en los beneficios de quien participa en un proceso de selección.",
+                "Criterio: Evitar beneficios que comprometan o aparenten comprometer la independencia."
+            ],
+            [
+                "Error que favorece a la entidad. Detectas que un informe contiene un error que hace parecer que tu dependencia cumplió una meta que realmente no alcanzó.",
+                [
+                    "Informar el error, tramitar la corrección y aclarar su efecto sobre el resultado reportado.",
+                    "Mantenerlo porque divulgar el error afectaría la imagen institucional.",
+                    "Corregir tu archivo, pero no informar a quienes recibieron el reporte."
+                ],
+                0,
+                "Piensa en la transparencia cuando el error favorece a la entidad.",
+                "Criterio: Corregir con transparencia, incluso cuando el error favorece la imagen institucional."
+            ],
+            [
+                "Atención ciudadana. Una persona tiene dificultades para comprender un trámite digital y la fila está creciendo.",
+                [
+                    "Pedirle que vuelva otro día acompañada de un familiar, porque no puedes retrasar la atención de las demás personas en la fila.",
+                    "Darle tu contraseña personal para que complete el trámite desde tu equipo y así agilizar la fila.",
+                    "Explicarle de forma clara y facilitar los apoyos disponibles, respetando la organización del servicio."
+                ],
+                2,
+                "Piensa en la atención respetuosa sin comprometer la seguridad.",
+                "Criterio: Atender con respeto y facilitar el acceso sin comprometer la seguridad."
+            ],
+            [
+                "Posible conflicto de intereses. Te asignan la evaluación de una propuesta presentada por una empresa en la que tu pareja tiene participación económica.",
+                [
+                    "Evaluarla de manera más estricta que las demás propuestas para demostrar objetividad frente a tus compañeros.",
+                    "Informar la situación y activar el procedimiento aplicable para que se decida sobre tu participación.",
+                    "Pedir informalmente a un compañero que firme tu evaluación para que no conste tu participación en el proceso."
+                ],
+                1,
+                "Piensa en cómo se maneja un posible conflicto de intereses.",
+                "Criterio: Informar el conflicto y permitir que se resuelva por el procedimiento correspondiente."
+            ],
+            [
+                "Información reservada. Un conocido te pide información no pública sobre una investigación. Asegura que solo quiere saber si debe preocuparse.",
+                [
+                    "Darle un resumen verbal de lo esencial, sin compartir documentos.",
+                    "Compartirla si promete mantenerla en secreto y no divulgarla.",
+                    "No entregarla y orientarlo hacia los canales autorizados para solicitar información."
+                ],
+                2,
+                "Piensa en la reserva de la información y en los canales autorizados.",
+                "Criterio: Proteger la información y utilizar canales autorizados."
+            ],
+            [
+                "Trato preferencial. Un directivo solicita que adelantes el trámite de un amigo. No existe una razón legal de prioridad.",
+                [
+                    "Adelantarlo porque la instrucción proviene de un superior jerárquico y debes obedecer las órdenes de tu dependencia.",
+                    "Tramitarlo primero, siempre que no haya una queja de otras personas que esperan.",
+                    "Mantener los criterios aplicables de atención y explicar que no corresponde otorgar una ventaja personal."
+                ],
+                2,
+                "Piensa en los criterios objetivos de atención.",
+                "Criterio: Aplicar criterios objetivos, no relaciones personales."
+            ],
+            [
+                "Uso de recursos públicos. Observas que un compañero utiliza reiteradamente un vehículo institucional para actividades particulares.",
+                [
+                    "Comunicar los hechos verificables mediante el canal institucional competente, sin presentar suposiciones como pruebas.",
+                    "Publicar su nombre y una fotografía en redes sociales para que la comunidad y las autoridades lo identifiquen.",
+                    "Ignorarlo porque no eres su superior y no te corresponde vigilar el uso que otros dan a los recursos."
+                ],
+                0,
+                "Piensa en cómo reportar hechos sin acusar públicamente.",
+                "Criterio: Reportar responsablemente hechos verificables, sin sustituir la investigación por acusaciones públicas."
+            ],
+            [
+                "Presión por resultados. Tu equipo debe responder numerosas solicitudes. Un compañero propone marcarlas como resueltas y enviar después las respuestas.",
+                [
+                    "Oponerte al registro falso y proponer una organización del trabajo que permita reportar el avance real.",
+                    "Aceptar si todas se responden durante la semana siguiente a la fecha en que fueron registradas como resueltas.",
+                    "Registrar como resueltas únicamente las solicitudes más sencillas, aunque todavía no se hayan contestado a las personas."
+                ],
+                0,
+                "Piensa en que los indicadores deben reflejar la gestión real.",
+                "Criterio: Los indicadores deben reflejar la gestión real."
+            ],
+            [
+                "Transparencia y protección de datos. Debes publicar un informe de gestión que contiene resultados públicos y datos personales cuya divulgación no corresponde.",
+                [
+                    "Publicarlo completo, incluidos los datos personales, porque la transparencia exige mostrar toda la información sin ninguna restricción.",
+                    "No publicar nada para evitar cualquier riesgo de divulgar datos personales o de recibir críticas.",
+                    "Publicar la versión correspondiente, protegiendo los datos que no deben divulgarse y explicando las restricciones cuando proceda."
+                ],
+                2,
+                "Piensa en cómo armonizar la transparencia con la protección de datos.",
+                "Criterio: La transparencia debe armonizarse con la protección de información legalmente restringida."
+            ],
+            [
+                "Diferencia de criterio. Un compañero cuestiona tu propuesta durante una reunión y presenta información que no habías considerado.",
+                [
+                    "Descartar sus observaciones porque el documento ya estaba terminado.",
+                    "Revisar los argumentos y ajustar la propuesta si la evidencia lo justifica.",
+                    "Responder que él será responsable si la decisión sale mal."
+                ],
+                1,
+                "Piensa en decidir con base en la evidencia.",
+                "Criterio: Decidir con base en evidencia y respetar el desacuerdo profesional."
+            ],
+            [
+                "Pago sin soporte suficiente. Debes revisar una cuenta de cobro. El contratista tiene dificultades económicas, pero faltan soportes necesarios para verificar la ejecución.",
+                [
+                    "Solicitar los soportes y tramitar el pago cuando se cumplan los requisitos, sin inventar exigencias ni omitir las aplicables.",
+                    "Autorizar el pago por solidaridad con el contratista y pedir los documentos después de efectuado el desembolso.",
+                    "Rechazar definitivamente la cuenta de cobro sin explicar qué debe subsanarse, para que el contratista inicie de nuevo el trámite."
+                ],
+                0,
+                "Piensa en la diligencia del pago junto con la verificación de requisitos.",
+                "Criterio: Combinar diligencia en el pago con verificación y cumplimiento de requisitos."
+            ]
+        ];
+
+        const questions = RAW.map((r, i) => ({
+            mod: "Servicio público — Situación " + (i + 1),
+            text: r[0],
+            options: r[1].map((t, j) => String.fromCharCode(65 + j) + ") " + t),
+            correct: r[2],
+            hint: r[3],
+            explanation: r[4]
+        }));
+
+        // ===== Barajar opciones y reetiquetar letras =====
+        // Así la respuesta correcta no queda siempre en la misma posición.
+        function stripLetter(s) { return s.replace(/^[A-D]\)\s*/, ''); }
+
+        function shuffleArray(arr) {
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        function prepareQuestions() {
+            questions.forEach(q => {
+                const items = q.options.map((t, i) => ({ t: stripLetter(t), c: i === q.correct }));
+                shuffleArray(items);
+                q.options = items.map((o, i) => String.fromCharCode(65 + i) + ') ' + o.t);
+                q.correct = items.findIndex(o => o.c);
+                q.explanation = q.explanation.replace(/^Respuesta [A-D] \(Correcta\):\s*/, '');
+            });
+        }
+        prepareQuestions();
+
+        let currentIndex = 0;
+        let userSelections = new Array(questions.length).fill(null);
+        let lockedStates = new Array(questions.length).fill(false);
+        let successCount = 0;
+        let errorCount = 0;
+
+        const progressIndicator = document.getElementById('progress-indicator');
+        const okCounter = document.getElementById('ok-counter');
+        const errCounter = document.getElementById('err-counter');
+        const progressBarFill = document.getElementById('progress-bar-fill');
+
+        const qMod = document.getElementById('q-mod');
+        const qTitle = document.getElementById('q-title');
+        const hintBoxContent = document.getElementById('hint-box-content');
+        const hintArrow = document.getElementById('hint-arrow');
+        const optionsBox = document.getElementById('options-box');
+        const feedbackBox = document.getElementById('feedback-box');
+
+        const btnBack = document.getElementById('btn-back');
+        const btnAction = document.getElementById('btn-action');
+
+        const activeQuizContent = document.getElementById('active-quiz-content');
+        const resultsView = document.getElementById('results-view');
+        const bottomNavContainer = document.getElementById('bottom-nav-container');
+
+        function renderQuestion() {
+            const q = questions[currentIndex];
+            qMod.textContent = q.mod;
+            qTitle.textContent = q.text;
+            hintBoxContent.textContent = q.hint;
+            hintBoxContent.style.display = 'none';
+            hintArrow.textContent = '▼';
+
+            progressIndicator.textContent = `${currentIndex + 1} de ${questions.length}`;
+            const pct = Math.round(((currentIndex + 1) / questions.length) * 100);
+            progressBarFill.style.width = pct + '%';
+
+            optionsBox.innerHTML = '';
+            q.options.forEach((optText, idx) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-item';
+
+                const letterSpan = document.createElement('span');
+                letterSpan.className = 'option-letter';
+                letterSpan.textContent = optText.charAt(0);
+
+                const textSpan = document.createElement('span');
+                textSpan.textContent = optText.slice(3);
+
+                btn.appendChild(letterSpan);
+                btn.appendChild(textSpan);
+
+                const isLocked = lockedStates[currentIndex];
+                const selectedIdx = userSelections[currentIndex];
+
+                if (isLocked) {
+                    btn.disabled = true;
+                    if (idx === q.correct) {
+                        btn.classList.add('correct');
+                    } else if (idx === selectedIdx) {
+                        btn.classList.add('incorrect');
+                    }
+                } else {
+                    if (selectedIdx === idx) {
+                        btn.classList.add('selected');
+                    }
+                    btn.onclick = () => selectOption(idx);
+                }
+
+                optionsBox.appendChild(btn);
+            });
+
+            if (lockedStates[currentIndex]) {
+                showFeedbackUI(userSelections[currentIndex] === q.correct, q);
+                btnAction.textContent = currentIndex === questions.length - 1 ? 'Resultados' : 'Siguiente';
+                btnAction.disabled = false;
+            } else {
+                feedbackBox.classList.remove('show');
+                btnAction.textContent = 'Listo';
+                btnAction.disabled = userSelections[currentIndex] === null;
+            }
+
+            btnBack.disabled = currentIndex === 0;
+        }
+
+        function selectOption(idx) {
+            if (lockedStates[currentIndex]) return;
+            userSelections[currentIndex] = idx;
+
+            const buttons = optionsBox.getElementsByClassName('option-item');
+            for (let i = 0; i < buttons.length; i++) {
+                if (i === idx) {
+                    buttons[i].classList.add('selected');
+                } else {
+                    buttons[i].classList.remove('selected');
+                }
+            }
+            btnAction.disabled = false;
+        }
+
+        function handleAction() {
+            const isLocked = lockedStates[currentIndex];
+
+            if (!isLocked) {
+                if (userSelections[currentIndex] === null) return;
+                lockedStates[currentIndex] = true;
+
+                const q = questions[currentIndex];
+                const isCorrect = userSelections[currentIndex] === q.correct;
+
+                if (isCorrect) {
+                    successCount++;
+                    okCounter.textContent = successCount;
+                } else {
+                    errorCount++;
+                    errCounter.textContent = errorCount;
+                }
+
+                renderQuestion();
+            } else {
+                if (currentIndex < questions.length - 1) {
+                    currentIndex++;
+                    renderQuestion();
+                } else {
+                    showResultsScreen();
+                }
+            }
+        }
+
+        function handleBack() {
+            if (currentIndex > 0) {
+                currentIndex--;
+                renderQuestion();
+            }
+        }
+
+        function showFeedbackUI(isCorrect, q) {
+            const letter = String.fromCharCode(65 + q.correct);
+            feedbackBox.classList.add('show');
+            if (isCorrect) {
+                feedbackBox.style.backgroundColor = '#d1fae5';
+                feedbackBox.style.color = '#065f46';
+                feedbackBox.innerHTML = `<strong>✓ Respuesta correcta (${letter})</strong><br>${q.explanation}`;
+            } else {
+                feedbackBox.style.backgroundColor = '#fee2e2';
+                feedbackBox.style.color = '#991b1b';
+                feedbackBox.innerHTML = `<strong>× Respuesta incorrecta. La correcta es la ${letter}</strong><br>${q.explanation}`;
+            }
+        }
+
+        function toggleHint() {
+            if (hintBoxContent.style.display === 'block') {
+                hintBoxContent.style.display = 'none';
+                hintArrow.textContent = '▼';
+            } else {
+                hintBoxContent.style.display = 'block';
+                hintArrow.textContent = '▲';
+            }
+        }
+
+        function showResultsScreen() {
+            activeQuizContent.style.display = 'none';
+            bottomNavContainer.style.display = 'none';
+            document.querySelector('.top-bar').style.display = 'none';
+
+            document.getElementById('final-score').textContent = `${successCount} / ${questions.length}`;
+            resultsView.style.display = 'block';
+        }
+
+        function restartQuiz() {
+            currentIndex = 0;
+            successCount = 0;
+            errorCount = 0;
+            userSelections = new Array(questions.length).fill(null);
+            lockedStates = new Array(questions.length).fill(false);
+            okCounter.textContent = '0';
+            errCounter.textContent = '0';
+
+            // Rebarajar opciones en cada reinicio
+            prepareQuestions();
+
+            resultsView.style.display = 'none';
+            activeQuizContent.style.display = 'block';
+            bottomNavContainer.style.display = 'flex';
+            document.querySelector('.top-bar').style.display = 'flex';
+
+            renderQuestion();
+        }
+
+        renderQuestion();
+    </script>
+
+</body>
+
+</html>

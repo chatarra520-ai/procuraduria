@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Integridad DIAN - Simulacro</title>
+    <style>
+        :root {
+            --bg-color: #f3f4f6;
+            --card-bg: #ffffff;
+            --primary: #3b82f6;
+            --primary-hover: #2563eb;
+            --text-main: #1f2937;
+            --text-muted: #6b7280;
+            --border-color: #e5e7eb;
+            --success-bg: #d1fae5;
+            --success-text: #065f46;
+            --danger-bg: #fee2e2;
+            --danger-text: #991b1b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 1rem;
+        }
+
+        .quiz-card {
+            width: 100%;
+            max-width: 600px;
+            background: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .top-bar {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin-bottom: 1.25rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.75rem;
+        }
+
+        .progress-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        .stats-badges {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .badge {
+            padding: 0.2rem 0.6rem;
+            border-radius: 9999px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.2rem;
+        }
+
+        .badge-err {
+            background-color: var(--danger-bg);
+            color: var(--danger-text);
+        }
+
+        .badge-ok {
+            background-color: var(--success-bg);
+            color: var(--success-text);
+        }
+
+        .progress-line {
+            width: 100%;
+            height: 6px;
+            background-color: var(--border-color);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: #4b5563;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .question-header {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+        }
+
+        .question-title {
+            font-size: 1.15rem;
+            font-weight: 600;
+            line-height: 1.4;
+            color: var(--text-main);
+            margin-bottom: 1.25rem;
+        }
+
+        .options-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .option-item {
+            width: 100%;
+            text-align: left;
+            padding: 1rem;
+            background-color: #f9fafb;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            font-size: 0.95rem;
+            color: var(--text-main);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+
+        .option-item:hover:not(:disabled) {
+            background-color: #f3f4f6;
+            border-color: #d1d5db;
+        }
+
+        .option-item.selected {
+            border-color: var(--primary);
+            background-color: #eff6ff;
+        }
+
+        .option-item.correct {
+            border-color: #10b981;
+            background-color: var(--success-bg);
+            color: var(--success-text);
+        }
+
+        .option-item.incorrect {
+            border-color: var(--danger-text);
+            background-color: var(--danger-bg);
+            color: var(--danger-text);
+        }
+
+        .option-letter {
+            font-weight: 700;
+            color: #4b5563;
+            min-width: 20px;
+        }
+
+        .hint-section {
+            margin-bottom: 1rem;
+        }
+
+        .hint-btn {
+            background: none;
+            border: none;
+            color: var(--primary);
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            padding: 0.2rem 0;
+        }
+
+        .hint-box {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            background-color: #f8fafc;
+            border-left: 3px solid var(--primary);
+            padding: 0.75rem;
+            margin-top: 0.5rem;
+            border-radius: 0 8px 8px 0;
+            display: none;
+            line-height: 1.4;
+        }
+
+        .feedback-container {
+            padding: 0.9rem;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            display: none;
+            line-height: 1.4;
+        }
+
+        .feedback-container.show {
+            display: block;
+        }
+
+        .bottom-nav {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .btn-nav {
+            flex: 1;
+            padding: 0.8rem 1.5rem;
+            border-radius: 9999px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: background 0.2s;
+            text-align: center;
+        }
+
+        .btn-back {
+            background-color: #e5e7eb;
+            color: #374151;
+        }
+
+        .btn-back:hover:not(:disabled) {
+            background-color: #d1d5db;
+        }
+
+        .btn-ready {
+            background-color: #93c5fd;
+            color: #1e3a8a;
+        }
+
+        .btn-ready:hover:not(:disabled) {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-nav:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .results-view {
+            text-align: center;
+            padding: 2rem 1rem;
+            display: none;
+        }
+
+        .results-view h2 {
+            font-size: 1.5rem;
+            color: var(--text-main);
+            margin-bottom: 0.75rem;
+        }
+
+        .score-display {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .results-desc {
+            font-size: 1rem;
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="quiz-card" id="main-card">
+        <div>
+            <div class="top-bar">
+                <div class="progress-row">
+                    <span id="progress-indicator">1 de 40</span>
+                    <div class="stats-badges">
+                        <div class="badge badge-err">× <span id="err-counter">0</span></div>
+                        <div class="badge badge-ok">✓ <span id="ok-counter">0</span></div>
+                    </div>
+                </div>
+                <div class="progress-line">
+                    <div class="progress-fill" id="progress-bar-fill"></div>
+                </div>
+            </div>
+
+            <div id="active-quiz-content">
+                <div class="question-header" id="q-mod">Módulo</div>
+                <div class="question-title" id="q-title">Cargando...</div>
+
+                <div class="hint-section">
+                    <button class="hint-btn" onclick="toggleHint()">Pista <span id="hint-arrow">▼</span></button>
+                    <div class="hint-box" id="hint-box-content">Pista aquí</div>
+                </div>
+
+                <div class="options-group" id="options-box"></div>
+
+                <div class="feedback-container" id="feedback-box"></div>
+            </div>
+
+            <div class="results-view" id="results-view">
+                <h2>¡Simulacro Finalizado!</h2>
+                <div class="score-display" id="final-score">0/40</div>
+                <p class="results-desc" id="final-desc">Has completado el simulacro de integridad de la DIAN.</p>
+                <button class="btn-nav btn-ready" onclick="restartQuiz()"
+                    style="max-width: 250px; margin: 0 auto;">Reiniciar Simulacro</button>
+            </div>
+        </div>
+
+        <div class="bottom-nav" id="bottom-nav-container">
+            <button class="btn-nav btn-back" id="btn-back" onclick="handleBack()">Atrás</button>
+            <button class="btn-nav btn-ready" id="btn-action" onclick="handleAction()">Listo</button>
+        </div>
+    </div>
+
+    <script>
+        const RAW = [
+            [
+                "Durante la consolidación de un expediente de fiscalización, un Gestor I de la DIAN advierte que cometió un error involuntario al digitar la cifra del saldo a favor de un contribuyente en una hoja de trabajo, lo cual altera el monto de la sanción propuesta en el proyecto de requerimiento especial antes de su notificación. Su superior no se ha percatado de la falla.",
+                [
+                    "Esperar a que el superior jerárquico detecte el error, mantener la cifra digitada en el expediente por razones de oportunidad y notificar el documento en el plazo previsto.",
+                    "Corregir discretamente los cálculos en el expediente sin informar al superior jerárquico y ajustar el documento antes de notificarlo, para no afectar la evaluación de desempeño.",
+                    "Reportar de inmediato el error a su superior jerárquico, corregir los cálculos en el expediente con fundamento en la verdad y ajustar el documento antes de notificarlo, cumpliendo así con el principio de transparencia."
+                ],
+                2,
+                "Valor en juego: Honestidad (actuar con fundamento en la verdad).",
+                "Informar el error y corregirlo con base en la verdad antes de notificar demuestra honestidad y responsabilidad. Ocultarlo o modificar solo los antecedentes físicos sin dejar constancia vulnera la transparencia."
+            ],
+            [
+                "Un auditor aduanero finaliza una inspección física a un embarque de importación en zona primaria. El representante de la agencia de aduanas, en señal de agradecimiento por la agilidad del trámite, le ofrece un obsequio corporativo de alto valor comercial y una invitación a un almuerzo ejecutivo.",
+                [
+                    "Rechazar cortésmente el obsequio y la invitación, explicando que los servidores de la DIAN tienen prohibido recibir incentivos o beneficios de usuarios o interesados.",
+                    "Aceptar cortésmente el obsequio y la invitación, explicando que los servidores de la DIAN pueden recibir incentivos de usuarios si la decisión técnica ya está tomada.",
+                    "Rechazar el obsequio pero aceptar la invitación al almuerzo, explicando que los servidores de la DIAN solo tienen prohibido recibir bienes de valor comercial y no atenciones de cortesía."
+                ],
+                0,
+                "Valor en juego: Honestidad. Piensa en las dádivas de usuarios o interesados.",
+                "Los servidores de la DIAN no pueden recibir incentivos o beneficios de usuarios o interesados. Lo correcto es rechazar con cortesía y explicar la prohibición; aceptar una parte (el almuerzo) o hacerlo sin registro sigue siendo una conducta indebida."
+            ],
+            [
+                "A un Gestor de Cobro Coactivo se le asigna el expediente de ejecución contra una sociedad comercial. Al revisar la representación legal de la empresa, advierte que el liquidador y socio mayoritario es su hermano germano.",
+                [
+                    "Continuar con el trámite del asunto, informando verbalmente a su superior jerárquico del parentesco y aplicando las normas de cobro de manera estricta para demostrar su imparcialidad.",
+                    "Manifestar de inmediato su impedimento por escrito ante su superior jerárquico, apartándose del conocimiento y trámite del asunto por existir un conflicto de interés.",
+                    "Solicitar a un compañero que firme las actuaciones del expediente, sin manifestar su impedimento por escrito ante su superior jerárquico, para evitar un conflicto de interés aparente."
+                ],
+                1,
+                "Piensa en el conflicto de interés y en el impedimento.",
+                "Cuando existe un vínculo familiar cercano con el interesado hay conflicto de interés: el servidor debe declararse impedido por escrito ante su superior y apartarse del trámite, aunque crea que podría ser imparcial."
+            ],
+            [
+                "Un funcionario de la Subdirección de Fiscalización Cambiaria utiliza la impresora de alta velocidad asignada a su dependencia y hojas institucionales para imprimir un trabajo de grado de 300 páginas de su maestría personal durante su jornada laboral.",
+                [
+                    "Es una conducta permitida, pues los recursos públicos y el tiempo laboral pueden usarse para fines académicos privados con la autorización de un compañero.",
+                    "Es una conducta prohibida, pues los recursos públicos, insumos y tiempo laboral no pueden utilizarse para fines personales, académicos privados o pasatiempos.",
+                    "Es una conducta aceptable, pues los recursos públicos y los insumos pueden utilizarse para fines personales siempre que se haga fuera de la jornada laboral y se reponga el material."
+                ],
+                1,
+                "Piensa en el uso de los recursos públicos y del tiempo laboral.",
+                "Los recursos públicos, los insumos y el tiempo laboral no se pueden usar para fines personales. Ni la autorización verbal de un compañero ni reponer las hojas convierten la conducta en aceptable."
+            ],
+            [
+                "Un Gestor de Fiscalización descubre en el análisis contable de un contribuyente un esquema deliberado de clonación de facturas electrónicas y venta de IVA descontable ficticio, en el que presuntamente está colaborando un funcionario de la misma seccional de la DIAN.",
+                [
+                    "Informar verbalmente la falta y los presuntos delitos a su jefe inmediato, sin acudir a las instancias competentes (Oficina de Control Interno Disciplinario y Fiscalía) hasta tener plena certeza de la participación del funcionario.",
+                    "Reportar únicamente la falta ante la Oficina de Control Interno Disciplinario, sin denunciar los presuntos delitos ante la Subdirección de Asuntos Penales ni la Fiscalía, para proteger la reputación de la seccional.",
+                    "Denunciar obligatoriamente la falta y los presuntos delitos ante las instancias competentes (Oficina de Control Interno Disciplinario, Subdirección de Asuntos Penales y Fiscalía) aportando las evidencias encontradas."
+                ],
+                2,
+                "Piensa en el deber de denunciar ante las instancias competentes.",
+                "Ante un presunto fraude con participación de un servidor, lo correcto es denunciar formalmente ante las instancias competentes y aportar las evidencias. Callar o confrontar sin dejar registro no protege a la entidad."
+            ],
+            [
+                "Un servidor de la DIAN es detenido en un control de tránsito vehicular los fines de semana. Para evitar la imposición de un comparendo por exceso de velocidad, exhibe su carné de funcionario de la DIAN e indica al agente de tránsito que es un 'inspector de fiscalización aduanera de alto nivel'.",
+                [
+                    "Incurre en una conducta prohibida por utilizar su identificación oficial o su cargo para presionar indebidamente o buscar privilegios personales ante otras autoridades.",
+                    "No incurre en conducta prohibida, pues puede utilizar su identificación oficial para informar su calidad de servidor público y solicitar un trato respetuoso.",
+                    "Incurre apenas en una falta de cortesía, pues utilizar su identificación oficial no constituye una presión indebida ni busca privilegios personales ante otras autoridades si no ofrece dinero."
+                ],
+                0,
+                "Piensa en el uso indebido del cargo o de la identificación oficial.",
+                "El carné y el cargo no se pueden usar para obtener privilegios personales ante otras autoridades. Que el funcionario fuera en vehículo particular no cambia la conducta."
+            ],
+            [
+                "Un Gestor de Liquidación se encuentra realizando trabajo remoto autorizado. Su jefe inmediato está en comisión fuera del país y no hay un monitoreo en tiempo real de sus horarios de conexión. A pesar de esto, el funcionario cumple estrictamente con el avance de expedientes proyectados y la calidad de sus fallos.",
+                [
+                    "Demuestra un exceso de celo laboral, pues actúa con más rigor del exigido y cumple sus deberes de manera innecesaria aun cuando esté ausente quien supervise su gestión.",
+                    "Demuestra la vivencia del valor de la Honestidad, actuando con rectitud y cumplimiento de sus deberes aun cuando esté ausente quien supervise su gestión, incluso en trabajo remoto.",
+                    "Debería reducir el ritmo de trabajo mientras esté ausente quien supervise su gestión, pues la rectitud en el cumplimiento de los deberes solo se evalúa en presencia del jefe inmediato."
+                ],
+                1,
+                "Valor en juego: Honestidad (rectitud aun sin supervisión).",
+                "Cumplir los deberes con rectitud aunque nadie supervise es una expresión de honestidad. Cumplir bien no constituye ningún exceso ni justifica suspender el trabajo."
+            ],
+            [
+                "Un contribuyente de la tercera edad y de origen rural acude a un punto de contacto de la DIAN en búsqueda de orientación para actualizar su RUT. Muestra confusión con el uso de las plataformas digitales y manifiesta frustración. El funcionario de atención:",
+                [
+                    "Lo atiende con paciencia, empatía y respeto, guiándolo en el uso de los kioscos digitales o realizando la atención asistida para garantizar su derecho a un trato digno.",
+                    "Lo atiende con tono firme y brevedad, indicándole que debe aprender a usar los kioscos digitales o buscar un contador privado, pues la DIAN no presta asesorías personalizadas a personas no bancarizadas.",
+                    "Lo remite a la fila general de PQRS, indicándole que su trámite de actualización del RUT debe hacerse por escrito, para no retrasar el turno de los demás usuarios ni realizar atención asistida."
+                ],
+                0,
+                "Valor en juego: Respeto (trato digno a todas las personas).",
+                "El valor del Respeto implica reconocer y tratar con dignidad a todas las personas, sin importar su condición. La atención asistida y paciente garantiza el trato digno."
+            ],
+            [
+                "En un comité técnico de discusión de un caso de precios de transferencia, dos Gestores de Fiscalización sostienen posturas opuestas sobre el método de comparabilidad aplicable. Uno de los funcionarios interrumpe con sarcasmo a su compañero, calificando su argumento de 'ignorante y absurdo'.",
+                [
+                    "El funcionario vulnera el valor del Respeto, ya que de ninguna manera debe referirse a otros con ironía, sarcasmo o desdén, debiendo exponer sus argumentos con nobleza y lenguaje considerado.",
+                    "El funcionario no vulnera ningún valor, ya que puede referirse a otros con ironía o sarcasmo cuando sus argumentos técnicos sean correctos.",
+                    "El funcionario vulnera apenas el valor de la Diligencia, ya que debe exponer sus argumentos con prontitud, pero puede referirse a otros con ironía o desdén sin que ello afecte el Respeto."
+                ],
+                0,
+                "Valor en juego: Respeto.",
+                "Se puede discrepar técnicamente, pero los argumentos deben exponerse con consideración. El sarcasmo y el desdén vulneran el Respeto, aunque el argumento propio sea acertado."
+            ],
+            [
+                "Durante un operativo de control aduanero en vía pública, un inspector decide detener e inspeccionar el equipaje únicamente de los ciudadanos de determinada procedencia étnica o regional, asumiendo sin pruebas que 'siempre transportan mercancía de contrabando'.",
+                [
+                    "Constituye una conducta válida de perfilamiento, puesto que los servidores pueden basar sus decisiones en presunciones cuando logran incautar mercancía irregular.",
+                    "Constituye una violación al valor del Respeto, puesto que los servidores jamás deben basar sus decisiones en presunciones, estereotipos o prejuicios ni actuar de manera discriminatoria.",
+                    "Constituye una violación al valor de la Diligencia, puesto que los servidores deben inspeccionar a todos los ciudadanos por igual, aunque puedan basar sus decisiones en la intuición personal."
+                ],
+                1,
+                "Piensa en los estereotipos y la no discriminación.",
+                "Las decisiones no pueden basarse en estereotipos ni en discriminación. Que el resultado sea exitoso no valida una actuación fundada en prejuicios."
+            ],
+            [
+                "Una Gestora de la Subdirección de Procesos llega al área de trabajo saludando amablemente a sus compañeros, promueve espacios de escucha cuando surgen tensiones operativas y colabora constructivamente para mantener la armonía del equipo de trabajo.",
+                [
+                    "La servidora distrae su atención de los objetivos individuales asignados al contribuir activamente a la generación de un clima laboral que no hace parte de sus deberes.",
+                    "La servidora cumple con las pautas del valor del Respeto al contribuir activamente a la generación de un adecuado clima laboral con su buena actitud.",
+                    "La servidora cumple con las pautas del valor del Respeto solo en su relación con el usuario externo, pues la amabilidad con los compañeros es opcional dentro del equipo de trabajo."
+                ],
+                1,
+                "Valor en juego: Respeto (clima laboral).",
+                "El trato amable, la escucha y la colaboración con los compañeros aportan a un buen clima laboral, que es parte de las pautas del Respeto; no se limitan al usuario externo."
+            ],
+            [
+                "Un pequeño comerciante acude desesperado a las oficinas de la DIAN porque su cuenta bancaria fue embargada dentro de un proceso de cobro por una deuda tributaria ya cancelada meses atrás. El funcionario de cobranzas atiende el caso:",
+                [
+                    "Asume una posición de empatía, escucha atentamente sin distracciones, verifica el soporte de pago en el sistema informático y adelanta de inmediato el trámite interno para levantar el embargo de ley.",
+                    "Asume una posición de neutralidad, escucha brevemente, le sugiere pagar nuevamente el impuesto para acelerar el desembargo de la cuenta y le indica que solicite la devolución posteriormente.",
+                    "Asume una posición formal, escucha sin interrumpir, le indica que debe interponer una PQRS que tardará 15 días hábiles en responderse y que el trámite interno no puede adelantarse antes."
+                ],
+                0,
+                "Piensa en la atención empática y diligente al usuario.",
+                "Escuchar, verificar el pago y gestionar de inmediato el levantamiento del embargo combina empatía y diligencia. Pedir un nuevo pago o desentenderse del problema del usuario es indebido."
+            ],
+            [
+                "Ante la expedición de una nueva Ley de Garantías y reformas al Régimen Sancionatorio Aduanero (como la Ley 2586 de 2026), un Gestor de Fiscalización decide inscribirse voluntariamente en los cursos virtuales ofrecidos por la Subdirección Escuela de la DIAN y estudiar las normativas en su tiempo de preparación laboral.",
+                [
+                    "Aplica de forma directa el valor del Compromiso al capacitarse permanentemente para garantizar la correcta realización de sus funciones y la excelencia del servicio, mejorando continuamente su servicio.",
+                    "Incurre en pérdida de tiempo operacional al capacitarse en horas laborales, pues ese tiempo debe dedicarse exclusivamente al cierre de investigaciones pendientes.",
+                    "Aplica el valor de la Diligencia de manera accesoria, pues la capacitación voluntaria no agrega valor a las competencias del empleo público ni a la excelencia del servicio."
+                ],
+                0,
+                "Valor en juego: Compromiso.",
+                "Capacitarse de manera permanente para cumplir mejor las funciones es una expresión del Compromiso."
+            ],
+            [
+                "Un servidor del área de liquidación expresa frecuentemente ante sus compañeros y ciudadanos que 'trabajar en la DIAN es un castigo, que la entidad no sirve para nada y que atender las peticiones de la gente es hacerles un favor innecesario'.",
+                [
+                    "El funcionario expresa una opinión privada amparada por la libertad de expresión, que no afecta su rol de servidor.",
+                    "El funcionario actúa de manera justificada, al trabajar con actitud negativa cuando la carga laboral del despacho supera la capacidad operativa y atender al ciudadano resulta un favor innecesario.",
+                    "El funcionario vulnera gravemente el valor del Compromiso, al trabajar con actitud negativa y asumir erróneamente que atender al ciudadano es un 'favor' y no un orgullo y deber constitucional."
+                ],
+                2,
+                "Valor en juego: Compromiso (actitud de servicio).",
+                "Atender al ciudadano es un deber y no un favor. La actitud negativa y despectiva frente al trabajo y al usuario va contra el Compromiso."
+            ],
+            [
+                "Con ocasión de un fallo masivo de los servicios informáticos de la DIAN al cierre del calendario tributario, se declara la contingencia oficial. Se requiere que el equipo de soporte y fiscalización permanezca horas adicionales para atender de forma oportuna a los usuarios. Un Gestor decide quedarse voluntariamente y apoyar la atención manual.",
+                [
+                    "El funcionario vulnera el principio de austeridad del gasto, al prestar servicios fuera del horario regular sin autorización previa.",
+                    "El funcionario materializa el valor del Compromiso redoblando esfuerzos en situaciones extraordinarias para brindar un servicio oportuno a la ciudadanía.",
+                    "El funcionario no materializa ningún valor, pues la contingencia suspende automáticamente los deberes de atención en situaciones extraordinarias y el servicio oportuno a la ciudadanía."
+                ],
+                1,
+                "Valor en juego: Compromiso.",
+                "Esforzarse más en una contingencia oficial para atender oportunamente a los usuarios es Compromiso. La contingencia no suspende los deberes de atención."
+            ],
+            [
+                "Al finalizar la jornada laboral, un inspector aduanero nota que en varias oficinas del nivel local han quedado encendidos los sistemas de aire acondicionado, pantallas de computador y luces de pasillos. Decide apagar los equipos a su alcance y reportar la situación a administración para optimizar el gasto de energía.",
+                [
+                    "Vulnera la autonomía operacional de los usuarios directos de las oficinas, al intervenir en el uso de los recursos públicos y reportar la situación a la administración sin su consentimiento.",
+                    "Asume una conducta diligente alineada con la conservación y uso responsable de los recursos públicos, recordando que lo público es de todos y no se desperdicia, evitando gastos innecesarios para la entidad.",
+                    "Extralimita sus funciones de inspector al intervenir en asuntos de servicios generales de la edificación, pues el uso de los recursos públicos de cada oficina es responsabilidad exclusiva de sus ocupantes."
+                ],
+                1,
+                "Piensa en el uso responsable de los recursos públicos.",
+                "Cuidar los recursos públicos y reportar el desperdicio a la administración es una conducta diligente; no es una extralimitación."
+            ],
+            [
+                "Un Gestor de Fiscalización tiene a su cargo la proyección de la resolución que decide un Recurso de Reconsideración cambiario. El término legal de un año para resolver vence en 15 días. El funcionario organiza su cronograma prioritario para notificar el acto dentro del término y evitar que se configure el silencio administrativo positivo a favor del infractor sin análisis previo.",
+                [
+                    "Actúa con Diligencia al solicitar una prórroga no prevista en la ley para dilatar la decisión, protegiendo los intereses del Estado.",
+                    "Cumple una labor rutinaria al organizar sus tiempos, sin relación con la integridad del servicio público ni con los derechos del usuario frente al silencio administrativo.",
+                    "Actúa con Diligencia al cumplir los tiempos estipulados con prontitud y eficiencia, protegiendo los intereses del Estado y los derechos del usuario."
+                ],
+                2,
+                "Valor en juego: Diligencia (cumplir los tiempos con prontitud).",
+                "Organizar el trabajo para cumplir los términos legales protege al Estado y al usuario: es Diligencia. Pedir una prórroga que la ley no prevé sería indebido."
+            ],
+            [
+                "Un profesional del área de analítica debe elaborar un informe sobre patrones de evasión en el sector textil. Por afán de salir de la oficina, entrega un documento preliminar con tablas incompletas, datos sin depurar y sin las conclusiones técnicas requeridas.",
+                [
+                    "Incurre en falta a la Diligencia, puesto que en el servicio público no son aceptables las gestiones a medias y debe garantizarse la calidad en cada producto entregado.",
+                    "No incurre en ninguna falta, puesto que la flexibilidad operacional permite entregar productos preliminares sin garantizar su calidad final.",
+                    "Incurre apenas en una falta menor, puesto que la entrega es válida si se acompaña de un compromiso verbal de completar los datos y las conclusiones técnicas en semanas posteriores."
+                ],
+                0,
+                "Valor en juego: Diligencia (calidad en cada entrega).",
+                "Entregar productos incompletos por afán va contra la Diligencia, que exige calidad en cada producto. Un compromiso verbal no subsana la entrega a medias."
+            ],
+            [
+                "Un Gestor I identifica un cuello de botella recurrente en el proceso informático de radicación de facturas de contingencia que genera demoras a los importadores. Diseña una propuesta técnica simplificada para automatizar la validación y la presenta formalmente ante el Líder de Subproceso.",
+                [
+                    "La conducta ejemplifica la Diligencia al ser proactivo comunicando a tiempo propuestas para mejorar continuamente su labor y la de sus compañeros, aportando a la eficiencia de la entidad.",
+                    "La conducta incurre en extralimitación de funciones, al proponer cambios que deben ser decididos por la Alta Dirección y no comunicados formalmente al Líder de Subproceso.",
+                    "La conducta no corresponde al funcionario, pues la innovación en los procesos de radicación es competencia exclusiva de la Dirección de Gestión de Innovación y Tecnología de la entidad."
+                ],
+                0,
+                "Valor en juego: Diligencia (proactividad y mejora continua).",
+                "Proponer mejoras por el canal formal, a tiempo y de manera proactiva, es Diligencia. Presentar una propuesta no equivale a modificar un manual por cuenta propia."
+            ],
+            [
+                "Un funcionario asignado al área de Notificaciones se niega a recibir una lista de liquidaciones oficiales complejas argumentando que 'esa tarea es muy aburrida y le corresponde a los funcionarios de carrera más antiguos'.",
+                [
+                    "La negativa es válida, dado que los servidores que no han completado el período de prueba pueden evadir funciones complejas.",
+                    "Vulnerará el valor de la Diligencia, dado que los servidores públicos no deben evadir sus funciones y responsabilidades por ningún motivo ni demostrar desinterés.",
+                    "La negativa es una forma legítima de objeción de conciencia laboral, dado que los servidores públicos pueden rechazar funciones que consideren aburridas o que correspondan a funcionarios más antiguos."
+                ],
+                1,
+                "Valor en juego: Diligencia.",
+                "Evadir las funciones asignadas por considerarlas aburridas va contra la Diligencia; el período de prueba o la antigüedad de otros no es una excusa válida."
+            ],
+            [
+                "Un auditor de fiscalización internacional debe determinar si procede un ajuste de ingresos en una multinacional. A pesar de que existe presión mediática sobre el caso, fundamenta su pliego de cargos exclusivamente en pruebas contables, contratos de transferencia de tecnología y estudios de comparabilidad rigurosos.",
+                [
+                    "Cumple con el valor de la Justicia al tomar decisiones informadas y objetivas basadas en evidencias y datos confiables, garantizando la imparcialidad, sin ceder a presiones mediáticas o de terceros.",
+                    "Incurre en sesgo técnico, pues debió tomar decisiones informadas considerando la opinión de los gremios económicos antes de notificar el acto, garantizando la participación de todos los interesados.",
+                    "Debería ceder parcialmente a la presión pública, tomando decisiones que demuestren contundencia institucional contra las grandes empresas, para garantizar la confianza ciudadana en la entidad."
+                ],
+                0,
+                "Valor en juego: Justicia (imparcialidad basada en evidencia).",
+                "Decidir con base en evidencia y no en presiones mediáticas ni de gremios garantiza imparcialidad: es la Justicia."
+            ],
+            [
+                "Un jefe de fiscalización aduanera decide acelerar la entrega de mercancías aprehendidas a un comerciante que es afiliado al mismo partido político de su preferencia, mientras mantiene represados sin justificación los expedientes de otros comerciantes en idéntica situación legal.",
+                [
+                    "Ejerce una facultad discrecional derivada del cargo directivo al favorecer a un comerciante por afinidad, sin vulnerar la igualdad de los demás.",
+                    "Incurre en flagrante violación al valor de la Justicia al favorecer a un grupo o persona por afinidad o simpatía y vulnerar la igualdad de derechos.",
+                    "Actúa de manera equitativa al favorecer a un comerciante que presentó una carta formal de solicitud, aunque los demás comerciantes se encuentren en idéntica situación legal y sin respuesta."
+                ],
+                1,
+                "Valor en juego: Justicia (igualdad de trato).",
+                "Favorecer a alguien por afinidad política y retener sin justificación los trámites de otros en igual situación viola la igualdad. La discrecionalidad no autoriza el trato desigual."
+            ],
+            [
+                "Durante una diligencia de inspección a un depósito habilitado, se presentan discrepancias sobre el conteo físico de bultos a granel. El Gestor responsable invita al depositario y al agenciador a revisar nuevamente las planillas de recepción, confrontar las básculas certificadas y levantar un acta concertada de hallazgos.",
+                [
+                    "El funcionario actúa conforme al valor de la Justicia al tomar decisiones estableciendo mecanismos de diálogo y concertación con las partes involucradas sobre bases probatorias, antes de adoptar una decisión definitiva.",
+                    "El funcionario muestra debilidad institucional al dialogar con las partes involucradas, pues el usuario no debe participar en la verificación de pruebas.",
+                    "El funcionario actúa conforme al valor de la Justicia al aplicar el decomiso directo, sin establecer mecanismos de diálogo con las partes involucradas ni escuchar las explicaciones del depositario."
+                ],
+                0,
+                "Valor en juego: Justicia (diálogo y decisión sobre pruebas).",
+                "Escuchar a las partes y confrontar las pruebas antes de decidir es parte de la Justicia. Decomisar sin escuchar sería decidir sin garantizar los derechos del usuario."
+            ],
+            [
+                "Un grupo de investigación aduanera de la DIAN proyecta un operativo contra una red transnacional de contrabando de cigarrillos y licores vinculada a economías criminales en una zona fronteriza de alto riesgo. A pesar de amedrentamientos anónimos, los funcionarios ejecutan el operativo con riguroso apoyo de la fuerza pública.",
+                [
+                    "La conducta refleja únicamente el valor aspiracional de la TEMPLANZA, mediante el cual se actúa con sobriedad y buen juicio en la fiscalización masiva de operaciones comerciales en el territorio.",
+                    "La conducta encarna el valor aspiracional de la VALENTÍA, mediante el cual se lucha con determinación contra las economías criminales para garantizar el imperio de la ley en todo el territorio, incluso ante amenazas anónimas.",
+                    "Los funcionarios debieron abstenerse de ejecutar el operativo, en aplicación de la PROVIDENCIA, para evitar controversias con grupos locales y anticiparse a las amenazas en el territorio."
+                ],
+                1,
+                "Los valores aspiracionales de la DIAN son valentía, objetividad, templanza y providencia.",
+                "Según la filosofía institucional de la DIAN, la valentía consiste en luchar contra las economías criminales para garantizar el imperio de la ley en todos los rincones del país."
+            ],
+            [
+                "La Subdirección de Analítica diseña un modelo predictivo de riesgo para auditar devoluciones de saldo a favor en IVA. El equipo técnico rechaza incluir variables de sesgo subjetivo o político y fundamenta los algoritmos exclusivamente en métricas de inconsistencia financiera e indicadores tributarios rigurosos.",
+                [
+                    "El equipo materializa el valor aspiracional de la OBJETIVIDAD, al basar sus funciones en evidencia rigurosa y sin sesgos para fortalecer la confianza ciudadana en la DIAN.",
+                    "El equipo materializa únicamente el valor aspiracional de la TEMPLANZA, al basar la gestión de datos masivos en métricas de inconsistencia.",
+                    "El equipo incurre en rigidez reglamentaria, al basar sus funciones en evidencia rigurosa y rechazar las variables que perjudican la discrecionalidad del Director General de la DIAN."
+                ],
+                0,
+                "Los valores aspiracionales de la DIAN son valentía, objetividad, templanza y providencia.",
+                "Según la filosofía institucional de la DIAN, la objetividad consiste en cumplir las funciones con base en evidencia rigurosa y sin sesgos, para fortalecer la confianza de la ciudadanía en la DIAN y en el Estado."
+            ],
+            [
+                "Un Gestor de Control Extensivo enfrenta fuertes presiones de mediadores y grupos de presión para acelerar indebidamente la devolución de tributos de un gran grupo económico. El funcionario mantiene la sobriedad, buen juicio y aplomo técnico, exigiendo la verificación documental completa conforme a la ley.",
+                [
+                    "Encarna el valor aspiracional de la TEMPLANZA, actuando con sobriedad, determinación y buen juicio ante presiones externas para sostener el Estado social de derecho.",
+                    "Encarna el valor aspiracional de la PROVIDENCIA, actuando con anticipación frente a los riesgos presupuestales derivados de las presiones externas.",
+                    "Incurre en un comportamiento burocrático, actuando con rigidez ante presiones externas, lo que vulnera el principio de celeridad administrativa y la finalidad de sostener el Estado social de derecho."
+                ],
+                0,
+                "Los valores aspiracionales de la DIAN son valentía, objetividad, templanza y providencia.",
+                "Según la filosofía institucional de la DIAN, la templanza es ser sobrios y enfrentar con determinación y buen juicio las situaciones necesarias para sostener el Estado social de derecho."
+            ],
+            [
+                "Frente a la anulación judicial imprevista de un procedimiento general de liquidación, la Subdirección de Normativa analiza anticipadamente las contingencias, reestructura los modelos de pliegos bajo la nueva jurisprudencia y continúa con firmeza en los programas de fiscalización para no dejar vacíos de recaudo.",
+                [
+                    "La actuación refleja una falta de planificación, al no anticiparse a la eventualidad de la anulación judicial y verse obligada a reestructurar los modelos de pliegos para cerrar la brecha tributaria.",
+                    "La actuación refleja la OBJETIVIDAD, al analizar con evidencia rigurosa las providencias del Consejo de Estado y continuar con los programas de fiscalización para cerrar la brecha tributaria.",
+                    "La actuación refleja la PROVIDENCIA, al anticiparse a las eventualidades y continuar de forma decidida ante reveses para cerrar la brecha tributaria, sin dejar vacíos de recaudo."
+                ],
+                2,
+                "Los valores aspiracionales de la DIAN son valentía, objetividad, templanza y providencia.",
+                "Según la filosofía institucional de la DIAN, la providencia consiste en anticiparse a las eventualidades y, ante los reveses, continuar de forma decidida en el cumplimiento de la misión: cerrar la brecha tributaria y acabar con el contrabando."
+            ],
+            [
+                "En el marco de la evaluación del Modelo Integrado de Planeación y Gestión (MIPG) en la DIAN, se le requiere a un Jefe de División presentar evidencias sobre la apropiación del Código de Integridad en su dependencia.",
+                [
+                    "Debe certificar la ejecución de acciones de capacitación obligatoria para todo el personal y presentar indicadores de seguimiento bi-anuales que midan la puesta en marcha de conductas íntegras en la gestión cotidiana.",
+                    "Debe enviar un correo a todos los funcionarios adjuntando el documento PDF del Código y presentar un informe anual que describa la difusión de conductas íntegras en la gestión cotidiana.",
+                    "Debe indicar que la política de integridad del MIPG es optativa en el nivel seccional y presentar únicamente indicadores de gestión de los procesos misionales de su dependencia en la gestión cotidiana."
+                ],
+                0,
+                "Piensa en el MIPG y en cómo se evidencia la apropiación del Código de Integridad.",
+                "La apropiación se evidencia con acciones de capacitación y con indicadores de seguimiento, no con el simple envío del documento. La política de integridad no es optativa. (Los detalles de periodicidad vienen de tu material y no los verifiqué en una norma.)"
+            ],
+            [
+                "Un periodista local contacta a un Gestor de Fiscalización y le ofrece publicidad positiva en medios a cambio de revelar los datos no públicos de la declaración de renta y activos en el exterior de un candidato a la alcaldía.",
+                [
+                    "Mantener la reserva de la información tributaria a su cargo, salvo la de los candidatos a cargos públicos, y aceptar la propuesta de publicidad.",
+                    "Mantener la reserva absoluta de la información tributaria a su cargo y honrar la promesa de confidencialidad exigible en su gestión, rechazando la propuesta.",
+                    "Mantener la reserva de la información tributaria de la renta y los activos en el exterior, pero entregar los datos de ingresos brutos sin revelar el saldo a pagar, rechazando la publicidad."
+                ],
+                1,
+                "Piensa en la reserva de la información tributaria.",
+                "La información tributaria está sujeta a reserva y el servidor no puede revelarla, ni siquiera parcialmente, ni por tratarse de una figura pública."
+            ],
+            [
+                "Un ciudadano radica una solicitud de información pública sobre la estructura organizativa de la Seccional de la DIAN. El funcionario receptor se niega a tramitarla aduciendo que el ciudadano no presentó la petición por escrito firmado ante notario público.",
+                [
+                    "El funcionario vulnera los deberes de las autoridades y la Carta de Trato Digno, ya que queda prohibido exigir formalidades no previstas en la ley o la presentación personal no obligatoria, como lo exige el trato digno al ciudadano.",
+                    "El funcionario cumple los deberes de las autoridades, ya que es legal exigir la firma ante notario público para evitar peticiones anónimas y garantizar la presentación personal del peticionario.",
+                    "El funcionario cumple la Carta de Trato Digno, ya que debe rechazar de plano toda solicitud que no incluya un poder de abogado formal y que no cumpla las formalidades previstas en la ley."
+                ],
+                0,
+                "Piensa en los deberes de las autoridades y en las formalidades no previstas en la ley.",
+                "No se pueden exigir formalidades que la ley no prevé, como la firma ante notario o un poder de abogado, para tramitar una solicitud de información."
+            ],
+            [
+                "Para justificar tres días de inasistencia no autorizada a su puesto de trabajo, un funcionario presenta ante la Subdirección de Desarrollo del Talento Humano una incapacidad médica alterada en sus fechas de expedición.",
+                [
+                    "Constituye un asunto privado que no afecta la integridad de la función pública recaudadora, aunque se justifiquen situaciones administrativas con documentos alterados y sin consecuencias disciplinarias.",
+                    "Constituye una violación grave al valor de la Honestidad por justificar situaciones administrativas con documentos falsos, además de configurar falta disciplinaria gravísima y delito.",
+                    "Constituye una falta que se subsana descontando proporcionalmente los días del sueldo, sin necesidad de iniciar investigación disciplinaria por justificar situaciones administrativas con documentos alterados."
+                ],
+                1,
+                "Valor en juego: Honestidad.",
+                "Presentar un documento alterado para justificar una ausencia es falsedad y vulnera la Honestidad. Descontar los días no exime de la investigación. (La calificación como falta gravísima y delito viene de tu material y no la verifiqué.)"
+            ],
+            [
+                "En la elaboración de una resolución reglamentaria sobre los requisitos de los depósitos francos, la Subdirección de Procesos Aduaneros publica el proyecto de norma en el portal web institucional por el término legal de 5 días para recibir observaciones de los usuarios y gremios antes de la firma del Director General.",
+                [
+                    "Incurre en dilación injustificada al someter decisiones técnicas a la opinión de terceros, en lugar de apoyar la expedición oportuna de las decisiones regulatorias que afectan a la ciudadanía.",
+                    "Vulnera el principio de reserva de los actos administrativos en borrador, al promover espacios de participación para que la ciudadanía opine sobre decisiones regulatorias que aún no han sido firmadas.",
+                    "Cumple con el valor de la Honestidad al apoyar y promover espacios de participación para que la ciudadanía haga parte de las decisiones regulatorias que la afectan, fortaleciendo la transparencia institucional."
+                ],
+                2,
+                "Valor en juego: Honestidad (transparencia y participación).",
+                "Publicar el proyecto para recibir observaciones promueve la transparencia y la participación ciudadana. (El término de 5 días viene de tu material y no lo verifiqué.)"
+            ],
+            [
+                "Durante la asignación de turnos de inspección física en puerto, un Gestor Aduanero altera el orden de la fila del sistema informático para atender prioritariamente el contenedor importado por la empresa de su mejor amigo de la infancia.",
+                [
+                    "Incurre en una conducta aceptable, pues puede dar trato preferencial a personas cercanas cuando no se cobra dinero a cambio de la agilización de un proceso en igualdad de condiciones.",
+                    "Ejerce la amabilidad profesional en el servicio aduanero, pues puede dar prioridad a personas cercanas para favorecerlas en un proceso sin afectar la igualdad de condiciones de los demás usuarios.",
+                    "Incurre en conducta prohibida por dar trato preferencial a personas cercanas para favorecerlas en un proceso en igualdad de condiciones."
+                ],
+                2,
+                "Piensa en el trato igual para todos y en los vínculos personales.",
+                "Alterar el orden de atención para favorecer a un allegado es trato preferencial prohibido, aunque no medie dinero."
+            ],
+            [
+                "Un nuevo Gestor de Cobro Coactivo asume sus funciones y procede a estudiar minuciosamente el Estatuto Tributario, el CPACA y la Guía de Cobro de la DIAN para aplicar adecuadamente las medidas cautelares sin generar vicios de nulidad.",
+                [
+                    "Incurre en pérdida de productividad al dedicar tiempo laboral a la revisión normativa, en lugar de emitir de inmediato los mandamientos de pago que regula su función.",
+                    "Demuestra la vivencia del valor de la Diligencia al conocer y entender en detalle el ordenamiento jurídico que regula su función, evitando vicios de nulidad en las actuaciones.",
+                    "Excede sus competencias al estudiar el ordenamiento jurídico que regula su función, pues el estudio normativo solo corresponde al personal de la Dirección de Gestión Jurídica."
+                ],
+                1,
+                "Valor en juego: Diligencia (conocer la norma que regula la función).",
+                "Conocer en detalle la normativa que rige su función permite actuar correctamente y evitar nulidades: es Diligencia."
+            ],
+            [
+                "Al responder una solicitud de reconsideración presentada por un contribuyente de manera manuscrita, el funcionario redacta en el acto administrativo que 'el escrito del peticionario refleja una ignorancia supina e hilarante de la normatividad fiscal'.",
+                [
+                    "Incurre en falta al valor del Respeto, al utilizar un lenguaje con burla, sarcasmo o desdén en lugar de exponer los argumentos con nobleza y consideración, aun cuando el escrito del contribuyente sea deficiente.",
+                    "No incurre en falta alguna, pues la redacción formal de los actos administrativos no se rige por el Código de Integridad y puede utilizar un lenguaje con burla si demuestra la inconsistencia del recurso.",
+                    "Incurre apenas en una falta de forma, pues puede utilizar un lenguaje con sarcasmo en el acto administrativo cuando considere que el argumento del peticionario carece de nobleza y consideración."
+                ],
+                0,
+                "Valor en juego: Respeto.",
+                "El lenguaje burlesco hacia el ciudadano vulnera el Respeto; los argumentos deben exponerse con consideración, también en los actos administrativos."
+            ],
+            [
+                "Durante una audiencia verbal de descargos aduaneros, el funcionario responsable está respondiendo chats personales en su teléfono móvil y revisando redes sociales mientras el usuario y su apoderado rinden su intervención.",
+                [
+                    "Vulnerará el valor del Compromiso, al no mantener una adecuada escucha siempre que interactúa con otras personas y permitirse distracciones durante el servicio.",
+                    "Demuestra eficiencia y compromiso, al realizar multitarea en el ejercicio del cargo y revisar chats personales durante el servicio.",
+                    "No vulnera ningún valor, pues permitirse distracciones durante el servicio es comprensible cuando la audiencia está siendo grabada en audio y no se requiere una adecuada escucha del usuario."
+                ],
+                0,
+                "Valor en juego: Compromiso (escucha atenta).",
+                "Distraerse con el teléfono mientras el usuario interviene en una audiencia va contra el Compromiso, que exige una escucha adecuada. Que se grabe la audiencia no lo justifica."
+            ],
+            [
+                "Un servidor del nivel directivo propone un instructivo interno que exige requisitos dobles de verificación aduanera exclusivamente a las pequeñas empresas importadoras, eximiendo sin sustento técnico a las grandes corporaciones.",
+                [
+                    "Aplica una estrategia válida de perfilamiento por volumen de recaudo al promover medidas que exigen requisitos dobles a un grupo de importadores y eximen a otro por su capacidad contributiva.",
+                    "Aplica una medida legal si busca reducir la carga de trabajo en el puerto, al ejecutar medidas que afectan a un grupo de importadores y benefician a las grandes corporaciones por su volumen.",
+                    "Incurre en violación al valor de la Justicia al promover o ejecutar medidas que afectan la igualdad y benefician arbitrariamente a un grupo sobre otro, sin sustento técnico que lo justifique."
+                ],
+                2,
+                "Valor en juego: Justicia (igualdad).",
+                "Exigir más requisitos solo a un grupo, sin sustento técnico y eximiendo a otro, es una medida arbitraria que vulnera la igualdad."
+            ],
+            [
+                "Un Gestor de Fiscalización es vinculado como imputado dentro de un proceso penal por lavado de activos ajeno a la entidad. Decide ocultar dicha situación administrativa y judicial a la Subdirección de Desarrollo del Talento Humano para evitar ser reubicado preventivamente.",
+                [
+                    "Incurre en falta al valor de la Honestidad, al esconder situaciones personales que inciden en el debido ejercicio de la función pública y en la gestión del riesgo de la entidad.",
+                    "Actúa correctamente, al reservar situaciones personales que no inciden en la función pública, pues rige la presunción de inocencia mientras no haya condena.",
+                    "Actúa correctamente, al considerar que los asuntos judiciales personales no guardan relación con la integridad del puesto ni con la gestión del riesgo de la entidad hasta que exista una condena."
+                ],
+                0,
+                "Valor en juego: Honestidad (transparencia frente a la entidad).",
+                "Ocultar a la entidad una situación que afecta la gestión del riesgo vulnera la Honestidad. Invocar la presunción de inocencia no justifica el ocultamiento."
+            ],
+            [
+                "Al tomar posesión o ratificar su compromiso anual en la DIAN, el servidor realiza la ratificación del juramento de integridad. Este compromiso ético implica:",
+                [
+                    "Obrar de tal manera que sus actuaciones sean ejemplo para su familia, institución y país, cumpliendo y haciendo cumplir la Constitución, leyes tributarias, aduaneras y cambiarias.",
+                    "Prometer que sus actuaciones sean ejemplo únicamente para la institución y los jefes de división, cumpliendo y haciendo cumplir la Constitución y las leyes tributarias, aduaneras y cambiarias.",
+                    "Realizar un acto simbólico anual, sin repercusión en la evaluación del desempeño ni en la carrera administrativa, que compromete a cumplir la Constitución y las leyes tributarias, aduaneras y cambiarias."
+                ],
+                0,
+                "Piensa en la ratificación del juramento de integridad de los servidores de la DIAN.",
+                "El juramento compromete a todos los servidores a obrar como ejemplo y a cumplir y hacer cumplir la Constitución y las leyes tributarias, aduaneras y cambiarias. (Este texto viene de tu material; el Código de ética de la DIAN incluye la ratificación del juramento, pero no confirmé la redacción exacta.)"
+            ],
+            [
+                "El Manifiesto Institucional de la DIAN consolida el sentir y la razón de ser de todos los servidores de la entidad en el territorio nacional. ¿Cuáles son los dos pilares fundamentales que unifican a los colaboradores de la DIAN según el Manifiesto?",
+                [
+                    "La maximización del recaudo a cualquier costo y el estricto cumplimiento del horario presencial, que hacen posible la existencia y el desarrollo de nuestro país.",
+                    "El respeto por la diferencia y el compromiso sagrado de recaudar los recursos económicos que hacen posible la existencia y el desarrollo de nuestro país.",
+                    "La sustitución total de la fiscalización humana por sistemas de inteligencia artificial desatendida, que hacen posible la existencia y el desarrollo de nuestro país."
+                ],
+                1,
+                "Piensa en el Manifiesto Institucional (la descripción vívida de la DIAN).",
+                "El Manifiesto de la DIAN habla de la diferencia y del compromiso sagrado de recaudar los recursos que hacen posible la existencia y el desarrollo del país."
+            ]
+        ];
+
+        const questions = RAW.map((r, i) => ({
+            mod: "Integridad DIAN — Pregunta " + (i + 1),
+            text: r[0],
+            options: r[1].map((t, j) => String.fromCharCode(65 + j) + ") " + t),
+            correct: r[2],
+            hint: r[3],
+            explanation: r[4]
+        }));
+
+        // ===== Barajar opciones y reetiquetar letras =====
+        // Así la respuesta correcta no queda siempre en la misma posición.
+        function stripLetter(s) { return s.replace(/^[A-D]\)\s*/, ''); }
+
+        function shuffleArray(arr) {
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        function prepareQuestions() {
+            questions.forEach(q => {
+                const items = q.options.map((t, i) => ({ t: stripLetter(t), c: i === q.correct }));
+                shuffleArray(items);
+                q.options = items.map((o, i) => String.fromCharCode(65 + i) + ') ' + o.t);
+                q.correct = items.findIndex(o => o.c);
+                q.explanation = q.explanation.replace(/^Respuesta [A-D] \(Correcta\):\s*/, '');
+            });
+        }
+        prepareQuestions();
+
+        let currentIndex = 0;
+        let userSelections = new Array(questions.length).fill(null);
+        let lockedStates = new Array(questions.length).fill(false);
+        let successCount = 0;
+        let errorCount = 0;
+
+        const progressIndicator = document.getElementById('progress-indicator');
+        const okCounter = document.getElementById('ok-counter');
+        const errCounter = document.getElementById('err-counter');
+        const progressBarFill = document.getElementById('progress-bar-fill');
+
+        const qMod = document.getElementById('q-mod');
+        const qTitle = document.getElementById('q-title');
+        const hintBoxContent = document.getElementById('hint-box-content');
+        const hintArrow = document.getElementById('hint-arrow');
+        const optionsBox = document.getElementById('options-box');
+        const feedbackBox = document.getElementById('feedback-box');
+
+        const btnBack = document.getElementById('btn-back');
+        const btnAction = document.getElementById('btn-action');
+
+        const activeQuizContent = document.getElementById('active-quiz-content');
+        const resultsView = document.getElementById('results-view');
+        const bottomNavContainer = document.getElementById('bottom-nav-container');
+
+        function renderQuestion() {
+            const q = questions[currentIndex];
+            qMod.textContent = q.mod;
+            qTitle.textContent = q.text;
+            hintBoxContent.textContent = q.hint;
+            hintBoxContent.style.display = 'none';
+            hintArrow.textContent = '▼';
+
+            progressIndicator.textContent = `${currentIndex + 1} de ${questions.length}`;
+            const pct = Math.round(((currentIndex + 1) / questions.length) * 100);
+            progressBarFill.style.width = pct + '%';
+
+            optionsBox.innerHTML = '';
+            q.options.forEach((optText, idx) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-item';
+
+                const letterSpan = document.createElement('span');
+                letterSpan.className = 'option-letter';
+                letterSpan.textContent = optText.charAt(0);
+
+                const textSpan = document.createElement('span');
+                textSpan.textContent = optText.slice(3);
+
+                btn.appendChild(letterSpan);
+                btn.appendChild(textSpan);
+
+                const isLocked = lockedStates[currentIndex];
+                const selectedIdx = userSelections[currentIndex];
+
+                if (isLocked) {
+                    btn.disabled = true;
+                    if (idx === q.correct) {
+                        btn.classList.add('correct');
+                    } else if (idx === selectedIdx) {
+                        btn.classList.add('incorrect');
+                    }
+                } else {
+                    if (selectedIdx === idx) {
+                        btn.classList.add('selected');
+                    }
+                    btn.onclick = () => selectOption(idx);
+                }
+
+                optionsBox.appendChild(btn);
+            });
+
+            if (lockedStates[currentIndex]) {
+                showFeedbackUI(userSelections[currentIndex] === q.correct, q);
+                btnAction.textContent = currentIndex === questions.length - 1 ? 'Resultados' : 'Siguiente';
+                btnAction.disabled = false;
+            } else {
+                feedbackBox.classList.remove('show');
+                btnAction.textContent = 'Listo';
+                btnAction.disabled = userSelections[currentIndex] === null;
+            }
+
+            btnBack.disabled = currentIndex === 0;
+        }
+
+        function selectOption(idx) {
+            if (lockedStates[currentIndex]) return;
+            userSelections[currentIndex] = idx;
+
+            const buttons = optionsBox.getElementsByClassName('option-item');
+            for (let i = 0; i < buttons.length; i++) {
+                if (i === idx) {
+                    buttons[i].classList.add('selected');
+                } else {
+                    buttons[i].classList.remove('selected');
+                }
+            }
+            btnAction.disabled = false;
+        }
+
+        function handleAction() {
+            const isLocked = lockedStates[currentIndex];
+
+            if (!isLocked) {
+                if (userSelections[currentIndex] === null) return;
+                lockedStates[currentIndex] = true;
+
+                const q = questions[currentIndex];
+                const isCorrect = userSelections[currentIndex] === q.correct;
+
+                if (isCorrect) {
+                    successCount++;
+                    okCounter.textContent = successCount;
+                } else {
+                    errorCount++;
+                    errCounter.textContent = errorCount;
+                }
+
+                renderQuestion();
+            } else {
+                if (currentIndex < questions.length - 1) {
+                    currentIndex++;
+                    renderQuestion();
+                } else {
+                    showResultsScreen();
+                }
+            }
+        }
+
+        function handleBack() {
+            if (currentIndex > 0) {
+                currentIndex--;
+                renderQuestion();
+            }
+        }
+
+        function showFeedbackUI(isCorrect, q) {
+            const letter = String.fromCharCode(65 + q.correct);
+            feedbackBox.classList.add('show');
+            if (isCorrect) {
+                feedbackBox.style.backgroundColor = '#d1fae5';
+                feedbackBox.style.color = '#065f46';
+                feedbackBox.innerHTML = `<strong>✓ Respuesta correcta (${letter})</strong><br>${q.explanation}`;
+            } else {
+                feedbackBox.style.backgroundColor = '#fee2e2';
+                feedbackBox.style.color = '#991b1b';
+                feedbackBox.innerHTML = `<strong>× Respuesta incorrecta. La correcta es la ${letter}</strong><br>${q.explanation}`;
+            }
+        }
+
+        function toggleHint() {
+            if (hintBoxContent.style.display === 'block') {
+                hintBoxContent.style.display = 'none';
+                hintArrow.textContent = '▼';
+            } else {
+                hintBoxContent.style.display = 'block';
+                hintArrow.textContent = '▲';
+            }
+        }
+
+        function showResultsScreen() {
+            activeQuizContent.style.display = 'none';
+            bottomNavContainer.style.display = 'none';
+            document.querySelector('.top-bar').style.display = 'none';
+
+            document.getElementById('final-score').textContent = `${successCount} / ${questions.length}`;
+            resultsView.style.display = 'block';
+        }
+
+        function restartQuiz() {
+            currentIndex = 0;
+            successCount = 0;
+            errorCount = 0;
+            userSelections = new Array(questions.length).fill(null);
+            lockedStates = new Array(questions.length).fill(false);
+            okCounter.textContent = '0';
+            errCounter.textContent = '0';
+
+            // Rebarajar opciones en cada reinicio
+            prepareQuestions();
+
+            resultsView.style.display = 'none';
+            activeQuizContent.style.display = 'block';
+            bottomNavContainer.style.display = 'flex';
+            document.querySelector('.top-bar').style.display = 'flex';
+
+            renderQuestion();
+        }
+
+        renderQuestion();
+    </script>
+
+</body>
+
+</html>

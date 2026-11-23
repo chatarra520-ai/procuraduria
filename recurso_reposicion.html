@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recurso de reposición - Guía didáctica</title>
+    <style>
+        :root {
+            --bg-color: #f3f4f6;
+            --card-bg: #ffffff;
+            --primary: #3b82f6;
+            --text-main: #1f2937;
+            --text-muted: #6b7280;
+            --border-color: #e5e7eb;
+            --success-bg: #d1fae5;
+            --success-text: #065f46;
+            --danger-bg: #fee2e2;
+            --danger-text: #991b1b;
+            --c-yellow: #fef3c7;
+            --c-yellow-b: #f59e0b;
+            --c-blue: #dbeafe;
+            --c-blue-b: #3b82f6;
+            --c-purple: #ede9fe;
+            --c-purple-b: #8b5cf6;
+            --c-pink: #fce7f3;
+            --c-pink-b: #ec4899;
+            --c-green: #d1fae5;
+            --c-green-b: #10b981;
+            --c-orange: #ffedd5;
+            --c-orange-b: #f97316;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            padding: 1rem;
+            line-height: 1.55;
+        }
+
+        .page {
+            width: 100%;
+            max-width: 720px;
+            background: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            padding: 1.5rem;
+        }
+
+        .back {
+            display: inline-block;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--primary);
+            text-decoration: none;
+            margin-bottom: 1rem;
+        }
+
+        .back:hover {
+            text-decoration: underline;
+        }
+
+        .kicker {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.4rem;
+        }
+
+        h1 {
+            font-size: 1.6rem;
+            line-height: 1.25;
+            margin-bottom: 0.75rem;
+        }
+
+        .lead {
+            font-size: 1.05rem;
+            background: var(--c-yellow);
+            border-left: 5px solid var(--c-yellow-b);
+            border-radius: 0 12px 12px 0;
+            padding: 0.9rem 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .sec {
+            border-radius: 14px;
+            padding: 1rem 1.1rem;
+            margin-bottom: 1.1rem;
+            border: 2px solid transparent;
+        }
+
+        .sec h2 {
+            font-size: 1.1rem;
+            margin-bottom: 0.6rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .num {
+            flex: none;
+            width: 1.9rem;
+            height: 1.9rem;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.85);
+            border: 2px solid currentColor;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.95rem;
+            font-weight: 800;
+        }
+
+        .sec p {
+            margin-bottom: 0.6rem;
+        }
+
+        .sec p:last-child {
+            margin-bottom: 0;
+        }
+
+        .s-yellow { background: var(--c-yellow); border-color: var(--c-yellow-b); }
+        .s-blue { background: var(--c-blue); border-color: var(--c-blue-b); }
+        .s-purple { background: var(--c-purple); border-color: var(--c-purple-b); }
+        .s-pink { background: var(--c-pink); border-color: var(--c-pink-b); }
+        .s-green { background: var(--c-green); border-color: var(--c-green-b); }
+        .s-orange { background: var(--c-orange); border-color: var(--c-orange-b); }
+
+        .norma {
+            display: inline-block;
+            font-size: 0.78rem;
+            font-weight: 700;
+            background: rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(0, 0, 0, 0.15);
+            border-radius: 9999px;
+            padding: 0.1rem 0.6rem;
+            margin-top: 0.3rem;
+        }
+
+        /* Cuatro verbos */
+        .verbs {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.6rem;
+            margin: 0.7rem 0;
+        }
+
+        .verb {
+            background: rgba(255, 255, 255, 0.85);
+            border-radius: 10px;
+            padding: 0.6rem 0.7rem;
+            font-size: 0.92rem;
+        }
+
+        .verb b {
+            display: block;
+            font-size: 1rem;
+        }
+
+        .flow {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 0.4rem;
+            font-weight: 600;
+            margin: 0.6rem 0;
+        }
+
+        .chip {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 9999px;
+            padding: 0.25rem 0.8rem;
+            border: 1px solid rgba(0, 0, 0, 0.12);
+            font-size: 0.92rem;
+        }
+
+        .arrow {
+            font-weight: 800;
+        }
+
+        /* Línea de tiempo */
+        .timeline {
+            list-style: none;
+            border-left: 3px solid rgba(0, 0, 0, 0.25);
+            margin: 0.7rem 0 0.7rem 0.6rem;
+            padding-left: 1rem;
+        }
+
+        .timeline li {
+            position: relative;
+            background: rgba(255, 255, 255, 0.85);
+            border-radius: 10px;
+            padding: 0.55rem 0.8rem;
+            margin-bottom: 0.6rem;
+            font-size: 0.95rem;
+        }
+
+        .timeline li::before {
+            content: "";
+            position: absolute;
+            left: -1.45rem;
+            top: 0.9rem;
+            width: 0.8rem;
+            height: 0.8rem;
+            border-radius: 50%;
+            background: var(--c-purple-b);
+            border: 2px solid #fff;
+        }
+
+        .timeline li b {
+            display: block;
+        }
+
+        /* Requisitos */
+        .checks {
+            list-style: none;
+            margin: 0.6rem 0;
+        }
+
+        .checks li {
+            background: rgba(255, 255, 255, 0.85);
+            border-radius: 10px;
+            padding: 0.5rem 0.8rem 0.5rem 2.4rem;
+            margin-bottom: 0.5rem;
+            position: relative;
+            font-size: 0.95rem;
+        }
+
+        .checks li::before {
+            content: "✓";
+            position: absolute;
+            left: 0.8rem;
+            top: 0.45rem;
+            font-weight: 800;
+            color: var(--success-text);
+        }
+
+        .tip {
+            background: rgba(255, 255, 255, 0.85);
+            border-radius: 10px;
+            padding: 0.6rem 0.8rem;
+            font-size: 0.93rem;
+            margin-top: 0.6rem;
+        }
+
+        .tip b:first-child {
+            margin-right: 0.3rem;
+        }
+
+        .scroll {
+            overflow-x: auto;
+            margin: 0.6rem 0;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            min-width: 520px;
+            font-size: 0.9rem;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        th,
+        td {
+            text-align: left;
+            padding: 0.55rem 0.65rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            vertical-align: top;
+        }
+
+        th {
+            background: rgba(0, 0, 0, 0.06);
+        }
+
+        .yesno {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.7rem;
+            margin-top: 0.7rem;
+        }
+
+        @media (max-width: 560px) {
+            .yesno {
+                grid-template-columns: 1fr;
+            }
+
+            .verbs {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .bad,
+        .good {
+            border-radius: 10px;
+            padding: 0.7rem 0.9rem;
+            font-size: 0.92rem;
+        }
+
+        .bad {
+            background: var(--danger-bg);
+            color: var(--danger-text);
+        }
+
+        .good {
+            background: var(--success-bg);
+            color: var(--success-text);
+        }
+
+        .bad ul,
+        .good ul {
+            margin: 0.4rem 0 0 1.1rem;
+        }
+
+        .bad li,
+        .good li {
+            margin-bottom: 0.25rem;
+        }
+
+        .memo {
+            counter-reset: m;
+            list-style: none;
+        }
+
+        .memo li {
+            counter-increment: m;
+            background: rgba(255, 255, 255, 0.85);
+            border-radius: 10px;
+            padding: 0.5rem 0.8rem 0.5rem 2.6rem;
+            margin-bottom: 0.5rem;
+            position: relative;
+        }
+
+        .memo li::before {
+            content: counter(m);
+            position: absolute;
+            left: 0.7rem;
+            top: 0.45rem;
+            width: 1.5rem;
+            height: 1.5rem;
+            border-radius: 50%;
+            background: var(--c-orange-b);
+            color: #fff;
+            font-weight: 800;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        details {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            padding: 0.6rem 0.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        summary {
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        details p {
+            margin-top: 0.5rem;
+            font-size: 0.93rem;
+        }
+
+        .verify {
+            background: #f8fafc;
+            border-left: 4px solid var(--primary);
+            border-radius: 0 10px 10px 0;
+            padding: 0.8rem 1rem;
+            font-size: 0.88rem;
+            color: var(--text-muted);
+            margin-top: 1.2rem;
+        }
+
+        .verify b {
+            color: var(--text-main);
+        }
+
+        .verify ul {
+            margin: 0.4rem 0 0 1.1rem;
+        }
+
+        .btn {
+            display: block;
+            text-align: center;
+            margin-top: 1.4rem;
+            padding: 0.8rem 1.5rem;
+            border-radius: 9999px;
+            font-weight: 600;
+            text-decoration: none;
+            background-color: #93c5fd;
+            color: #1e3a8a;
+        }
+
+        .btn:hover {
+            background-color: var(--primary);
+            color: #fff;
+        }
+    </style>
+</head>
+
+<body>
+
+    <main class="page">
+        <a class="back" href="conocimiento.html#administrativo">← Volver al quiz</a>
+
+        <div class="kicker">Derecho administrativo · CPACA (Ley 1437 de 2011)</div>
+        <h1>Recurso de reposición, paso a paso</h1>
+
+        <p class="lead"><b>En una frase:</b> es pedirle <b>a la misma autoridad que tomó una decisión</b> que la
+            revise para que la <b>aclare, modifique, adicione o revoque</b>.</p>
+
+        <!-- 1 -->
+        <section class="sec s-yellow">
+            <h2><span class="num">1</span> ¿Qué es?</h2>
+            <p>Es un recurso que se presenta contra los actos administrativos definitivos. Sirve para que la propia
+                administración corrija su decisión antes de que el asunto llegue a un juez.</p>
+            <div class="flow">
+                <span class="chip">Decisión de la autoridad</span><span class="arrow">→</span>
+                <span class="chip">Recurso de reposición</span><span class="arrow">→</span>
+                <span class="chip">La misma autoridad la revisa</span>
+            </div>
+            <div class="verbs">
+                <div class="verb"><b>Aclarar</b>Explicar un punto confuso de la decisión.</div>
+                <div class="verb"><b>Modificar</b>Cambiar una parte de lo decidido.</div>
+                <div class="verb"><b>Adicionar</b>Agregar algo que faltó decidir.</div>
+                <div class="verb"><b>Revocar</b>Dejar sin efecto la decisión.</div>
+            </div>
+            <div class="tip"><b>💡 Truco para recordarlo:</b> los cuatro verbos forman la palabra <b>A-M-A-R</b>:
+                <b>A</b>clarar, <b>M</b>odificar, <b>A</b>dicionar, <b>R</b>evocar.</div>
+            <span class="norma">Art. 74, numeral 1 · Ley 1437 de 2011</span>
+        </section>
+
+        <!-- 2 -->
+        <section class="sec s-blue">
+            <h2><span class="num">2</span> ¿Ante quién se presenta?</h2>
+            <p>Ante <b>el mismo funcionario que expidió la decisión</b>. Esa es la gran diferencia con los otros dos
+                recursos:</p>
+            <div class="scroll">
+                <table>
+                    <tr>
+                        <th>Recurso</th>
+                        <th>¿Ante quién?</th>
+                    </tr>
+                    <tr>
+                        <td><b>Reposición</b></td>
+                        <td>Ante quien expidió la decisión.</td>
+                    </tr>
+                    <tr>
+                        <td>Apelación</td>
+                        <td>Ante el inmediato superior administrativo o funcional.</td>
+                    </tr>
+                    <tr>
+                        <td>Queja</td>
+                        <td>Ante el superior, cuando se rechaza la apelación.</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="tip"><b>💡 Regla rápida:</b> si el recurso va a <b>la misma mesa</b>, es reposición; si
+                <b>sube</b> de nivel, es apelación o queja.</div>
+        </section>
+
+        <!-- 3 -->
+        <section class="sec s-purple">
+            <h2><span class="num">3</span> ¿Cómo y cuándo se presenta?</h2>
+            <p>Debe presentarse <b>por escrito</b> (también puede ser por medios electrónicos). Y hay tres momentos
+                posibles, según cómo se haya notificado la decisión:</p>
+            <ul class="timeline">
+                <li><b>En la misma diligencia de notificación personal</b>Puedes presentarlo ahí mismo, cuando te
+                    notifican.</li>
+                <li><b>Dentro de los 10 días siguientes</b>A la notificación personal o a la notificación por aviso.
+                </li>
+                <li><b>Al vencimiento del término de publicación</b>Cuando la notificación se hizo por publicación, el
+                    plazo se cuenta desde que vence ese término.</li>
+            </ul>
+            <p>Si dejas pasar el plazo, el recurso es extemporáneo y se rechaza.</p>
+            <span class="norma">Art. 76, inciso 1 · Art. 77</span>
+        </section>
+
+        <!-- 4 -->
+        <section class="sec s-pink">
+            <h2><span class="num">4</span> ¿Qué debe contener? (requisitos)</h2>
+            <ul class="checks">
+                <li><b>Plazo y persona:</b> interponerse dentro del plazo legal, por el interesado, su representante o
+                    apoderado debidamente constituido.</li>
+                <li><b>Motivos:</b> sustentarse con expresión concreta de los motivos de inconformidad.</li>
+                <li><b>Pruebas:</b> solicitar y aportar las que se quieran hacer valer.</li>
+                <li><b>Datos:</b> nombre y dirección de quien recurre (y correo electrónico, si quiere ser notificado
+                    por ese medio).</li>
+            </ul>
+            <p>Por regla general <b>no requiere presentación personal</b> si quien lo presenta ya fue reconocido en la
+                actuación.</p>
+            <div class="tip"><b>⚠️ Ojo con el rechazo:</b> si el escrito no cumple los requisitos de los numerales
+                <b>1, 2 y 4</b> (plazo y persona, motivos, y datos), el funcionario debe rechazarlo. No aportar pruebas
+                no es causal de rechazo.</div>
+            <span class="norma">Art. 77 · Art. 78</span>
+        </section>
+
+        <!-- 5 -->
+        <section class="sec s-green">
+            <h2><span class="num">5</span> ¿Es obligatorio?</h2>
+            <p><b>No.</b> Los recursos de reposición y de queja <b>no son obligatorios</b>. Puedes ir directamente a la
+                vía judicial sin haberlos presentado.</p>
+            <div class="scroll">
+                <table>
+                    <tr>
+                        <th>Recurso</th>
+                        <th>¿Obligatorio?</th>
+                    </tr>
+                    <tr>
+                        <td><b>Reposición</b></td>
+                        <td><b>No.</b></td>
+                    </tr>
+                    <tr>
+                        <td>Queja</td>
+                        <td>No.</td>
+                    </tr>
+                    <tr>
+                        <td>Apelación</td>
+                        <td>Puede presentarse directamente o como subsidiaria de la reposición. Cuando procede, es
+                            obligatoria para acceder a la jurisdicción.</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="tip"><b>💡 ¿Qué significa "reposición y en subsidio apelación"?</b> Se pide primero que la misma
+                autoridad revise y, si no cambia la decisión, que lo haga el superior.</div>
+            <span class="norma">Art. 76, incisos 3 y 4 · Art. 161, numeral 2</span>
+        </section>
+
+        <!-- 6 -->
+        <section class="sec s-orange">
+            <h2><span class="num">6</span> ¿Cuándo NO procede?</h2>
+            <ul class="checks">
+                <li>Contra los <b>actos de carácter general</b>.</li>
+                <li>Contra los <b>actos de trámite, preparatorios o de ejecución</b>, salvo que una norma lo permita
+                    expresamente.</li>
+            </ul>
+            <p>Además, hay decisiones que <b>no tienen apelación</b>, por ejemplo las de los ministros, directores de
+                departamento administrativo, superintendentes y representantes legales de entidades descentralizadas, y
+                las de los representantes legales y jefes superiores de entidades del nivel territorial. En esos casos
+                la vía administrativa es la reposición.</p>
+            <span class="norma">Art. 75 · Art. 74, numeral 2</span>
+        </section>
+
+        <!-- 7 -->
+        <section class="sec s-blue">
+            <h2><span class="num">7</span> ¿Qué pasa mientras se resuelve?</h2>
+            <ul class="checks">
+                <li>Los recursos se tramitan en el <b>efecto suspensivo</b>: la decisión no se ejecuta mientras se
+                    resuelve.</li>
+                <li>Si hay que practicar pruebas, se hace primero el período probatorio.</li>
+                <li>Después se profiere una <b>decisión motivada</b> que resuelve todo lo planteado.</li>
+            </ul>
+            <span class="norma">Art. 79 · Art. 80</span>
+        </section>
+
+        <!-- 8 -->
+        <section class="sec s-purple">
+            <h2><span class="num">8</span> ¿Y si la entidad no responde? (silencio)</h2>
+            <p>Si pasan <b>2 meses</b> desde que se interpuso el recurso y no se notificó una decisión expresa, se
+                entiende que la decisión es <b>negativa</b> (silencio administrativo negativo). Hay una excepción para
+                los procedimientos sancionatorios.</p>
+            <div class="flow">
+                <span class="chip">Presentas el recurso</span><span class="arrow">→</span>
+                <span class="chip">2 meses sin decisión expresa</span><span class="arrow">→</span>
+                <span class="chip">Se entiende negado</span>
+            </div>
+            <p>Por otro lado, los recursos contra <b>actos presuntos</b> (los que nacen del silencio) pueden
+                presentarse en cualquier tiempo, salvo que ya se haya acudido ante el juez.</p>
+            <span class="norma">Art. 86 · Art. 76, inciso 2</span>
+        </section>
+
+        <!-- 9 -->
+        <section class="sec s-pink">
+            <h2><span class="num">9</span> Ejemplo práctico</h2>
+            <p>La Secretaría de Planeación de un municipio <b>niega</b> a Carlos una licencia de construcción. La
+                notifican personalmente.</p>
+            <div class="yesno">
+                <div class="good"><b>✔ Bien hecho</b>
+                    <ul>
+                        <li>Presenta un escrito dirigido a la Secretaría, que fue quien decidió.</li>
+                        <li>Lo entrega dentro de los 10 días siguientes a la notificación.</li>
+                        <li>Explica con claridad por qué no está de acuerdo y adjunta pruebas.</li>
+                        <li>Incluye su nombre y dirección.</li>
+                    </ul>
+                </div>
+                <div class="bad"><b>✘ Errores típicos</b>
+                    <ul>
+                        <li>Mandarlo al superior de la Secretaría (eso ya sería apelación).</li>
+                        <li>Escribir solo "recurro" sin decir los motivos.</li>
+                        <li>Presentarlo cuando ya venció el plazo.</li>
+                        <li>Querer recurrir un simple acto de trámite.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- 10 -->
+        <section class="sec s-orange">
+            <h2><span class="num">10</span> Para memorizar</h2>
+            <ol class="memo">
+                <li><b>A-M-A-R:</b> aclarar, modificar, adicionar, revocar.</li>
+                <li><b>Ante el mismo</b> funcionario que expidió la decisión.</li>
+                <li><b>Por escrito</b>, y dentro de los <b>10 días</b> siguientes a la notificación.</li>
+                <li><b>No es obligatorio</b> (ni la reposición ni la queja).</li>
+                <li><b>2 meses</b> sin respuesta: se entiende negado.</li>
+            </ol>
+        </section>
+
+        <!-- 11 -->
+        <section class="sec s-green">
+            <h2><span class="num">11</span> Compruébalo tú</h2>
+            <details>
+                <summary>1. ¿Ante quién se presenta el recurso de reposición?</summary>
+                <p>Ante el mismo funcionario que expidió la decisión.</p>
+            </details>
+            <details>
+                <summary>2. ¿Es obligatorio presentarlo antes de ir a la vía judicial?</summary>
+                <p>No. La reposición y la queja no son obligatorias.</p>
+            </details>
+            <details>
+                <summary>3. Te notificaron personalmente una decisión. ¿Hasta cuándo puedes presentar la reposición?
+                </summary>
+                <p>En la misma diligencia de notificación o dentro de los 10 días siguientes.</p>
+            </details>
+            <details>
+                <summary>4. Presentaste el recurso y pasaron 2 meses sin respuesta expresa. ¿Qué se entiende?</summary>
+                <p>Que la decisión es negativa (silencio administrativo negativo), salvo lo previsto para los
+                    procedimientos sancionatorios.</p>
+            </details>
+            <details>
+                <summary>5. ¿Procede contra un acto de trámite?</summary>
+                <p>No, por regla general, salvo que una norma expresa lo permita.</p>
+            </details>
+        </section>
+
+        <div class="verify">
+            <b>Qué verifiqué y qué no.</b> Revisé el texto de los Arts. 74 a 80 y 86 de la Ley 1437 de 2011 y el Art.
+            161, numeral 2, en normogramas oficiales y sentencias de la Corte Constitucional y el Consejo de Estado.
+            <ul>
+                <li><b>Tu mapa mental</b> cita el Art. 76, inciso 2, para decir que la reposición no es obligatoria.
+                    Según las fuentes que revisé, eso está en los incisos 3 y 4. Por eso aquí cito los incisos 3 y 4.
+                </li>
+                <li>Partes del mapa (los puntos 5 y 6) tenían texto ilegible, así que el ejemplo de esta página es mío.
+                </li>
+                <li><b>No verifiqué:</b> que los 10 días se cuenten como hábiles (por regla general los plazos en días
+                    se entienden hábiles, pero confírmalo), el texto completo del numeral 2 del Art. 74 y la frase
+                    sobre actos presuntos del Art. 76, inciso 2.</li>
+            </ul>
+            Es material de estudio; no sustituye la lectura de la norma.
+        </div>
+
+        <a class="btn" href="conocimiento.html#administrativo">Volver al quiz</a>
+    </main>
+
+</body>
+
+</html>

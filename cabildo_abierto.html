@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cabildo abierto - Guía didáctica</title>
+    <style>
+        :root {
+            --bg-color: #f3f4f6;
+            --card-bg: #ffffff;
+            --primary: #3b82f6;
+            --text-main: #1f2937;
+            --text-muted: #6b7280;
+            --border-color: #e5e7eb;
+            --success-bg: #d1fae5;
+            --success-text: #065f46;
+            --danger-bg: #fee2e2;
+            --danger-text: #991b1b;
+            --c-yellow: #fef3c7;
+            --c-yellow-b: #f59e0b;
+            --c-blue: #dbeafe;
+            --c-blue-b: #3b82f6;
+            --c-purple: #ede9fe;
+            --c-purple-b: #8b5cf6;
+            --c-pink: #fce7f3;
+            --c-pink-b: #ec4899;
+            --c-green: #d1fae5;
+            --c-green-b: #10b981;
+            --c-orange: #ffedd5;
+            --c-orange-b: #f97316;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            padding: 1rem;
+            line-height: 1.55;
+        }
+
+        .page {
+            width: 100%;
+            max-width: 720px;
+            background: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            padding: 1.5rem;
+        }
+
+        .back {
+            display: inline-block;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--primary);
+            text-decoration: none;
+            margin-bottom: 1rem;
+        }
+
+        .back:hover {
+            text-decoration: underline;
+        }
+
+        .kicker {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.4rem;
+        }
+
+        h1 {
+            font-size: 1.6rem;
+            line-height: 1.25;
+            margin-bottom: 0.75rem;
+        }
+
+        .lead {
+            font-size: 1.05rem;
+            background: var(--c-yellow);
+            border-left: 5px solid var(--c-yellow-b);
+            border-radius: 0 12px 12px 0;
+            padding: 0.9rem 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .sec {
+            border-radius: 14px;
+            padding: 1rem 1.1rem;
+            margin-bottom: 1.1rem;
+            border: 2px solid transparent;
+        }
+
+        .sec h2 {
+            font-size: 1.1rem;
+            margin-bottom: 0.6rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .num {
+            flex: none;
+            width: 1.9rem;
+            height: 1.9rem;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.85);
+            border: 2px solid currentColor;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.95rem;
+            font-weight: 800;
+        }
+
+        .sec p {
+            margin-bottom: 0.6rem;
+        }
+
+        .sec p:last-child {
+            margin-bottom: 0;
+        }
+
+        .s-yellow { background: var(--c-yellow); border-color: var(--c-yellow-b); }
+        .s-blue { background: var(--c-blue); border-color: var(--c-blue-b); }
+        .s-purple { background: var(--c-purple); border-color: var(--c-purple-b); }
+        .s-pink { background: var(--c-pink); border-color: var(--c-pink-b); }
+        .s-green { background: var(--c-green); border-color: var(--c-green-b); }
+        .s-orange { background: var(--c-orange); border-color: var(--c-orange-b); }
+
+        .norma {
+            display: inline-block;
+            font-size: 0.78rem;
+            font-weight: 700;
+            background: rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(0, 0, 0, 0.15);
+            border-radius: 9999px;
+            padding: 0.1rem 0.6rem;
+            margin-top: 0.3rem;
+        }
+
+        /* Cuatro verbos */
+        .verbs {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.6rem;
+            margin: 0.7rem 0;
+        }
+
+        .verb {
+            background: rgba(255, 255, 255, 0.85);
+            border-radius: 10px;
+            padding: 0.6rem 0.7rem;
+            font-size: 0.92rem;
+        }
+
+        .verb b {
+            display: block;
+            font-size: 1rem;
+        }
+
+        .flow {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 0.4rem;
+            font-weight: 600;
+            margin: 0.6rem 0;
+        }
+
+        .chip {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 9999px;
+            padding: 0.25rem 0.8rem;
+            border: 1px solid rgba(0, 0, 0, 0.12);
+            font-size: 0.92rem;
+        }
+
+        .arrow {
+            font-weight: 800;
+        }
+
+        /* Línea de tiempo */
+        .timeline {
+            list-style: none;
+            border-left: 3px solid rgba(0, 0, 0, 0.25);
+            margin: 0.7rem 0 0.7rem 0.6rem;
+            padding-left: 1rem;
+        }
+
+        .timeline li {
+            position: relative;
+            background: rgba(255, 255, 255, 0.85);
+            border-radius: 10px;
+            padding: 0.55rem 0.8rem;
+            margin-bottom: 0.6rem;
+            font-size: 0.95rem;
+        }
+
+        .timeline li::before {
+            content: "";
+            position: absolute;
+            left: -1.45rem;
+            top: 0.9rem;
+            width: 0.8rem;
+            height: 0.8rem;
+            border-radius: 50%;
+            background: var(--c-purple-b);
+            border: 2px solid #fff;
+        }
+
+        .timeline li b {
+            display: block;
+        }
+
+        /* Requisitos */
+        .checks {
+            list-style: none;
+            margin: 0.6rem 0;
+        }
+
+        .checks li {
+            background: rgba(255, 255, 255, 0.85);
+            border-radius: 10px;
+            padding: 0.5rem 0.8rem 0.5rem 2.4rem;
+            margin-bottom: 0.5rem;
+            position: relative;
+            font-size: 0.95rem;
+        }
+
+        .checks li::before {
+            content: "✓";
+            position: absolute;
+            left: 0.8rem;
+            top: 0.45rem;
+            font-weight: 800;
+            color: var(--success-text);
+        }
+
+        .tip {
+            background: rgba(255, 255, 255, 0.85);
+            border-radius: 10px;
+            padding: 0.6rem 0.8rem;
+            font-size: 0.93rem;
+            margin-top: 0.6rem;
+        }
+
+        .tip b:first-child {
+            margin-right: 0.3rem;
+        }
+
+        .scroll {
+            overflow-x: auto;
+            margin: 0.6rem 0;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            min-width: 520px;
+            font-size: 0.9rem;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        th,
+        td {
+            text-align: left;
+            padding: 0.55rem 0.65rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            vertical-align: top;
+        }
+
+        th {
+            background: rgba(0, 0, 0, 0.06);
+        }
+
+        .yesno {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.7rem;
+            margin-top: 0.7rem;
+        }
+
+        @media (max-width: 560px) {
+            .yesno {
+                grid-template-columns: 1fr;
+            }
+
+            .verbs {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .bad,
+        .good {
+            border-radius: 10px;
+            padding: 0.7rem 0.9rem;
+            font-size: 0.92rem;
+        }
+
+        .bad {
+            background: var(--danger-bg);
+            color: var(--danger-text);
+        }
+
+        .good {
+            background: var(--success-bg);
+            color: var(--success-text);
+        }
+
+        .bad ul,
+        .good ul {
+            margin: 0.4rem 0 0 1.1rem;
+        }
+
+        .bad li,
+        .good li {
+            margin-bottom: 0.25rem;
+        }
+
+        .memo {
+            counter-reset: m;
+            list-style: none;
+        }
+
+        .memo li {
+            counter-increment: m;
+            background: rgba(255, 255, 255, 0.85);
+            border-radius: 10px;
+            padding: 0.5rem 0.8rem 0.5rem 2.6rem;
+            margin-bottom: 0.5rem;
+            position: relative;
+        }
+
+        .memo li::before {
+            content: counter(m);
+            position: absolute;
+            left: 0.7rem;
+            top: 0.45rem;
+            width: 1.5rem;
+            height: 1.5rem;
+            border-radius: 50%;
+            background: var(--c-orange-b);
+            color: #fff;
+            font-weight: 800;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        details {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            padding: 0.6rem 0.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        summary {
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        details p {
+            margin-top: 0.5rem;
+            font-size: 0.93rem;
+        }
+
+        .verify {
+            background: #f8fafc;
+            border-left: 4px solid var(--primary);
+            border-radius: 0 10px 10px 0;
+            padding: 0.8rem 1rem;
+            font-size: 0.88rem;
+            color: var(--text-muted);
+            margin-top: 1.2rem;
+        }
+
+        .verify b {
+            color: var(--text-main);
+        }
+
+        .verify ul {
+            margin: 0.4rem 0 0 1.1rem;
+        }
+
+        .btn {
+            display: block;
+            text-align: center;
+            margin-top: 1.4rem;
+            padding: 0.8rem 1.5rem;
+            border-radius: 9999px;
+            font-weight: 600;
+            text-decoration: none;
+            background-color: #93c5fd;
+            color: #1e3a8a;
+        }
+
+        .btn:hover {
+            background-color: var(--primary);
+            color: #fff;
+        }
+    
+        .mapa {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.5rem;
+            margin: 0 0 1.4rem;
+        }
+
+        .mapa div {
+            border-radius: 12px;
+            padding: 0.6rem 0.4rem;
+            text-align: center;
+            font-size: 0.82rem;
+            line-height: 1.25;
+            border: 2px solid transparent;
+        }
+
+        .mapa b {
+            display: block;
+            font-size: 1.15rem;
+        }
+
+        .m1 { background: var(--c-blue); border-color: var(--c-blue-b); }
+        .m2 { background: var(--c-purple); border-color: var(--c-purple-b); }
+        .m3 { background: var(--c-yellow); border-color: var(--c-yellow-b); }
+        .m4 { background: var(--c-pink); border-color: var(--c-pink-b); }
+
+        @media (max-width: 560px) {
+            .mapa { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        .extra {
+            border-left: 4px dashed rgba(0, 0, 0, 0.3);
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 0 10px 10px 0;
+            padding: 0.55rem 0.8rem;
+            font-size: 0.9rem;
+            margin-top: 0.6rem;
+        }
+
+        .extra b:first-child {
+            margin-right: 0.3rem;
+        }
+    </style>
+</head>
+
+<body>
+
+    <main class="page">
+        <a class="back" href="index.html">← Volver al índice</a>
+
+        <div class="kicker">Constitución · Participación democrática (Art. 103)</div>
+        <h1>Cabildo abierto: la ciudadanía habla ante su corporación</h1>
+
+        <p class="lead"><b>En una frase:</b> es una <b>reunión pública</b> en la que los habitantes discuten
+            directamente con el concejo, la asamblea o la junta administradora local un asunto de interés de la
+            comunidad. <b>No se vota en urnas.</b></p>
+
+        <div class="mapa">
+            <div class="m1"><b>1</b>Qué es y qué no es</div>
+            <div class="m2"><b>2</b>Dónde está en la norma</div>
+            <div class="m3"><b>3</b>Cómo se convoca</div>
+            <div class="m4"><b>4</b>Papel de la Procuraduría</div>
+        </div>
+
+        <!-- 1 -->
+        <section class="sec s-yellow">
+            <h2><span class="num">1</span> ¿Qué es?</h2>
+            <p>Es un mecanismo de participación ciudadana. Los habitantes piden que se estudie un tema de competencia de
+                su corporación y expresan su opinión en una sesión pública. Se puede hacer ante:</p>
+            <div class="flow">
+                <span class="chip">Concejo municipal o distrital</span>
+                <span class="chip">Asamblea departamental</span>
+                <span class="chip">Junta Administradora Local (JAL)</span>
+            </div>
+            <p>Sirve para temas como seguridad, servicios públicos, obras, medio ambiente o políticas locales.</p>
+            <div class="yesno">
+                <div class="good"><b>✔ Sí es</b>
+                    <ul>
+                        <li>Un debate colectivo y formal.</li>
+                        <li>Una sesión pública ante una corporación.</li>
+                        <li>Un derecho de participación de la ciudadanía.</li>
+                    </ul>
+                </div>
+                <div class="bad"><b>✘ No es</b>
+                    <ul>
+                        <li>Una reunión privada con el alcalde.</li>
+                        <li>Una queja individual.</li>
+                        <li>Una votación en urnas (eso es consulta popular, referendo o plebiscito).</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="tip"><b>💡 Para recordarlo:</b> en el cabildo abierto <b>se habla</b>; en los otros mecanismos
+                de votación <b>se vota</b>.</div>
+        </section>
+
+        <!-- 2 -->
+        <section class="sec s-blue">
+            <h2><span class="num">2</span> ¿Dónde está en la norma?</h2>
+            <div class="scroll">
+                <table>
+                    <tr>
+                        <th>Norma</th>
+                        <th>Qué establece</th>
+                    </tr>
+                    <tr>
+                        <td><b>Constitución, Art. 103</b></td>
+                        <td>Lo incluye entre los mecanismos de participación del pueblo, junto con el voto, el
+                            plebiscito, el referendo, la consulta popular, la iniciativa legislativa y la revocatoria del
+                            mandato.</td>
+                    </tr>
+                    <tr>
+                        <td><b>Ley 134 de 1994</b></td>
+                        <td>Art. 9: lo define. Art. 81: fija la oportunidad para celebrarlo.</td>
+                    </tr>
+                    <tr>
+                        <td><b>Ley 1757 de 2015</b></td>
+                        <td>Art. 22: regula su convocatoria y funcionamiento actual.</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="extra"><b>Ojo:</b> la definición de la Ley 134 habla de los concejos y las JAL. El Art. 22 de
+                la Ley 1757 menciona también a las <b>asambleas departamentales</b>. Por eso algunas respuestas hablan
+                solo de "concejos o JAL" y otras agregan las asambleas.</div>
+            <div class="tip"><b>📍 Ubicación:</b> Título IV de la Constitución, "De la participación democrática y de los
+                partidos políticos", Capítulo 1, "De las formas de participación democrática".</div>
+        </section>
+
+        <!-- 3 -->
+        <section class="sec s-purple">
+            <h2><span class="num">3</span> ¿Cómo se convoca?</h2>
+            <p>Por <b>iniciativa ciudadana</b>. El paso a paso es:</p>
+            <ul class="timeline">
+                <li><b>1. Se inscribe la iniciativa y se reúnen apoyos</b>De al menos el <b>5 por mil</b> (0,5 %) de
+                    los ciudadanos del censo electoral del departamento, municipio, distrito, localidad o comuna.</li>
+                <li><b>2. Se verifican los apoyos</b>La Registraduría revisa que se cumpla el número y los
+                    requisitos.</li>
+                <li><b>3. La corporación recibe la solicitud</b>La debate y decide sobre su celebración.</li>
+                <li><b>4. Se celebra en sesión pública</b>Dentro de un período de sesiones ordinarias de la
+                    corporación.</li>
+            </ul>
+            <div class="tip"><b>🧮 Ejemplo de cálculo:</b> si un municipio tiene 100.000 personas en el censo electoral,
+                el 5 por mil son <b>500</b> apoyos. (5 ÷ 1.000 × 100.000)</div>
+            <div class="tip"><b>🧩 Ejemplo de tema:</b> si ese porcentaje de ciudadanos pide discutir el estado de una
+                vía o la falta de alumbrado, y el tema corresponde al Concejo, puede convocarse un cabildo abierto.</div>
+            <div class="extra"><b>Dato extra:</b> el asunto debe ser de <b>competencia de la corporación</b> que se
+                convoca. Y los concejos deben hacer obligatoriamente un cabildo abierto previo para estudiar los Planes
+                de Ordenamiento Territorial, sin que se exija el 5 por mil.</div>
+            <span class="norma">Ley 1757 de 2015, arts. 15 y 22 · Ley 134 de 1994, art. 81</span>
+        </section>
+
+        <!-- 4 -->
+        <section class="sec s-green">
+            <h2><span class="num">4</span> ¿Qué papel tiene la Procuraduría?</h2>
+            <p>La Procuraduría <b>no convoca el cabildo abierto ni lo reemplaza</b>. Su relación es de:</p>
+            <ul class="checks">
+                <li><b>Promoción:</b> difunde la normativa (Ley 134 de 1994 y Ley 1757 de 2015) y busca que la gente
+                    conozca el mecanismo.</li>
+                <li><b>Orientación:</b> ayuda a que ciudadanos y autoridades lo usen bien.</li>
+                <li><b>Control:</b> como órgano de control, vela por que las autoridades respeten los derechos de
+                    participación y atiendan lo debatido.</li>
+            </ul>
+            <div class="tip"><b>💡 En pocas palabras:</b> la Constitución lo crea (Art. 103), la ley explica cómo
+                hacerlo y la Procuraduría ayuda a difundirlo y vigila que se respete.</div>
+        </section>
+
+        <!-- 5 -->
+        <section class="sec s-pink">
+            <h2><span class="num">5</span> No lo confundas con los otros mecanismos</h2>
+            <p>El Art. 103 reúne siete mecanismos. Así se distingue cada uno:</p>
+            <div class="scroll">
+                <table>
+                    <tr>
+                        <th>Mecanismo</th>
+                        <th>En una idea</th>
+                        <th>¿Hay votación?</th>
+                    </tr>
+                    <tr>
+                        <td><b>Cabildo abierto</b></td>
+                        <td>Reunión pública para debatir con la corporación.</td>
+                        <td><b>No</b></td>
+                    </tr>
+                    <tr>
+                        <td>Voto</td>
+                        <td>Elegir a los gobernantes.</td>
+                        <td>Sí</td>
+                    </tr>
+                    <tr>
+                        <td>Plebiscito</td>
+                        <td>El pueblo respalda o rechaza una decisión del Ejecutivo.</td>
+                        <td>Sí</td>
+                    </tr>
+                    <tr>
+                        <td>Referendo</td>
+                        <td>El pueblo aprueba o rechaza una norma.</td>
+                        <td>Sí</td>
+                    </tr>
+                    <tr>
+                        <td>Consulta popular</td>
+                        <td>Se le hace una pregunta al pueblo sobre un asunto de importancia.</td>
+                        <td>Sí</td>
+                    </tr>
+                    <tr>
+                        <td>Iniciativa legislativa</td>
+                        <td>La ciudadanía presenta proyectos de ley, acuerdo o similares.</td>
+                        <td>No (se tramita en la corporación)</td>
+                    </tr>
+                    <tr>
+                        <td>Revocatoria del mandato</td>
+                        <td>Se termina el mandato de un alcalde o gobernador.</td>
+                        <td>Sí</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="extra"><b>Complemento mío:</b> esta tabla resume las definiciones generales de cada mecanismo y
+                no está en el texto que me pasaste. Confírmala antes de memorizarla.</div>
+        </section>
+
+        <!-- 6 -->
+        <section class="sec s-green">
+            <h2><span class="num">6</span> Pruébate</h2>
+            <details>
+                <summary>1. Un grupo de vecinos quiere discutir con el Concejo la falta de alumbrado, en sesión pública y
+                    sin votar. ¿Qué mecanismo usan?</summary>
+                <p><b>El cabildo abierto.</b> Es una reunión pública para debatir con la corporación.</p>
+            </details>
+            <details>
+                <summary>2. ¿Qué porcentaje del censo electoral se necesita para pedir un cabildo abierto?</summary>
+                <p><b>Al menos el 5 por mil</b> (0,5 %) del censo electoral del departamento, municipio, distrito,
+                    localidad o comuna.</p>
+            </details>
+            <details>
+                <summary>3. ¿Se vota en urnas en un cabildo abierto?</summary>
+                <p><b>No.</b> Es un espacio de debate, no de votación.</p>
+            </details>
+            <details>
+                <summary>4. ¿Ante qué corporaciones se puede hacer?</summary>
+                <p>Ante los concejos municipales o distritales, las asambleas departamentales y las Juntas
+                    Administradoras Locales.</p>
+            </details>
+            <details>
+                <summary>5. ¿La Procuraduría convoca el cabildo abierto?</summary>
+                <p><b>No.</b> La solicitud viene de la ciudadanía y el debate es de la corporación. La Procuraduría
+                    difunde, orienta y vigila que se respeten los derechos de participación.</p>
+            </details>
+        </section>
+
+        <!-- 7 -->
+        <section class="sec s-orange">
+            <h2><span class="num">7</span> Para fijar</h2>
+            <ol class="memo">
+                <li><b>Qué es:</b> reunión pública para debatir con la corporación. <b>Sin votación.</b></li>
+                <li><b>Dónde:</b> Art. 103 de la Constitución, Ley 134 de 1994 y Ley 1757 de 2015 (art. 22).</li>
+                <li><b>Ante quién:</b> concejos, asambleas departamentales y JAL.</li>
+                <li><b>Cómo se convoca:</b> iniciativa ciudadana con al menos el <b>5 por mil</b> del censo electoral.
+                </li>
+                <li><b>Procuraduría:</b> promueve, orienta y vigila; no convoca.</li>
+            </ol>
+        </section>
+
+        <div class="verify">
+            <b>Qué verifiqué y qué no.</b> Confirmé, en resoluciones de la Registraduría que citan la ley, el texto del
+            Art. 22 de la Ley 1757 de 2015 (asambleas departamentales, concejos y JAL; iniciativa de no menos del cinco
+            por mil del censo electoral del departamento, municipio, distrito, localidad o comuna), la verificación de
+            apoyos (Art. 15), que el cabildo abierto se rige por normas especiales (Art. 4, parágrafo), el Art. 9 (la
+            definición) y el Art. 81 de la Ley 134 de 1994, y el cabildo previo obligatorio para los POT.
+            <ul>
+                <li><b>No verifiqué:</b> el papel de la Procuraduría (viene del texto que me pasaste), que el asunto deba
+                    ser de competencia de la corporación, que la corporación "debata y decida sobre su celebración"
+                    (lo tomé de resoluciones de la Registraduría, no del texto de la ley) y el Título IX de la Ley 134
+                    que mencionaba tu texto.</li>
+                <li>La tabla de los siete mecanismos y el ejemplo de los 500 apoyos son <b>míos</b>.</li>
+            </ul>
+            Es material de estudio; no sustituye la lectura de la norma.
+        </div>
+
+        <a class="btn" href="conocimiento.html#constitucion">Practicar en el quiz de conocimiento</a>
+    </main>
+
+</body>
+
+</html>

@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medidas cautelares - Guía didáctica</title>
+    <style>
+        :root {
+            --bg-color: #f3f4f6;
+            --card-bg: #ffffff;
+            --primary: #3b82f6;
+            --text-main: #1f2937;
+            --text-muted: #6b7280;
+            --border-color: #e5e7eb;
+            --success-bg: #d1fae5;
+            --success-text: #065f46;
+            --danger-bg: #fee2e2;
+            --danger-text: #991b1b;
+            --c-yellow: #fef3c7;
+            --c-yellow-b: #f59e0b;
+            --c-blue: #dbeafe;
+            --c-blue-b: #3b82f6;
+            --c-purple: #ede9fe;
+            --c-purple-b: #8b5cf6;
+            --c-pink: #fce7f3;
+            --c-pink-b: #ec4899;
+            --c-green: #d1fae5;
+            --c-green-b: #10b981;
+            --c-orange: #ffedd5;
+            --c-orange-b: #f97316;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            padding: 1rem;
+            line-height: 1.55;
+        }
+
+        .page {
+            width: 100%;
+            max-width: 720px;
+            background: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            padding: 1.5rem;
+        }
+
+        .back {
+            display: inline-block;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--primary);
+            text-decoration: none;
+            margin-bottom: 1rem;
+        }
+
+        .back:hover {
+            text-decoration: underline;
+        }
+
+        .kicker {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.4rem;
+        }
+
+        h1 {
+            font-size: 1.6rem;
+            line-height: 1.25;
+            margin-bottom: 0.75rem;
+        }
+
+        .lead {
+            font-size: 1.05rem;
+            background: var(--c-yellow);
+            border-left: 5px solid var(--c-yellow-b);
+            border-radius: 0 12px 12px 0;
+            padding: 0.9rem 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .sec {
+            border-radius: 14px;
+            padding: 1rem 1.1rem;
+            margin-bottom: 1.1rem;
+            border: 2px solid transparent;
+        }
+
+        .sec h2 {
+            font-size: 1.1rem;
+            margin-bottom: 0.6rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .num {
+            flex: none;
+            width: 1.9rem;
+            height: 1.9rem;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.85);
+            border: 2px solid currentColor;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.95rem;
+            font-weight: 800;
+        }
+
+        .sec p {
+            margin-bottom: 0.6rem;
+        }
+
+        .sec p:last-child {
+            margin-bottom: 0;
+        }
+
+        .s-yellow { background: var(--c-yellow); border-color: var(--c-yellow-b); }
+        .s-blue { background: var(--c-blue); border-color: var(--c-blue-b); }
+        .s-purple { background: var(--c-purple); border-color: var(--c-purple-b); }
+        .s-pink { background: var(--c-pink); border-color: var(--c-pink-b); }
+        .s-green { background: var(--c-green); border-color: var(--c-green-b); }
+        .s-orange { background: var(--c-orange); border-color: var(--c-orange-b); }
+
+        .norma {
+            display: inline-block;
+            font-size: 0.78rem;
+            font-weight: 700;
+            background: rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(0, 0, 0, 0.15);
+            border-radius: 9999px;
+            padding: 0.1rem 0.6rem;
+            margin-top: 0.3rem;
+        }
+
+        /* Cuatro verbos */
+        .verbs {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.6rem;
+            margin: 0.7rem 0;
+        }
+
+        .verb {
+            background: rgba(255, 255, 255, 0.85);
+            border-radius: 10px;
+            padding: 0.6rem 0.7rem;
+            font-size: 0.92rem;
+        }
+
+        .verb b {
+            display: block;
+            font-size: 1rem;
+        }
+
+        .flow {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 0.4rem;
+            font-weight: 600;
+            margin: 0.6rem 0;
+        }
+
+        .chip {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 9999px;
+            padding: 0.25rem 0.8rem;
+            border: 1px solid rgba(0, 0, 0, 0.12);
+            font-size: 0.92rem;
+        }
+
+        .arrow {
+            font-weight: 800;
+        }
+
+        /* Línea de tiempo */
+        .timeline {
+            list-style: none;
+            border-left: 3px solid rgba(0, 0, 0, 0.25);
+            margin: 0.7rem 0 0.7rem 0.6rem;
+            padding-left: 1rem;
+        }
+
+        .timeline li {
+            position: relative;
+            background: rgba(255, 255, 255, 0.85);
+            border-radius: 10px;
+            padding: 0.55rem 0.8rem;
+            margin-bottom: 0.6rem;
+            font-size: 0.95rem;
+        }
+
+        .timeline li::before {
+            content: "";
+            position: absolute;
+            left: -1.45rem;
+            top: 0.9rem;
+            width: 0.8rem;
+            height: 0.8rem;
+            border-radius: 50%;
+            background: var(--c-purple-b);
+            border: 2px solid #fff;
+        }
+
+        .timeline li b {
+            display: block;
+        }
+
+        /* Requisitos */
+        .checks {
+            list-style: none;
+            margin: 0.6rem 0;
+        }
+
+        .checks li {
+            background: rgba(255, 255, 255, 0.85);
+            border-radius: 10px;
+            padding: 0.5rem 0.8rem 0.5rem 2.4rem;
+            margin-bottom: 0.5rem;
+            position: relative;
+            font-size: 0.95rem;
+        }
+
+        .checks li::before {
+            content: "✓";
+            position: absolute;
+            left: 0.8rem;
+            top: 0.45rem;
+            font-weight: 800;
+            color: var(--success-text);
+        }
+
+        .tip {
+            background: rgba(255, 255, 255, 0.85);
+            border-radius: 10px;
+            padding: 0.6rem 0.8rem;
+            font-size: 0.93rem;
+            margin-top: 0.6rem;
+        }
+
+        .tip b:first-child {
+            margin-right: 0.3rem;
+        }
+
+        .scroll {
+            overflow-x: auto;
+            margin: 0.6rem 0;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            min-width: 520px;
+            font-size: 0.9rem;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        th,
+        td {
+            text-align: left;
+            padding: 0.55rem 0.65rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            vertical-align: top;
+        }
+
+        th {
+            background: rgba(0, 0, 0, 0.06);
+        }
+
+        .yesno {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.7rem;
+            margin-top: 0.7rem;
+        }
+
+        @media (max-width: 560px) {
+            .yesno {
+                grid-template-columns: 1fr;
+            }
+
+            .verbs {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .bad,
+        .good {
+            border-radius: 10px;
+            padding: 0.7rem 0.9rem;
+            font-size: 0.92rem;
+        }
+
+        .bad {
+            background: var(--danger-bg);
+            color: var(--danger-text);
+        }
+
+        .good {
+            background: var(--success-bg);
+            color: var(--success-text);
+        }
+
+        .bad ul,
+        .good ul {
+            margin: 0.4rem 0 0 1.1rem;
+        }
+
+        .bad li,
+        .good li {
+            margin-bottom: 0.25rem;
+        }
+
+        .memo {
+            counter-reset: m;
+            list-style: none;
+        }
+
+        .memo li {
+            counter-increment: m;
+            background: rgba(255, 255, 255, 0.85);
+            border-radius: 10px;
+            padding: 0.5rem 0.8rem 0.5rem 2.6rem;
+            margin-bottom: 0.5rem;
+            position: relative;
+        }
+
+        .memo li::before {
+            content: counter(m);
+            position: absolute;
+            left: 0.7rem;
+            top: 0.45rem;
+            width: 1.5rem;
+            height: 1.5rem;
+            border-radius: 50%;
+            background: var(--c-orange-b);
+            color: #fff;
+            font-weight: 800;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        details {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            padding: 0.6rem 0.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        summary {
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        details p {
+            margin-top: 0.5rem;
+            font-size: 0.93rem;
+        }
+
+        .verify {
+            background: #f8fafc;
+            border-left: 4px solid var(--primary);
+            border-radius: 0 10px 10px 0;
+            padding: 0.8rem 1rem;
+            font-size: 0.88rem;
+            color: var(--text-muted);
+            margin-top: 1.2rem;
+        }
+
+        .verify b {
+            color: var(--text-main);
+        }
+
+        .verify ul {
+            margin: 0.4rem 0 0 1.1rem;
+        }
+
+        .btn {
+            display: block;
+            text-align: center;
+            margin-top: 1.4rem;
+            padding: 0.8rem 1.5rem;
+            border-radius: 9999px;
+            font-weight: 600;
+            text-decoration: none;
+            background-color: #93c5fd;
+            color: #1e3a8a;
+        }
+
+        .btn:hover {
+            background-color: var(--primary);
+            color: #fff;
+        }
+    
+        .mapa {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.5rem;
+            margin: 0 0 1.4rem;
+        }
+
+        .mapa div {
+            border-radius: 12px;
+            padding: 0.6rem 0.4rem;
+            text-align: center;
+            font-size: 0.82rem;
+            line-height: 1.25;
+            border: 2px solid transparent;
+        }
+
+        .mapa b {
+            display: block;
+            font-size: 1.15rem;
+        }
+
+        .m1 { background: var(--c-blue); border-color: var(--c-blue-b); }
+        .m2 { background: var(--c-purple); border-color: var(--c-purple-b); }
+        .m3 { background: var(--c-yellow); border-color: var(--c-yellow-b); }
+        .m4 { background: var(--c-pink); border-color: var(--c-pink-b); }
+
+        @media (max-width: 560px) {
+            .mapa { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        .extra {
+            border-left: 4px dashed rgba(0, 0, 0, 0.3);
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 0 10px 10px 0;
+            padding: 0.55rem 0.8rem;
+            font-size: 0.9rem;
+            margin-top: 0.6rem;
+        }
+
+        .extra b:first-child {
+            margin-right: 0.3rem;
+        }
+    </style>
+</head>
+
+<body>
+
+    <main class="page">
+        <a class="back" href="index.html">← Volver al índice</a>
+
+        <div class="kicker">Procuraduría · Derecho administrativo · CPACA (Ley 1437 de 2011)</div>
+        <h1>Medidas cautelares: frenar el daño mientras se decide</h1>
+
+        <p class="lead"><b>En una frase:</b> una medida cautelar es una <b>decisión provisional del juez</b> para evitar
+            que un daño ocurra o se agrave <b>mientras se resuelve el proceso</b>.</p>
+
+        <div class="mapa">
+            <div class="m1"><b>1</b>Qué son y para qué sirven</div>
+            <div class="m2"><b>2</b>Los dos presupuestos</div>
+            <div class="m3"><b>3</b>Qué tipos hay</div>
+            <div class="m4"><b>4</b>El caso de la licitación</div>
+        </div>
+
+        <!-- 1 -->
+        <section class="sec s-yellow">
+            <h2><span class="num">1</span> ¿Qué son y para qué sirven?</h2>
+            <p>Un proceso judicial puede tardar años. Si durante ese tiempo el daño sigue avanzando, cuando llegue la
+                sentencia ya puede ser tarde. La medida cautelar <b>protege provisionalmente el objeto del proceso y
+                    la efectividad de la sentencia</b>.</p>
+            <div class="flow">
+                <span class="chip">Demanda</span><span class="arrow">→</span>
+                <span class="chip">Solicitud de la medida</span><span class="arrow">→</span>
+                <span class="chip">El juez decide de forma provisional</span><span class="arrow">→</span>
+                <span class="chip">Sentencia definitiva</span>
+            </div>
+            <div class="tip"><b>💡 Para recordarlo:</b> es como el <b>freno de mano</b>: no resuelve el conflicto, pero
+                evita que el vehículo siga rodando mientras se decide.</div>
+            <div class="tip"><b>⚠️ Ojo:</b> decretar una medida cautelar <b>no significa que el juez ya le dio la razón</b>
+                a quien la pidió. Es una decisión provisional, que no implica prejuzgamiento.</div>
+            <span class="norma">Art. 229 · Ley 1437 de 2011</span>
+        </section>
+
+        <!-- 2 -->
+        <section class="sec s-blue">
+            <h2><span class="num">2</span> ¿Cuándo y cómo se pide?</h2>
+            <ul class="checks">
+                <li>En los <b>procesos declarativos</b> de la jurisdicción de lo contencioso administrativo.</li>
+                <li>Por regla general, <b>a petición de parte debidamente sustentada</b>, en la demanda o en un escrito
+                    aparte.</li>
+                <li>En los procesos de defensa de <b>derechos e intereses colectivos</b>, el juez puede decretarla
+                    <b>de oficio</b>.</li>
+                <li>Puede solicitarse <b>en cualquier etapa</b> del proceso, antes o después de admitida la demanda.</li>
+            </ul>
+            <span class="norma">Arts. 229, 233 y 234</span>
+        </section>
+
+        <!-- 3 -->
+        <section class="sec s-purple">
+            <h2><span class="num">3</span> Los dos presupuestos</h2>
+            <p>Para decretarla, el juez mira dos cosas. La doctrina les pone nombre en latín; la ley las describe con
+                otras palabras:</p>
+            <div class="scroll">
+                <table>
+                    <tr>
+                        <th>Presupuesto</th>
+                        <th>¿Qué significa?</th>
+                        <th>¿Cómo lo dice la ley (Art. 231)?</th>
+                    </tr>
+                    <tr>
+                        <td><b>Fumus boni iuris</b><br>(apariencia de buen derecho)</td>
+                        <td>Quien pide la medida parece tener razón.</td>
+                        <td>La demanda está <b>razonablemente fundada en derecho</b>.</td>
+                    </tr>
+                    <tr>
+                        <td><b>Periculum in mora</b><br>(peligro por la demora)</td>
+                        <td>Esperar hasta la sentencia sería demasiado tarde.</td>
+                        <td>Si no se otorga, se causa un <b>perjuicio irremediable</b>, o los efectos de la sentencia
+                            serían <b>nugatorios</b> (inútiles).</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="tip"><b>💡 Truco:</b> <b>FUMUS</b> = el derecho <b>se ve</b>. <b>PERICULUM</b> = el daño
+                <b>corre</b>.</div>
+            <div class="extra"><b>Dato extra:</b> el juez también pondera los intereses en juego: debe concluir que
+                resultaría más gravoso para el interés público <b>negar</b> la medida que concederla.</div>
+            <div class="extra"><b>Ojo con la fuente:</b> los nombres en latín son de la doctrina, no aparecen como tales
+                en el CPACA. Lo que regula la ley son los requisitos del Art. 231.</div>
+            <span class="norma">Art. 231</span>
+        </section>
+
+        <!-- 4 -->
+        <section class="sec s-green">
+            <h2><span class="num">4</span> ¿Qué tipos de medidas hay?</h2>
+            <p>Según el Art. 230, pueden ser <b>preventivas, conservativas, anticipativas o de suspensión</b>. Siempre
+                deben tener <b>relación directa y necesaria con las pretensiones</b> de la demanda. Algunos ejemplos de
+                lo que el juez puede ordenar:</p>
+            <ul class="checks">
+                <li><b>Mantener o restablecer</b> la situación anterior a la conducta que vulnera o amenaza.</li>
+                <li><b>Suspender un procedimiento o una actuación administrativa</b>, incluso de carácter contractual.
+                    Es una medida de último recurso: solo cuando no hay otra forma de evitar el perjuicio.</li>
+                <li><b>Suspender provisionalmente los efectos de un acto administrativo.</b></li>
+                <li><b>Ordenar</b> adoptar una decisión, o realizar o demoler una obra, para prevenir un perjuicio.</li>
+                <li><b>Imponer obligaciones de hacer o no hacer</b> a las partes.</li>
+            </ul>
+            <span class="norma">Art. 230</span>
+        </section>
+
+        <!-- 5 -->
+        <section class="sec s-pink">
+            <h2><span class="num">5</span> El caso: frenar la licitación de un megaproyecto</h2>
+            <p>Imagina que la Procuraduría, ante un juez, pide <b>suspender el proceso contractual</b> de un megaproyecto.
+                ¿Qué tiene que mostrar?</p>
+            <div class="scroll">
+                <table>
+                    <tr>
+                        <th>Qué muestra la Procuraduría</th>
+                        <th>Presupuesto que cubre</th>
+                    </tr>
+                    <tr>
+                        <td>Que hay indicios serios de un <b>direccionamiento ilegal</b> del contrato (o de otra
+                            violación de normas).</td>
+                        <td><b>Fumus boni iuris</b>: la solicitud está razonablemente fundada en derecho.</td>
+                    </tr>
+                    <tr>
+                        <td>Que hay riesgo de <b>perder recursos públicos</b> o de un <b>daño ambiental grave e
+                                irreversible</b>.</td>
+                        <td><b>Periculum in mora</b>: el perjuicio sería irremediable.</td>
+                    </tr>
+                    <tr>
+                        <td>Que <b>esperar la sentencia</b> haría inútil el fallo.</td>
+                        <td><b>Periculum in mora</b>: los efectos de la sentencia serían nugatorios.</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="tip"><b>💡 Nota:</b> los estudios técnicos (financieros o de ingeniería, por ejemplo) ayudan a
+                demostrar el riesgo. La ley exige acreditar los requisitos; no exige un tipo de dictamen en
+                particular.</div>
+        </section>
+
+        <!-- 6 -->
+        <section class="sec s-orange">
+            <h2><span class="num">6</span> ¿Quién decide y qué pasa si hay urgencia?</h2>
+            <ul class="checks">
+                <li>Decide el <b>juez o el magistrado ponente</b> del proceso.</li>
+                <li>Normalmente se le da a la otra parte la oportunidad de pronunciarse antes de decidir.</li>
+                <li>Si hay <b>urgencia</b>, la ley prevé <b>medidas cautelares de urgencia</b>, que se pueden decretar
+                    sin ese trámite previo.</li>
+            </ul>
+            <span class="norma">Arts. 233 y 234</span>
+        </section>
+
+        <!-- 7 -->
+        <section class="sec s-purple">
+            <h2><span class="num">!</span> No confundas: dos "suspensiones provisionales"</h2>
+            <div class="scroll">
+                <table>
+                    <tr>
+                        <th></th>
+                        <th>Medida cautelar del juez</th>
+                        <th>Suspensión provisional disciplinaria</th>
+                    </tr>
+                    <tr>
+                        <td><b>Quién la decreta</b></td>
+                        <td>El juez contencioso administrativo.</td>
+                        <td>La Procuraduría, en una investigación disciplinaria.</td>
+                    </tr>
+                    <tr>
+                        <td><b>Qué frena</b></td>
+                        <td>Un acto, un procedimiento o una actuación (por ejemplo, una licitación).</td>
+                        <td>Que un servidor siga en su cargo mientras se le investiga.</td>
+                    </tr>
+                    <tr>
+                        <td><b>Dónde está</b></td>
+                        <td>CPACA, arts. 229 y siguientes.</td>
+                        <td>Régimen disciplinario.</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="tip"><b>💡 Conexión con el quiz:</b> en las preguntas sobre alcaldes y gobernadores, la
+                suspensión provisional es la <b>disciplinaria</b>, no la del juez.</div>
+        </section>
+
+        <!-- 8 -->
+        <section class="sec s-green">
+            <h2><span class="num">7</span> Compruébalo tú</h2>
+            <details>
+                <summary>1. ¿Qué dos presupuestos sustentan una medida cautelar?</summary>
+                <p>El <b>fumus boni iuris</b> (apariencia de buen derecho) y el <b>periculum in mora</b> (peligro por la
+                    demora).</p>
+            </details>
+            <details>
+                <summary>2. ¿Qué dice la ley, con otras palabras, sobre el periculum in mora?</summary>
+                <p>Que, si no se otorga la medida, se causaría un perjuicio irremediable o los efectos de la sentencia
+                    serían nugatorios.</p>
+            </details>
+            <details>
+                <summary>3. Si el juez decreta la medida, ¿ya le dio la razón a quien la pidió?</summary>
+                <p><b>No.</b> Es una decisión provisional, que no implica prejuzgamiento.</p>
+            </details>
+            <details>
+                <summary>4. ¿Puede el juez decretarla sin que nadie se lo pida?</summary>
+                <p>Por regla general se necesita petición de parte. En los procesos de defensa de derechos e intereses
+                    colectivos, puede hacerlo de oficio.</p>
+            </details>
+            <details>
+                <summary>5. ¿En qué momento del proceso se puede pedir?</summary>
+                <p>En cualquier etapa, antes o después de admitida la demanda.</p>
+            </details>
+        </section>
+
+        <!-- 9 -->
+        <section class="sec s-orange">
+            <h2><span class="num">8</span> Para fijar</h2>
+            <ol class="memo">
+                <li><b>Qué es:</b> decisión <b>provisional</b> del juez para evitar un daño mientras se resuelve.</li>
+                <li><b>Dos presupuestos:</b> fumus boni iuris + periculum in mora.</li>
+                <li><b>Norma:</b> CPACA (Ley 1437 de 2011), arts. 229 y siguientes.</li>
+                <li><b>Tipos:</b> preventivas, conservativas, anticipativas o de suspensión.</li>
+                <li><b>No prejuzga</b> y se puede pedir en cualquier etapa del proceso.</li>
+            </ol>
+        </section>
+
+        <div class="verify">
+            <b>Qué verifiqué y qué no.</b> Confirmé, en providencias del Consejo de Estado y de tribunales, que las
+            medidas cautelares están en los Arts. 229 y siguientes del CPACA, que pueden ser preventivas, conservativas,
+            anticipativas o de suspensión (Art. 230), que la suspensión provisional de un acto es una de ellas, que el
+            Art. 231 exige una demanda razonablemente fundada en derecho y un perjuicio irremediable o efectos
+            nugatorios de la sentencia, que pueden decretarse de oficio en procesos de derechos colectivos y que se
+            piden en cualquier etapa (Arts. 233 y 234).
+            <ul>
+                <li><b>De memoria y sin confirmar:</b> el requisito de ponderación de intereses del Art. 231, que la
+                    suspensión de actuaciones contractuales es de último recurso (Art. 230) y el contenido de las
+                    medidas de urgencia.</li>
+                <li>No incluí plazos del trámite, porque no los verifiqué.</li>
+                <li>El ejemplo de la licitación es hipotético, tomado de un video. No verifiqué en qué tipo de proceso
+                    concreto la Procuraduría puede pedir esa medida.</li>
+                <li>El video decía que los presupuestos están "regulados" en el código; en realidad la ley describe los
+                    requisitos con otras palabras, y los nombres en latín son de la doctrina.</li>
+            </ul>
+            Es material de estudio; no sustituye la lectura de la norma.
+        </div>
+
+        <a class="btn" href="conocimiento.html#procuraduria">Practicar en el quiz de conocimiento</a>
+    </main>
+
+</body>
+
+</html>

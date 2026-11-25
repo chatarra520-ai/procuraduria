@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prohibiciones de los servidores públicos - Guía didáctica</title>
+    <style>
+        :root {
+            --bg-color: #f3f4f6;
+            --card-bg: #ffffff;
+            --primary: #3b82f6;
+            --text-main: #1f2937;
+            --text-muted: #6b7280;
+            --border-color: #e5e7eb;
+            --success-bg: #d1fae5;
+            --success-text: #065f46;
+            --danger-bg: #fee2e2;
+            --danger-text: #991b1b;
+            --c-yellow: #fef3c7;
+            --c-yellow-b: #f59e0b;
+            --c-blue: #dbeafe;
+            --c-blue-b: #3b82f6;
+            --c-purple: #ede9fe;
+            --c-purple-b: #8b5cf6;
+            --c-pink: #fce7f3;
+            --c-pink-b: #ec4899;
+            --c-green: #d1fae5;
+            --c-green-b: #10b981;
+            --c-orange: #ffedd5;
+            --c-orange-b: #f97316;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            padding: 1rem;
+            line-height: 1.55;
+        }
+
+        .page {
+            width: 100%;
+            max-width: 720px;
+            background: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            padding: 1.5rem;
+        }
+
+        .back {
+            display: inline-block;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--primary);
+            text-decoration: none;
+            margin-bottom: 1rem;
+        }
+
+        .back:hover {
+            text-decoration: underline;
+        }
+
+        .kicker {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.4rem;
+        }
+
+        h1 {
+            font-size: 1.6rem;
+            line-height: 1.25;
+            margin-bottom: 0.75rem;
+        }
+
+        .lead {
+            font-size: 1.05rem;
+            background: var(--c-yellow);
+            border-left: 5px solid var(--c-yellow-b);
+            border-radius: 0 12px 12px 0;
+            padding: 0.9rem 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .sec {
+            border-radius: 14px;
+            padding: 1rem 1.1rem;
+            margin-bottom: 1.1rem;
+            border: 2px solid transparent;
+        }
+
+        .sec h2 {
+            font-size: 1.1rem;
+            margin-bottom: 0.6rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .num {
+            flex: none;
+            width: 1.9rem;
+            height: 1.9rem;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.85);
+            border: 2px solid currentColor;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.95rem;
+            font-weight: 800;
+        }
+
+        .sec p {
+            margin-bottom: 0.6rem;
+        }
+
+        .sec p:last-child {
+            margin-bottom: 0;
+        }
+
+        .s-yellow { background: var(--c-yellow); border-color: var(--c-yellow-b); }
+        .s-blue { background: var(--c-blue); border-color: var(--c-blue-b); }
+        .s-purple { background: var(--c-purple); border-color: var(--c-purple-b); }
+        .s-pink { background: var(--c-pink); border-color: var(--c-pink-b); }
+        .s-green { background: var(--c-green); border-color: var(--c-green-b); }
+        .s-orange { background: var(--c-orange); border-color: var(--c-orange-b); }
+
+        .norma {
+            display: inline-block;
+            font-size: 0.78rem;
+            font-weight: 700;
+            background: rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(0, 0, 0, 0.15);
+            border-radius: 9999px;
+            padding: 0.1rem 0.6rem;
+            margin-top: 0.3rem;
+        }
+
+        /* Cuatro verbos */
+        .verbs {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.6rem;
+            margin: 0.7rem 0;
+        }
+
+        .verb {
+            background: rgba(255, 255, 255, 0.85);
+            border-radius: 10px;
+            padding: 0.6rem 0.7rem;
+            font-size: 0.92rem;
+        }
+
+        .verb b {
+            display: block;
+            font-size: 1rem;
+        }
+
+        .flow {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 0.4rem;
+            font-weight: 600;
+            margin: 0.6rem 0;
+        }
+
+        .chip {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 9999px;
+            padding: 0.25rem 0.8rem;
+            border: 1px solid rgba(0, 0, 0, 0.12);
+            font-size: 0.92rem;
+        }
+
+        .arrow {
+            font-weight: 800;
+        }
+
+        /* Línea de tiempo */
+        .timeline {
+            list-style: none;
+            border-left: 3px solid rgba(0, 0, 0, 0.25);
+            margin: 0.7rem 0 0.7rem 0.6rem;
+            padding-left: 1rem;
+        }
+
+        .timeline li {
+            position: relative;
+            background: rgba(255, 255, 255, 0.85);
+            border-radius: 10px;
+            padding: 0.55rem 0.8rem;
+            margin-bottom: 0.6rem;
+            font-size: 0.95rem;
+        }
+
+        .timeline li::before {
+            content: "";
+            position: absolute;
+            left: -1.45rem;
+            top: 0.9rem;
+            width: 0.8rem;
+            height: 0.8rem;
+            border-radius: 50%;
+            background: var(--c-purple-b);
+            border: 2px solid #fff;
+        }
+
+        .timeline li b {
+            display: block;
+        }
+
+        /* Requisitos */
+        .checks {
+            list-style: none;
+            margin: 0.6rem 0;
+        }
+
+        .checks li {
+            background: rgba(255, 255, 255, 0.85);
+            border-radius: 10px;
+            padding: 0.5rem 0.8rem 0.5rem 2.4rem;
+            margin-bottom: 0.5rem;
+            position: relative;
+            font-size: 0.95rem;
+        }
+
+        .checks li::before {
+            content: "✓";
+            position: absolute;
+            left: 0.8rem;
+            top: 0.45rem;
+            font-weight: 800;
+            color: var(--success-text);
+        }
+
+        .tip {
+            background: rgba(255, 255, 255, 0.85);
+            border-radius: 10px;
+            padding: 0.6rem 0.8rem;
+            font-size: 0.93rem;
+            margin-top: 0.6rem;
+        }
+
+        .tip b:first-child {
+            margin-right: 0.3rem;
+        }
+
+        .scroll {
+            overflow-x: auto;
+            margin: 0.6rem 0;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            min-width: 520px;
+            font-size: 0.9rem;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        th,
+        td {
+            text-align: left;
+            padding: 0.55rem 0.65rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            vertical-align: top;
+        }
+
+        th {
+            background: rgba(0, 0, 0, 0.06);
+        }
+
+        .yesno {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.7rem;
+            margin-top: 0.7rem;
+        }
+
+        @media (max-width: 560px) {
+            .yesno {
+                grid-template-columns: 1fr;
+            }
+
+            .verbs {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .bad,
+        .good {
+            border-radius: 10px;
+            padding: 0.7rem 0.9rem;
+            font-size: 0.92rem;
+        }
+
+        .bad {
+            background: var(--danger-bg);
+            color: var(--danger-text);
+        }
+
+        .good {
+            background: var(--success-bg);
+            color: var(--success-text);
+        }
+
+        .bad ul,
+        .good ul {
+            margin: 0.4rem 0 0 1.1rem;
+        }
+
+        .bad li,
+        .good li {
+            margin-bottom: 0.25rem;
+        }
+
+        .memo {
+            counter-reset: m;
+            list-style: none;
+        }
+
+        .memo li {
+            counter-increment: m;
+            background: rgba(255, 255, 255, 0.85);
+            border-radius: 10px;
+            padding: 0.5rem 0.8rem 0.5rem 2.6rem;
+            margin-bottom: 0.5rem;
+            position: relative;
+        }
+
+        .memo li::before {
+            content: counter(m);
+            position: absolute;
+            left: 0.7rem;
+            top: 0.45rem;
+            width: 1.5rem;
+            height: 1.5rem;
+            border-radius: 50%;
+            background: var(--c-orange-b);
+            color: #fff;
+            font-weight: 800;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        details {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            padding: 0.6rem 0.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        summary {
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        details p {
+            margin-top: 0.5rem;
+            font-size: 0.93rem;
+        }
+
+        .verify {
+            background: #f8fafc;
+            border-left: 4px solid var(--primary);
+            border-radius: 0 10px 10px 0;
+            padding: 0.8rem 1rem;
+            font-size: 0.88rem;
+            color: var(--text-muted);
+            margin-top: 1.2rem;
+        }
+
+        .verify b {
+            color: var(--text-main);
+        }
+
+        .verify ul {
+            margin: 0.4rem 0 0 1.1rem;
+        }
+
+        .btn {
+            display: block;
+            text-align: center;
+            margin-top: 1.4rem;
+            padding: 0.8rem 1.5rem;
+            border-radius: 9999px;
+            font-weight: 600;
+            text-decoration: none;
+            background-color: #93c5fd;
+            color: #1e3a8a;
+        }
+
+        .btn:hover {
+            background-color: var(--primary);
+            color: #fff;
+        }
+    
+        .mapa {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.5rem;
+            margin: 0 0 1.4rem;
+        }
+
+        .mapa div {
+            border-radius: 12px;
+            padding: 0.6rem 0.4rem;
+            text-align: center;
+            font-size: 0.82rem;
+            line-height: 1.25;
+            border: 2px solid transparent;
+        }
+
+        .mapa b {
+            display: block;
+            font-size: 1.15rem;
+        }
+
+        .m1 { background: var(--c-blue); border-color: var(--c-blue-b); }
+        .m2 { background: var(--c-purple); border-color: var(--c-purple-b); }
+        .m3 { background: var(--c-yellow); border-color: var(--c-yellow-b); }
+        .m4 { background: var(--c-pink); border-color: var(--c-pink-b); }
+
+        @media (max-width: 560px) {
+            .mapa { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        .extra {
+            border-left: 4px dashed rgba(0, 0, 0, 0.3);
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 0 10px 10px 0;
+            padding: 0.55rem 0.8rem;
+            font-size: 0.9rem;
+            margin-top: 0.6rem;
+        }
+
+        .extra b:first-child {
+            margin-right: 0.3rem;
+        }
+    </style>
+</head>
+
+<body>
+
+    <main class="page">
+        <a class="back" href="index.html">← Volver al índice</a>
+
+        <div class="kicker">Procuraduría · Constitución Política</div>
+        <h1>Prohibiciones de los servidores públicos (arts. 126 a 129)</h1>
+
+        <p class="lead"><b>En una frase:</b> cuatro artículos, cuatro ideas: <b>parientes</b> (126),
+            <b>contratos y política</b> (127), <b>doble sueldo</b> (128) y <b>regalos de gobiernos extranjeros</b>
+            (129).</p>
+
+        <div class="mapa">
+            <div class="m1"><b>126</b>Nepotismo: parientes y favores cruzados</div>
+            <div class="m2"><b>127</b>Contratos y participación en política</div>
+            <div class="m3"><b>128</b>Doble empleo o doble asignación</div>
+            <div class="m4"><b>129</b>Cargos, honores y contratos del exterior</div>
+        </div>
+
+        <!-- 126 inc 1 -->
+        <section class="sec s-blue">
+            <h2><span class="num">1</span> Art. 126, inciso 1: nepotismo</h2>
+            <p>Los servidores públicos <b>no pueden, en ejercicio de sus funciones</b>, hacer tres cosas con sus
+                parientes:</p>
+            <div class="flow">
+                <span class="chip">Nombrar</span><span class="chip">Postular</span><span class="chip">Contratar</span>
+            </div>
+            <p>con personas con las que tengan parentesco hasta el:</p>
+            <ul class="checks">
+                <li><b>4.º grado</b> de consanguinidad (por sangre).</li>
+                <li><b>2.º grado</b> de afinidad (con los parientes de su pareja).</li>
+                <li><b>1.er grado</b> civil (adopción).</li>
+                <li>O con quien estén ligados por <b>matrimonio o unión permanente</b>.</li>
+            </ul>
+            <div class="tip"><b>💡 Para recordarlo:</b> <b>4 - 2 - 1</b> (consanguinidad, afinidad, civil).</div>
+            <span class="norma">Art. 126, inc. 1 · modificado por el Acto Legislativo 2 de 2015</span>
+        </section>
+
+        <!-- Grados -->
+        <section class="sec s-yellow">
+            <h2><span class="num">+</span> Complemento: ¿quién es pariente de qué grado?</h2>
+            <div class="scroll">
+                <table>
+                    <tr>
+                        <th>Grado</th>
+                        <th>Consanguinidad</th>
+                        <th>Afinidad</th>
+                        <th>Civil</th>
+                    </tr>
+                    <tr>
+                        <td><b>1.º</b></td>
+                        <td>Padres, hijos</td>
+                        <td>Suegros, hijastros, yernos y nueras</td>
+                        <td>Padres e hijos adoptivos</td>
+                    </tr>
+                    <tr>
+                        <td><b>2.º</b></td>
+                        <td>Abuelos, nietos, hermanos</td>
+                        <td>Cuñados (hermanos del cónyuge), abuelos del cónyuge</td>
+                        <td>No aplica: el límite es el 1.º</td>
+                    </tr>
+                    <tr>
+                        <td><b>3.º</b></td>
+                        <td>Bisabuelos, bisnietos, <b>tíos, sobrinos</b></td>
+                        <td>Fuera del límite</td>
+                        <td>Fuera del límite</td>
+                    </tr>
+                    <tr>
+                        <td><b>4.º</b></td>
+                        <td><b>Primos hermanos</b>, tíos abuelos, sobrinos nietos, tatarabuelos</td>
+                        <td>Fuera del límite</td>
+                        <td>Fuera del límite</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="extra"><b>Ojo:</b> los tíos, los sobrinos y los primos hermanos entran dentro de la prohibición
+                (hasta el 4.º grado de consanguinidad). Un cuñado también, porque es parentesco de afinidad en 2.º
+                grado.</div>
+            <div class="extra"><b>Complemento mío:</b> esta tabla no está en tu infografía. Sale de las reglas del
+                Código Civil sobre grados de parentesco. Confírmala antes de memorizarla.</div>
+        </section>
+
+        <!-- 126 inc 2-3 -->
+        <section class="sec s-green">
+            <h2><span class="num">2</span> Art. 126, incisos 2 y 3: "yo te elijo, tú me eliges"</h2>
+            <p>Tampoco pueden <b>nombrar ni postular como servidores públicos, ni celebrar contratos estatales</b> con:
+            </p>
+            <ul class="checks">
+                <li>Quienes <b>intervinieron en su postulación o designación</b>.</li>
+                <li>Las personas que tengan con ellos <b>los mismos vínculos de parentesco</b> del inciso anterior.</li>
+            </ul>
+            <p><b>Excepción (inciso 3):</b> los nombramientos hechos aplicando las normas de <b>ingreso o ascenso por
+                    méritos en carrera</b>.</p>
+            <div class="tip"><b>🧩 Ejemplo:</b> un concejal ayudó a que eligieran a un personero. El personero no puede
+                nombrar al hermano de ese concejal.</div>
+            <span class="norma">Art. 126, incs. 2 y 3</span>
+        </section>
+
+        <!-- 126 inc 4 -->
+        <section class="sec s-orange">
+            <h2><span class="num">3</span> Art. 126, inciso 4: convocatoria pública</h2>
+            <p>Salvo los concursos regulados por la ley, cuando una <b>corporación pública</b> elige servidores
+                públicos, la elección debe estar <b>precedida de una convocatoria pública</b> reglada por la ley.</p>
+            <p>Esa convocatoria debe garantizar:</p>
+            <div class="flow">
+                <span class="chip">Publicidad</span><span class="chip">Transparencia</span>
+                <span class="chip">Participación ciudadana</span><span class="chip">Equidad de género</span>
+                <span class="chip">Mérito</span>
+            </div>
+            <div class="extra"><b>Dato extra:</b> los incisos finales del artículo dicen que quien haya ejercido en
+                propiedad ciertos altos cargos (como magistrado de las altas cortes, Fiscal, Procurador, Defensor del
+                Pueblo, Contralor o Registrador) no puede ser reelegido para el mismo cargo, ni elegido a un cargo de
+                elección popular, sino <b>un año después</b> de haber cesado en sus funciones. La lista exacta se ha
+                ajustado por sentencias, así que no la memorices sin revisarla.</div>
+        </section>
+
+        <!-- 127 -->
+        <section class="sec s-purple">
+            <h2><span class="num">4</span> Art. 127: contratos y política</h2>
+            <p><b>Contratos.</b> Los servidores públicos no pueden celebrar, <b>por sí o por interpuesta persona, o en
+                    representación de otro</b>, ningún contrato con entidades públicas ni con personas privadas que
+                manejen recursos públicos, salvo las excepciones legales.</p>
+            <div class="tip"><b>💡 ¿Qué es "interpuesta persona"?</b> Alguien que aparece como contratista, pero en
+                realidad es el servidor quien contrata, por ejemplo mediante una sociedad de la que es socio.</div>
+            <p style="margin-top:0.7rem"><b>Política.</b> A los empleados del Estado de la <b>rama judicial</b>, los
+                <b>órganos electorales</b>, los de <b>control</b> y los de <b>seguridad</b> les está prohibido tomar
+                parte en las actividades de los partidos y movimientos y en las controversias políticas, <b>sin
+                    perjuicio del derecho al voto</b>.</p>
+            <ul class="checks">
+                <li>Los miembros de la <b>Fuerza Pública</b> en servicio activo se rigen por las limitaciones del Art.
+                    219.</li>
+                <li>Los <b>demás empleados</b> solo pueden participar en esas actividades en las condiciones que señale
+                    la <b>Ley Estatutaria</b>.</li>
+                <li>Presionar a los ciudadanos con el empleo para respaldar una campaña es causal de <b>mala
+                        conducta</b>.</li>
+            </ul>
+            <span class="norma">Art. 127, incs. 1 a 3 · modificado por el Acto Legislativo 2 de 2004</span>
+        </section>
+
+        <!-- 128 -->
+        <section class="sec s-yellow">
+            <h2><span class="num">5</span> Art. 128: doble asignación</h2>
+            <p>Nadie puede desempeñar <b>al mismo tiempo más de un empleo público</b> ni recibir <b>más de una
+                    asignación</b> que provenga del tesoro público, o de empresas o instituciones en las que el Estado
+                tenga parte mayoritaria, salvo los casos que la ley determine expresamente.</p>
+            <div class="flow">
+                <span class="chip">Tesoro público = Nación</span><span class="chip">+ entidades territoriales</span>
+                <span class="chip">+ entidades descentralizadas</span>
+            </div>
+            <div class="extra"><b>Dato extra:</b> por "asignación" se entiende toda remuneración que salga del tesoro
+                público: sueldo, honorarios o mesada pensional. Las excepciones generales están en el artículo 19 de la
+                Ley 4 de 1992.</div>
+        </section>
+
+        <!-- 129 -->
+        <section class="sec s-pink">
+            <h2><span class="num">6</span> Art. 129: gobiernos extranjeros</h2>
+            <p>Los servidores públicos <b>no pueden aceptar cargos, honores o recompensas</b> de gobiernos extranjeros u
+                organismos internacionales, <b>ni celebrar contratos</b> con ellos, <b>sin previa autorización del
+                    Gobierno</b>.</p>
+            <div class="tip"><b>⚠️ Fíjate:</b> no está prohibido siempre; está prohibido <b>sin permiso previo</b>.
+            </div>
+        </section>
+
+        <!-- Concepto clave y trampa -->
+        <section class="sec s-orange">
+            <h2><span class="num">!</span> Concepto clave y trampa</h2>
+            <div class="yesno">
+                <div class="good"><b>💡 Concepto clave</b>
+                    <p style="margin-top:0.4rem">La Procuraduría es un <b>órgano de control</b>. Sus empleados están en
+                        el grupo con <b>prohibición total</b> de participar en actividades de partidos y controversias
+                        políticas. Conservan el derecho al voto.</p>
+                </div>
+                <div class="bad"><b>⚠️ ¡Ojo con la trampa!</b>
+                    <p style="margin-top:0.4rem">La regla de "participar en las condiciones de la Ley Estatutaria"
+                        (inciso 3) es solo para los empleados <b>no incluidos</b> en la prohibición. No sirve para los
+                        empleados de la Procuraduría ni de otros órganos de control.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Comparativo -->
+        <section class="sec s-blue">
+            <h2><span class="num">7</span> Los cuatro artículos de un vistazo</h2>
+            <div class="scroll">
+                <table>
+                    <tr>
+                        <th>Art.</th>
+                        <th>Qué prohíbe</th>
+                        <th>Excepción o condición</th>
+                    </tr>
+                    <tr>
+                        <td><b>126</b></td>
+                        <td>Nombrar, postular o contratar parientes (4.º, 2.º, 1.º), y los favores cruzados.</td>
+                        <td>Nombramientos por méritos en carrera.</td>
+                    </tr>
+                    <tr>
+                        <td><b>127</b></td>
+                        <td>Contratar con entidades públicas o que manejen recursos públicos; y, para ciertos órganos,
+                            participar en política.</td>
+                        <td>Excepciones legales; el voto siempre se conserva.</td>
+                    </tr>
+                    <tr>
+                        <td><b>128</b></td>
+                        <td>Más de un empleo público o más de una asignación del tesoro público.</td>
+                        <td>Casos que determine la ley.</td>
+                    </tr>
+                    <tr>
+                        <td><b>129</b></td>
+                        <td>Aceptar cargos, honores, recompensas o contratos de gobiernos u organismos extranjeros.
+                        </td>
+                        <td>Previa autorización del Gobierno.</td>
+                    </tr>
+                </table>
+            </div>
+        </section>
+
+        <!-- Casos -->
+        <section class="sec s-green">
+            <h2><span class="num">8</span> ¿Cómo cae en el examen? Pruébate</h2>
+            <details>
+                <summary>1. Un alcalde quiere nombrar a su sobrino (tercer grado de consanguinidad) en un cargo de
+                    libre nombramiento y remoción. ¿Puede?</summary>
+                <p><b>No.</b> El nepotismo se prohíbe hasta el cuarto grado de consanguinidad (Art. 126).</p>
+            </details>
+            <details>
+                <summary>2. Una funcionaria de la Procuraduría quiere asistir a la campaña de un partido. ¿Puede?
+                </summary>
+                <p><b>No.</b> Los empleados de los órganos de control tienen prohibido tomar parte en actividades de
+                    partidos y en controversias políticas. Solo conservan el derecho a votar (Art. 127).</p>
+            </details>
+            <details>
+                <summary>3. Un empleado público quiere recibir al mismo tiempo el sueldo de otro empleo público. ¿Puede?
+                </summary>
+                <p><b>No, salvo que la ley lo permita expresamente</b> (Art. 128).</p>
+            </details>
+            <details>
+                <summary>4. Un servidor acepta una condecoración de un gobierno extranjero sin avisar a nadie. ¿Puede?
+                </summary>
+                <p><b>No.</b> Necesita previa autorización del Gobierno (Art. 129).</p>
+            </details>
+            <details>
+                <summary>5. Un servidor firma un contrato con una entidad pública a través de una sociedad de la que es
+                    socio. ¿Puede?</summary>
+                <p><b>No.</b> Contratar por interpuesta persona también está prohibido (Art. 127).</p>
+            </details>
+            <details>
+                <summary>6. Un personero nombra al hermano del concejal que lo ayudó a ser elegido. ¿Puede?</summary>
+                <p><b>No.</b> No puede nombrar a quienes intervinieron en su designación ni a sus parientes (Art. 126,
+                    inciso 2). Es el "yo te elijo, tú me eliges".</p>
+            </details>
+        </section>
+
+        <!-- Fijar -->
+        <section class="sec s-orange">
+            <h2><span class="num">9</span> Para fijar</h2>
+            <ol class="memo">
+                <li><b>Parentesco:</b> 4.º de consanguinidad, 2.º de afinidad y 1.º civil (Art. 126).</li>
+                <li><b>Excepción:</b> el ingreso o ascenso por méritos en carrera (Art. 126).</li>
+                <li><b>Tesoro público:</b> Nación, entidades territoriales y descentralizadas (Art. 128).</li>
+                <li><b>Procuraduría:</b> prohibición total de política, pero conserva el voto (Art. 127).</li>
+                <li><b>Del exterior:</b> cargos, honores o contratos solo con previa autorización del Gobierno (Art.
+                    129).</li>
+            </ol>
+        </section>
+
+        <div class="verify">
+            <b>Qué verifiqué y qué no.</b> Confirmé en el texto de la Constitución los Arts. 126 (completo, modificado
+            por el Acto Legislativo 2 de 2015), 127 (incisos 1 a 3, modificado por el Acto Legislativo 2 de 2004), 128 y
+            129, y en conceptos de la Función Pública la definición de "tesoro público", el alcance de "asignación" y la
+            figura de la interpuesta persona.
+            <ul>
+                <li><b>No encontré</b> en el texto del Art. 127 que consulté la frase sobre presionar con el empleo
+                    como causal de mala conducta. La incluí porque viene en tu infografía, pero confírmala.</li>
+                <li>La tabla de grados de parentesco es un <b>complemento mío</b> basado en el Código Civil, no
+                    verificado aquí.</li>
+                <li>La lista de altos cargos del Art. 126 (dato extra) se ha ajustado por sentencias; no la memorices sin
+                    revisar el texto vigente.</li>
+            </ul>
+            Es material de estudio; no sustituye la lectura de la norma.
+        </div>
+
+        <a class="btn" href="conocimiento.html#empleo">Practicar en el quiz de conocimiento</a>
+    </main>
+
+</body>
+
+</html>
